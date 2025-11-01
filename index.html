@@ -4,70 +4,94 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calcula tus puntos con Rincón de Labores</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <header>
-    <h1 class="titulo">
-      Calcula tus puntos con <span>Rincón de Labores</span>
-    </h1>
+    <h1 class="title"><span>🧶</span> Calcula tus puntos con <span class="brand">Rincón de Labores</span></h1>
   </header>
 
-  <main>
-    <section class="calculadora">
-      <h2>Calculadora de Tejido</h2>
-      <form id="formCalculadora">
-        <label for="gaugePoints">Puntos en 10 cm:</label>
-        <input type="number" id="gaugePoints" required />
+  <main class="container">
+    <section class="calculator">
+      <h2>Ingresa tu muestra de tensión</h2>
 
-        <label for="gaugeRows">Pasadas en 10 cm (opcional):</label>
-        <input type="number" id="gaugeRows" />
-
-        <label for="talla">Selecciona una talla:</label>
-        <select id="talla" required></select>
-
-        <label for="pieza">Pieza a calcular:</label>
-        <select id="pieza">
-          <option value="espalda">Espalda / Delantero (Jersey)</option>
-          <option value="delanteroChaqueta">Delantero (Chaqueta)</option>
-          <option value="manga">Manga</option>
-          <option value="cuello">Cuello (Top-Down Ranglan)</option>
-        </select>
-
-        <button type="submit">Calcular</button>
-      </form>
-    </section>
-
-    <section id="resultados" class="resultados oculto">
-      <h3>Resultados de Cálculo</h3>
-      <div id="resultadoTexto"></div>
-
-      <div class="cta">
-        <p>
-          ¡Comparte tu creación! Nos encantaría ver tu proyecto terminado.  
-          Sube una foto a Instagram y etiquétanos  
-          <a href="https://www.instagram.com/rincondlabores/" target="_blank">@rincondlabores</a>.
-        </p>
+      <div class="form-group">
+        <label for="stitches">Puntos en 10 cm:</label>
+        <input type="number" id="stitches" placeholder="Ej. 22" min="1" />
       </div>
+
+      <div class="form-group">
+        <label for="rows">Pasadas en 10 cm (opcional):</label>
+        <input type="number" id="rows" placeholder="Ej. 30" min="1" />
+      </div>
+
+      <div class="form-group">
+        <label for="garmentType">Tipo de prenda:</label>
+        <select id="garmentType">
+          <option value="" disabled selected>Selecciona una opción...</option>
+          <option value="jersey">Jersey</option>
+          <option value="chaqueta">Chaqueta</option>
+          <option value="custom">Medida personalizada</option>
+        </select>
+      </div>
+
+      <div id="custom-cm-container" class="form-group hidden">
+        <label for="customCm">Medida personalizada (en cm):</label>
+        <input type="number" id="customCm" placeholder="Ej. 50" min="1" />
+      </div>
+
+      <div id="construction-method-container" class="form-group hidden">
+        <label for="constructionMethod">Método de construcción:</label>
+        <select id="constructionMethod">
+          <option value="" disabled selected>Selecciona...</option>
+          <option value="bottom-up">Desde abajo (Bottom-Up)</option>
+          <option value="top-down">Desde arriba (Top-Down / Ranglan)</option>
+        </select>
+      </div>
+
+      <div id="size-container" class="form-group hidden">
+        <label for="size">Talla:</label>
+        <select id="size"></select>
+      </div>
+
+      <div id="garment-piece-container" class="form-group hidden">
+        <label for="garmentPiece">Pieza:</label>
+        <select id="garmentPiece">
+          <option value="" disabled selected>Selecciona una pieza...</option>
+          <option value="espalda">Espalda</option>
+          <option value="delantero">Delantero</option>
+          <option value="mangas">Manga</option>
+        </select>
+      </div>
+
+      <div class="buttons">
+        <button id="calculate-btn" class="btn-primary">Calcular</button>
+        <button id="reset-btn" class="btn-secondary">Reiniciar</button>
+      </div>
+
+      <div id="error-container" class="error hidden"></div>
+      <div id="results-container" class="results"></div>
     </section>
   </main>
 
   <footer>
-    <div class="tarjeta">
-      <h4 class="nombre-tienda">Rincón de Labores</h4>
+    <div class="footer-card">
+      <h3 class="brand-footer">Rincón de Labores</h3>
       <p>📍 Calle Bando de la Huerta, 21, 30580 Alquerías, Murcia</p>
       <p>📞 <a href="tel:+34659687211">(+34) 659 687 211</a></p>
-      <p>📧 <a href="mailto:rincondelabores@gmail.com">rincondelabores@gmail.com</a></p>
-
-      <div class="redes">
-        <a href="https://www.instagram.com/rincondlabores/" target="_blank">📸 Instagram</a>
-        <a href="https://www.facebook.com/rinconlabores/" target="_blank">📘 Facebook</a>
-        <a href="https://wa.me/34659687211" target="_blank">💬 WhatsApp</a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
+      <p>✉️ <a href="mailto:rincondelabores@gmail.com">rincondelabores@gmail.com</a></p>
+      <div class="social-links">
+        <a href="https://www.instagram.com/rincondlabores/" target="_blank" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path fill="#e1306c" d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2a3 3 0 110 6 3 3 0 010-6zm4.5-.75a1.25 1.25 0 11-.001 2.501A1.25 1.25 0 0116.5 6.25z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/rinconlabores/" target="_blank" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path fill="#3b5998" d="M22 12a10 10 0 10-11.64 9.87v-6.99h-2.8v-2.88h2.8V9.41c0-2.77 1.64-4.31 4.15-4.31 1.2 0 2.45.21 2.45.21v2.7h-1.38c-1.36 0-1.79.85-1.79 1.72v2.05h3.04l-.49 2.88h-2.55v6.99A10 10 0 0022 12z"/></svg>
+        </a>
+        <a href="https://wa.me/34659687211" target="_blank" aria-label="WhatsApp">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path fill="#25D366" d="M20.52 3.48A11.93 11.93 0 0012 0C5.38 0 .02 5.36.02 11.97c0 2.11.55 4.15 1.6 5.96L0 24l6.27-1.6a11.93 11.93 0 005.73 1.48h.01c6.62 0 11.98-5.36 11.98-11.98 0-3.19-1.24-6.18-3.47-8.42zM12 21.48a9.49 9.49 0 01-4.85-1.33l-.35-.21-3.72.94.99-3.63-.23-.37a9.47 9.47 0 01-1.43-5.03C2.41 6.91 6.9 2.42 12 2.42c2.52 0 4.9.98 6.69 2.77A9.39 9.39 0 0121.58 12c0 5.1-4.49 9.48-9.58 9.48z"/><path fill="#25D366" d="M17.6 14.69c-.27-.14-1.6-.79-1.84-.88-.24-.09-.41-.14-.59.14-.18.27-.68.88-.84 1.06-.16.18-.31.2-.58.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.6-1.5-1.86-.16-.27-.02-.41.12-.55.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.47-.07-.14-.59-1.43-.81-1.96-.21-.51-.43-.44-.59-.45h-.5c-.16 0-.47.07-.72.34-.25.27-.95.92-.95 2.24 0 1.32.97 2.6 1.1 2.78.14.18 1.91 2.91 4.64 4.08.65.28 1.15.45 1.55.58.65.21 1.24.18 1.7.11.52-.08 1.6-.66 1.83-1.31.23-.6
