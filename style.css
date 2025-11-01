@@ -1,0 +1,103 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #fffdf8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background-color: #fce4ec;
+  padding: 2rem 1rem;
+}
+
+.titulo {
+  font-family: 'Dancing Script', cursive;
+  color: #d81b60;
+  font-size: 2rem;
+}
+
+.titulo span {
+  display: block;
+  font-size: 2.5rem;
+}
+
+.calculadora {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #f0f0f0;
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #f06292;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+button:hover {
+  background-color: #ec407a;
+}
+
+.resultados {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #fff0f5;
+  border-radius: 10px;
+}
+
+.cta {
+  background-color: #f8bbd0;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.cta a {
+  color: #c2185b;
+  font-weight: bold;
+}
+
+footer {
+  background: #fce4ec;
+  padding: 2rem;
+  text-align: center;
+}
+
+.nombre-tienda {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  color: #d81b60;
+}
+
+.redes a {
+  margin: 0 0.5rem;
+  text-decoration: none;
+  color: #ad1457;
+  font-weight: bold;
+}
+
+.oculto {
+  display: none;
+}
