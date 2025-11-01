@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calcula tus puntos con Rincón de Labores</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1 class="titulo">
+      Calcula tus puntos con <span>Rincón de Labores</span>
+    </h1>
+  </header>
+
+  <main>
+    <section class="calculadora">
+      <h2>Calculadora de Tejido</h2>
+      <form id="formCalculadora">
+        <label for="gaugePoints">Puntos en 10 cm:</label>
+        <input type="number" id="gaugePoints" required />
+
+        <label for="gaugeRows">Pasadas en 10 cm (opcional):</label>
+        <input type="number" id="gaugeRows" />
+
+        <label for="talla">Selecciona una talla:</label>
+        <select id="talla" required></select>
+
+        <label for="pieza">Pieza a calcular:</label>
+        <select id="pieza">
+          <option value="espalda">Espalda / Delantero (Jersey)</option>
+          <option value="delanteroChaqueta">Delantero (Chaqueta)</option>
+          <option value="manga">Manga</option>
+          <option value="cuello">Cuello (Top-Down Ranglan)</option>
+        </select>
+
+        <button type="submit">Calcular</button>
+      </form>
+    </section>
+
+    <section id="resultados" class="resultados oculto">
+      <h3>Resultados de Cálculo</h3>
+      <div id="resultadoTexto"></div>
+
+      <div class="cta">
+        <p>
+          ¡Comparte tu creación! Nos encantaría ver tu proyecto terminado.  
+          Sube una foto a Instagram y etiquétanos  
+          <a href="https://www.instagram.com/rincondlabores/" target="_blank">@rincondlabores</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="tarjeta">
+      <h4 class="nombre-tienda">Rincón de Labores</h4>
+      <p>📍 Calle Bando de la Huerta, 21, 30580 Alquerías, Murcia</p>
+      <p>📞 <a href="tel:+34659687211">(+34) 659 687 211</a></p>
+      <p>📧 <a href="mailto:rincondelabores@gmail.com">rincondelabores@gmail.com</a></p>
+
+      <div class="redes">
+        <a href="https://www.instagram.com/rincondlabores/" target="_blank">📸 Instagram</a>
+        <a href="https://www.facebook.com/rinconlabores/" target="_blank">📘 Facebook</a>
+        <a href="https://wa.me/34659687211" target="_blank">💬 WhatsApp</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
