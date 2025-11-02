@@ -42,7 +42,7 @@ const ORDEN_TALLAS = {
 // ====================================================================
 
 /**
- * Rellena el select de tallas. (Corregido)
+ * Rellena el select de tallas. 
  */
 function poblarTallas() {
     const select = document.getElementById('talla_seleccionada');
@@ -56,7 +56,7 @@ function poblarTallas() {
         optgroup.label = label;
         
         tallas.forEach(tallaKey => {
-            // Usa 'in' o hasOwnProperty para verificar la clave
+            // Verifica la existencia de la clave en el objeto de medidas
             if (tallaKey in MEDIDAS_ANTROPOMETRICAS) { 
                 const option = document.createElement('option');
                 option.value = tallaKey;
@@ -92,7 +92,7 @@ function manejarVisibilidadCampos() {
     }
 }
 
-// Inicialización de funciones al cargar el DOM (Asegura que el select existe)
+// Inicialización de funciones al cargar el DOM (Solución al error de carga)
 document.addEventListener('DOMContentLoaded', () => {
     poblarTallas();
     const tipoPrendaSelect = document.getElementById('tipo_prenda');
@@ -100,6 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tipoPrendaSelect.addEventListener('change', manejarVisibilidadCampos);
     }
     manejarVisibilidadCampos();
+    
+    // Añade el evento de cálculo al botón/formulario
+    const botonCalcular = document.getElementById('calcular_patron');
+    if (botonCalcular) {
+        botonCalcular.addEventListener('click', calcularPatron);
+    }
 });
 
 // ====================================================================
@@ -165,10 +171,10 @@ function calcularPatron() {
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-             // Bebé/Niño: Margen pequeño para cabeza
+             // Bebé/Niño: Margen pequeño para cabeza (5cm)
              ccAjustadoCm = medidas.CC + 5; 
         } else {
-             // Adulto: Margen más grande para pasar la cabeza
+             // Adulto: Margen más grande para pasar la cabeza (10cm)
              ccAjustadoCm = medidas.CC + 10; 
         }
     }
@@ -335,23 +341,65 @@ function calcularPatron() {
         resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los puntos de montaje para formar la tira del cuello.\n`;
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
-        // 2. AUMENTOS RAGLÁN
-        const puntosAAumentarManga = Math.round(caPts * 1.15) - pManga; 
-        const hilerasRaglan = Math.round((puntosAAumentarManga / 2) * 2); 
-        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : (medidas.PSisa * 1.1).toFixed(1);
+        // 2. AUMENTOS RAGLÁN - ¡LÓGICA CORREGIDA AQUÍ!
         
-        const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
+        let raglanCmBase;
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
+            // BEBÉ/NIÑO: Forzar un largo mínimo para una sisa cómoda (aprox. 10 cm)
+            raglanCmBase = 10.0;
+        } else {
+            // ADULTO: Usar el largo de sisa ajustado
+            raglanCmBase = medidas.PSisa * 1.1; 
+        }
 
-        resultado += `<u>2. Aumentos y Separación</u>\n`;
-        resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
-        resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
-        resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
+        const puntosTotalSisaDeseados = Math.round(medidas.CA * 1.15 * densidadP); 
+        const puntosAlcanzadosRagland = puntosTotalSisaDeseados - pManga;
+        const hilerasRaglan = Math.round((puntosAlcanzadosRagland / 2) * 2); 
+        
+        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : raglanCmBase.toFixed(1);
+        
+        // Ajuste si la sisa calculada es muy corta para bebé/niño
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
+             if (parseFloat(raglanCmFinal) < 9.0) {
+                 // Si el cálculo da menos de 9cm (ej. 7cm), lo forzamos a 10cm y recalcular las pasadas
+                 const hilerasRaglanForzada = Math.round(raglanCmBase * densidadH);
+                 const aumentosExtra = Math.floor(hilerasRaglanForzada / 2);
+                 
+                 // Recalculamos los puntos que se añadirán al separar (ahora serán menos)
+                 const puntosMangaFinal = pManga + aumentosExtra * 2; // Aumentos a cada lado de la manga
+                 const puntosAnadirSisaPts = Math.round((caPts * 1.15 * densidadP) - puntosMangaFinal);
+
+                 resultado += `<u>2. Aumentos y Separación (Ajuste Bebé/Niño)</u>\n`;
+                 resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmBase.toFixed(1)} cm** (**${hilerasRaglanForzada} pasadas**).\n`;
+                 resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglanForzada} pasadas**.\n`;
+                 resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${Math.max(0, puntosAnadirSisaPts)} puntos** (montados o recogidos) bajo cada sisa. (Ahora menos, ¡como pediste!).\n\n`;
+                
+            } else {
+                 // Usamos el cálculo estándar si ya es suficientemente largo (Adulto o Talla Niña Grande)
+                 const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
+                 
+                 resultado += `<u>2. Aumentos y Separación</u>\n`;
+                 resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
+                 resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
+                 resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
+            }
+        } else {
+             // Lógica estándar para adultos
+             const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
+             
+             resultado += `<u>2. Aumentos y Separación</u>\n`;
+             resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
+             resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
+             resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
+        }
+        
         
         // 3. LARGOS FINALES
-        const largoCuerpoCm = medidas.LT - medidas.PSisa;
+        // Las pasadas restantes para cuerpo y mangas se ajustarán automáticamente
+        const largoCuerpoCm = medidas.LT - raglanCmBase;
         const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
         
-        const largoMangaCm = medidas.LM - parseFloat(raglanCmFinal); 
+        const largoMangaCm = medidas.LM - raglanCmBase; 
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
         const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : 0;
