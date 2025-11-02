@@ -1,6 +1,6 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
-//    ERROR CORREGIDO: Se eliminan los asteriscos dobles (**) en los valores LM.
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO con la última tabla)
+//    MODIFICACIONES SOLICITADAS: CP de tallas 36, 38 y 40 ajustados.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
@@ -22,16 +22,16 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
     '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
-    // Tallas de Mujer (Adulto) - LM es Sisa a Puño.
-    // **AQUÍ ESTABA EL ERROR DE SINTAXIS:**
-    '36': { CP: 82.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 },
-    '38': { CP: 88.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 },
-    '40': { CP: 94.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 },
-    '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 },
-    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 },
-    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 },
-    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 },
-    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 }
+    // Tallas de Mujer (Adulto)
+    // CP MODIFICADO: 36: 82.0 (antes 88.0), 38: 86.0 (antes 92.0), 40: 92.0 (antes 96.0)
+    '36': { CP: 82.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
+    '38': { CP: 86.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
+    '40': { CP: 92.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
+    '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 }, 
+    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
+    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
+    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
+    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
 };
 
 const ORDEN_TALLAS = {
@@ -42,7 +42,7 @@ const ORDEN_TALLAS = {
 
 
 // ====================================================================
-// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
+// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ (Se mantienen sin cambios)
 // ====================================================================
 
 function poblarTallas() {
@@ -89,26 +89,25 @@ function manejarVisibilidadCampos() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Tras la corrección de sintaxis, esta función ya se puede ejecutar:
-    poblarTallas(); 
-    
+    poblarTallas();
     const tipoPrendaSelect = document.getElementById('tipo_prenda');
     if (tipoPrendaSelect) {
         tipoPrendaSelect.addEventListener('change', manejarVisibilidadCampos);
     }
     manejarVisibilidadCampos();
     
-    // Se elimina el bloque de código que intentaba adjuntar el evento
-    // de click a un ID que no existe, ya que el HTML usa 'onclick="calcularPatron()"'.
+    const botonCalcular = document.getElementById('calcular_patron');
+    if (botonCalcular) {
+        botonCalcular.addEventListener('click', calcularPatron);
+    }
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (LM Corregido)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Holgura Modificada)
 // ====================================================================
 
 /**
  * Función principal para calcular el patrón de tejido.
- * (Esta función se llama directamente desde el botón en index.html)
  */
 function calcularPatron() {
     const puntosMuestra = parseFloat(document.getElementById('puntos_muestra').value);
@@ -151,10 +150,12 @@ function calcularPatron() {
 
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
-    // --- LÓGICA DE HOLGURA (Holgura Normal/Estándar) ---
-    let holguraCm = 10.0; 
-    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('años')) {
-        holguraCm = 6.0; 
+    // --- LÓGICA DE HOLGURA (Holgura Actualizada) ---
+    let holguraCm = 8.0; // Holgura estándar para Adultos
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+        holguraCm = 4.0; // Holgura para Bebés (Modificado de 6.0 a 4.0)
+    } else if (tallaSeleccionada.includes('años')) {
+        holguraCm = 6.0; // Holgura para Niños (Mantenido)
     }
     
     // --- LÓGICA DE RAGLÁN BASE (Para ambas direcciones) ---
@@ -194,7 +195,7 @@ function calcularPatron() {
     let resultado = '';
 
     if (metodoTejido === "BAJO" && densidadH) {
-        // --- CÁLCULO BOTTOM-UP (Bajo a Hombro) ---
+        // --- CÁLCULO BOTTOM-UP (Bajo a Hombro) - OUTPUT REFINADO ---
         
         const largoCuerpoCm = medidas.LT - medidas.PSisa;
         
@@ -268,18 +269,17 @@ function calcularPatron() {
         const cmRecto = hilerasTrabajarRecto > 0 ? (hilerasTrabajarRecto / densidadH).toFixed(1) : (0).toFixed(1); 
         
         // =================================== INICIO OUTPUT ===================================
-        resultado += `<h4>🧶 Resultados de Tejido (Bajo a Escote - Por Piezas)</h4>\n`;
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho del cuerpo):** **${medidas.CP.toFixed(1)} cm**.\n`;
-        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`;
+        resultado += `<h4>🧶 Resultados de Tejido (Del Bajo al Hombro - Por Piezas)</h4>\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n`; 
+        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; // HOLGURA MODIFICADA
         resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
         resultado += `* **Montar:** **${puntosEspalda} puntos**.\n`;
-        resultado += `* **Tejer Bajo a Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${densidadH ? `(**${hilerasBajoSisa} pasadas**)` : ''}.\n`;
-        resultado += `* **Cerrar Sisa:** Empezar a disminuir o cerrar los puntos de la sisa. (Ver Patrones Estándar).\n`;
-        resultado += `* **Tejer Sisa a Hombro:** **${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n`;
-        resultado += `* **Total Tejido:** **${medidas.LT.toFixed(1)} cm** ${densidadH ? `(**${hilerasTotalEspalda} pasadas**)` : ''}.\n\n`;
+        resultado += `* **Tejer hasta la Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${densidadH ? `(**${hilerasBajoSisa} pasadas**)` : ''}.\n`; 
+        resultado += `* **Continuar Sisa a Hombro (Recto):** **${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n`; 
+        resultado += `* **Total Tejido (De bajo a Hombro):** **${medidas.LT.toFixed(1)} cm** ${densidadH ? `(**${hilerasTotalEspalda} pasadas**)` : ''}. Cerrar todos los puntos al finalizar.\n\n`;
 
         // 2. DELANTERO(S)
         resultado += `<u>2. Delantero(s)</u>\n`;
@@ -291,8 +291,8 @@ function calcularPatron() {
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tapeta Opcional:** Sugerimos añadir **${puntosTapeta} puntos** extra para la tapeta, que serán **${tiraCuelloCm.toFixed(1)} cm** de ancho.</p>\n`;
         }
         
-        resultado += `* **Tejer Bajo a Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${densidadH ? `(**${hilerasBajoSisa} pasadas**)` : ''} (igual que la espalda).\n`;
-        resultado += `* **Total a Tejer Sisa a Hombro:** **${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`;
+        resultado += `* **Tejer hasta la Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${densidadH ? `(**${hilerasBajoSisa} pasadas**)` : ''} (igual que la espalda).\n`; 
+        resultado += `* **Largo Total de Sisa a Hombro:** **${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         
         // INSTRUCCIONES DE ESCOTE SIMPLIFICADAS
         resultado += `<u>Instrucciones de Escote (Delantero) - Simplificado</u>\n`;
@@ -301,10 +301,10 @@ function calcularPatron() {
         if (tipoPrenda === "JERSEY") {
              resultado += `* **2. Cierre Central:** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
              resultado += `* **3. Curva de Escote (Por Separado):** Continuar tejiendo cada hombro por separado y cerrar/disminuir en el borde del escote de la siguiente manera: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** por lado).\n`;
-             resultado += `* **4. Trabajo Plano y Hombro:** Continuar recto durante **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} hasta el final de la sisa. Quedarán **${puntosHombro} puntos** por hombro para cerrar.\n\n`;
+             resultado += `* **4. Trabajo Plano y Hombro:** Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
         } else { // CHAQUETA
             resultado += `* **2. Curva de Escote (Borde Central):** Cerrar **${cierreInicial} puntos** y luego disminuir con la siguiente secuencia: **${cierresEscote.slice(1).join(', ')}** (un total de **${puntosAFormarEscotePts} puntos**).\n`;
-            resultado += `* **3. Trabajo Plano y Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa.\n\n`;
+            resultado += `* **3. Trabajo Plano y Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
         // 3. MANGAS
@@ -312,20 +312,24 @@ function calcularPatron() {
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         const puntosSisaManga = caPts; 
         
-        // CORRECTO: Usar medidas.LM directamente (Largo de Sisa a Puño).
         const largoMangaSisaPuñoCm = medidas.LM; 
         const largoMangaH = densidadH ? Math.round(largoMangaSisaPuñoCm * densidadH) : null;
         
         const totalAumentos = puntosSisaManga - puntosPuño;
         const aumentosPorLado = Math.floor(totalAumentos / 2);
         const frecuenciaAumentos = (aumentosPorLado > 0 && largoMangaH) ? Math.round(largoMangaH / aumentosPorLado) : 0;
+
+        // NOTA IMPORTANTE SOBRE TALLAS DE NIÑO
+        if (tallaSeleccionada.includes('años')) {
+            resultado += `<p style="font-size:0.9em; padding-left: 20px; color: #cc0000;">* **NOTA IMPORTANTE:** Los **${medidas['C Puño'].toFixed(1)} cm** de Contorno de Puño para las tallas de niño son grandes. Esto resulta en **${aumentosPorLado > 0 ? aumentosPorLado : 0} aumentos por lado**. Por favor, verifique el contorno deseado de puño (**'C Puño'**) en la tabla de tallas si el resultado no parece correcto.</p>\n`;
+        }
         
         resultado += `* **Montar:** **${puntosPuño} p.** (Puño de **${medidas['C Puño'].toFixed(1)} cm**).\n`;
         resultado += `* **Tejer:** **${largoMangaSisaPuñoCm.toFixed(1)} cm** (Largo de Sisa a Puño). ${largoMangaH ? `(**${largoMangaH} pasadas**)` : ''}\n`;
         
-        if (frecuenciaAumentos > 0) {
+        if (aumentosPorLado > 0) {
             const frecuenciaCm = (frecuenciaAumentos / densidadH).toFixed(1);
-            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm} cm**) ${largoMangaH ? `(**${aumentosPorLado} veces**)` : ''} hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
+            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm} cm**) **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
         } else {
             resultado += `* **Aumentos:** No se requieren aumentos o el cálculo es inconsistente. Tejer recto.\n\n`;
         }
@@ -337,8 +341,8 @@ function calcularPatron() {
         const hilerasRaglan = Math.round(raglanCmBase * densidadH);
         
         resultado += `<h4>🧶 Resultados de Tejido desde el Escote (Raglán)</h4>\n`;
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho del cuerpo):** **${medidas.CP.toFixed(1)} cm**.\n`;
-        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n`; 
+        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; // HOLGURA MODIFICADA
         resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
 
         // 1. REPARTO INICIAL
@@ -383,7 +387,6 @@ function calcularPatron() {
         const largoCuerpoCm = medidas.LT - medidas.PSisa; 
         const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
         
-        // CORRECCIÓN: Usar medidas.LM directamente para el largo de manga restante.
         const largoMangaCm = medidas.LM; 
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
