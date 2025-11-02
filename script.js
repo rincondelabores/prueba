@@ -1,16 +1,16 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (AJUSTADAS)
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
-    // Tallas de Bebé (Prematuro a 24 meses)
-    '00 (Prematuro)': { CP: 37, CC: 20.0, CA: 10.5, 'C Puño': 9.0, LT: 23, LM: 14, PSisa: 8.0, AE: 15.5, CED: 3.0 },
-    '0 meses': { CP: 39, CC: 21.0, CA: 11.5, 'C Puño': 9.5, LT: 25, LM: 16, PSisa: 9.0, AE: 16.5, CED: 3.5 },
-    '1-3 meses': { CP: 41, CC: 22.0, CA: 12.5, 'C Puño': 10.0, LT: 27, LM: 18, PSisa: 9.5, AE: 17.5, CED: 3.5 },
-    '3-6 meses': { CP: 44, CC: 23.0, CA: 13.5, 'C Puño': 10.5, LT: 29, LM: 21, PSisa: 10.0, AE: 18.5, CED: 4.0 },
-    '6-12 meses': { CP: 47, CC: 24.0, CA: 14.5, 'C Puño': 11.0, LT: 32, LM: 25, PSisa: 10.5, AE: 19.5, CED: 4.5 },
-    '12-18 meses': { CP: 50, CC: 25.0, CA: 15.5, 'C Puño': 11.5, LT: 35, LM: 28, PSisa: 11.0, AE: 20.5, CED: 5.0 },
-    '18-24 meses': { CP: 53, CC: 26.0, CA: 16.5, 'C Puño': 12.0, LT: 38, LM: 30, PSisa: 11.5, AE: 21.5, CED: 5.5 },
+    // Tallas de Bebé (LM y LT Ajustados)
+    '00 (Prematuro)': { CP: 37, CC: 20.0, CA: 10.5, 'C Puño': 9.0, LT: 26, LM: 17, PSisa: 8.0, AE: 15.5, CED: 3.0 },
+    '0 meses': { CP: 39, CC: 21.0, CA: 11.5, 'C Puño': 9.5, LT: 27, LM: 18, PSisa: 9.0, AE: 16.5, CED: 3.5 }, 
+    '1-3 meses': { CP: 41, CC: 22.0, CA: 12.5, 'C Puño': 10.0, LT: 28, LM: 20, PSisa: 9.5, AE: 17.5, CED: 3.5 },
+    '3-6 meses': { CP: 44, CC: 23.0, CA: 13.5, 'C Puño': 10.5, LT: 29, LM: 23, PSisa: 10.0, AE: 18.5, CED: 4.0 },
+    '6-12 meses': { CP: 47, CC: 24.0, CA: 14.5, 'C Puño': 11.0, LT: 33, LM: 26, PSisa: 10.5, AE: 19.5, CED: 4.5 },
+    '12-18 meses': { CP: 50, CC: 25.0, CA: 15.5, 'C Puño': 11.5, LT: 36, LM: 29, PSisa: 11.0, AE: 20.5, CED: 5.0 },
+    '18-24 meses': { CP: 53, CC: 26.0, CA: 16.5, 'C Puño': 12.0, LT: 39, LM: 31, PSisa: 11.5, AE: 21.5, CED: 5.5 },
     
     // Tallas de Niños
     '3 años': { CP: 56, CC: 27.0, CA: 17.5, 'C Puño': 13.0, LT: 40, LM: 33, PSisa: 12.0, AE: 24.0, CED: 6.0 },
@@ -154,7 +154,20 @@ function calcularPatron() {
     // Puntos y Hileras Base
     const cpPts = Math.round(medidas.CP * densidadP);
     const caPts = Math.round(medidas.CA * densidadP);
-    const ccPts = Math.round(medidas.CC * densidadP);
+    
+    // Ajuste de CC para Top-Down (Raglán) para cuello más holgado
+    let ccAjustadoCm = medidas.CC;
+    if (metodoTejido === "ESCOTE") {
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
+             // Bebé/Niño: Margen pequeño para cabeza
+             ccAjustadoCm = medidas.CC + 5; 
+        } else {
+             // Adulto: Margen más grande para pasar la cabeza
+             ccAjustadoCm = medidas.CC + 10; 
+        }
+    }
+    const ccPts = Math.round(ccAjustadoCm * densidadP);
+    
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
     // Tapeta Suggestion (Calculada y redondeada al siguiente impar)
@@ -180,7 +193,7 @@ function calcularPatron() {
         let puntosEspalda = puntosMedioPecho;
         let puntosTotalDelantero; // Puntos *sin* la tapeta
         
-        let puntosACerrarBase = Math.round(ccPts * 0.75);
+        let puntosACerrarBase = Math.round(medidas.CC * 0.75 * densidadP); // Usar CC original para el cierre de cuello
         const escoteCmDesdeSisa = medidas.PSisa - medidas.CED;
         const hilerasInicioEscote = Math.round(escoteCmDesdeSisa * densidadH);
         
@@ -278,7 +291,7 @@ function calcularPatron() {
 
         // 4. TIRA DE CUELLO
         resultado += `<u>4. Tira de Cuello</u>\n`;
-        resultado += `* **Puntos a Recoger/Montar (aprox.):** **${Math.round(ccPts * 0.9)} puntos** (90% del contorno cuello).\n`;
+        resultado += `* **Puntos a Recoger/Montar (aprox.):** **${Math.round(medidas.CC * 0.9 * densidadP)} puntos** (90% del contorno cuello original).\n`;
         resultado += `* **Ancho de la Tira de Cuello:** ${tiraCuelloCm} cm, lo que equivale a **${tiraCuelloPts} puntos** (tejer y coser/recoger).\n`;
 
     } else if (metodoTejido === "ESCOTE" && densidadH) {
@@ -287,12 +300,13 @@ function calcularPatron() {
         const largoTotalH = Math.round(medidas.LT * densidadH);
         const largoMangaH = Math.round(medidas.LM * densidadH);
         
-        resultado += `<h4>🧶 Resultados de Tejido (Escote a Bajo - Raglán) ${indicacionH}</h4>\n`;
+        resultado += `<h4>🧶 Resultados de Tejido desde el Escote ${indicacionH}</h4>\n`;
         // Referencia de Talla
         resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
 
         // 1. REPARTO INICIAL
-        const puntosMontaje = Math.round(ccPts * 0.85);
+        // Usamos el CC AJUSTADO (que ya incluye margen de holgura)
+        const puntosMontaje = Math.round(ccPts * 0.95); 
         const puntosBase = puntosMontaje - 4; 
         
         const pEspalda = Math.round(puntosBase * 0.33);
@@ -312,43 +326,4 @@ function calcularPatron() {
         
         resultado += `<u>1. Tira de Cuello y Reparto Inicial</u>\n`;
         resultado += `* **Puntos Totales de Montaje:** **${puntosMontaje} puntos**.\n`;
-        resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los puntos de montaje para formar la tira del cuello.\n`;
-        resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
-
-        // 2. AUMENTOS RAGLÁN
-        // La línea Raglán se calcula por los puntos de la manga necesarios (CA)
-        const puntosAAumentarManga = Math.round(caPts * 1.15) - pManga; 
-        const hilerasRaglan = Math.round((puntosAAumentarManga / 2) * 2); 
-        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : (medidas.PSisa * 1.1).toFixed(1); // Estimar con PSisa + 10% si no hay densidadH
-        
-        // Puntos a añadir en la sisa: Usar PSisa vertical
-        const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
-
-        resultado += `<u>2. Aumentos y Separación</u>\n`;
-        resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
-        resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
-        resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
-        
-        // 3. LARGOS FINALES
-        const largoCuerpoCm = medidas.LT - medidas.PSisa;
-        const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
-        
-        // Largo Manga: Usar la medida LM (Largo Manga Total) - Largo Raglán REAL
-        const largoMangaCm = medidas.LM - parseFloat(raglanCmFinal); 
-        const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
-
-        const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : 0;
-        const finalLargoMangaCm = largoMangaCm > 0 ? largoMangaCm.toFixed(1) : 0;
-        
-        resultado += `<u>3. Largos Finales</u>\n`;
-        resultado += `* **Largo del Cuerpo (desde Sisa a Bajo):** **${finalLargoCuerpoCm} cm** (**${largoCuerpoRestanteH} pasadas**).\n`;
-        resultado += `* **Largo de la Manga (desde Sisa a Puño):** **${finalLargoMangaCm} cm** (**${largoMangaRestanteH} pasadas**).\n`;
-
-    } else {
-        resultadoDiv.innerHTML = '<p class="error">Error: Por favor, complete todos los campos obligatorios y/o introduzca las **pasadas en 10 cm** para calcular las instrucciones de tejido.</p>';
-        return;
-    }
-
-    // El reemplazo final asegura que negritas (**) se muestren como negritas (<b>) en HTML
-    resultadoDiv.innerHTML = resultado.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-}
+        resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los
