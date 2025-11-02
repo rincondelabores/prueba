@@ -3,39 +3,43 @@
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
-    // Tallas de Bebé (LM y LT Ajustados)
-    '00 (Prematuro)': { CP: 37, CC: 20.0, CA: 10.5, 'C Puño': 9.0, LT: 26, LM: 17, PSisa: 8.0, AE: 15.5, CED: 3.0 },
-    '0 meses': { CP: 39, CC: 21.0, CA: 11.5, 'C Puño': 9.5, LT: 27, LM: 18, PSisa: 9.0, AE: 16.5, CED: 3.5 }, 
-    '1-3 meses': { CP: 41, CC: 22.0, CA: 12.5, 'C Puño': 10.0, LT: 28, LM: 20, PSisa: 9.5, AE: 17.5, CED: 3.5 },
-    '3-6 meses': { CP: 44, CC: 23.0, CA: 13.5, 'C Puño': 10.5, LT: 29, LM: 23, PSisa: 10.0, AE: 18.5, CED: 4.0 },
-    '6-12 meses': { CP: 47, CC: 24.0, CA: 14.5, 'C Puño': 11.0, LT: 33, LM: 26, PSisa: 10.5, AE: 19.5, CED: 4.5 },
-    '12-18 meses': { CP: 50, CC: 25.0, CA: 15.5, 'C Puño': 11.5, LT: 36, LM: 29, PSisa: 11.0, AE: 20.5, CED: 5.0 },
-    '18-24 meses': { CP: 53, CC: 26.0, CA: 16.5, 'C Puño': 12.0, LT: 39, LM: 31, PSisa: 11.5, AE: 21.5, CED: 5.5 },
+    // Tallas de Bebé (Según progresión interna)
+    '00 (Prematuro)': { CP: 37.0, CC: 20.0, CA: 12.0, 'C Puño': 10.0, LT: 18.0, LM: 10.0, PSisa: 8.0, AE: 14.0, CED: 3.0 },
+    '0 meses': { CP: 39.0, CC: 21.0, CA: 13.0, 'C Puño': 10.0, LT: 20.0, LM: 12.0, PSisa: 8.0, AE: 16.0, CED: 3.5 },
+    '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 15.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
+    '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 12.0, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
     
-    // Tallas de Niños
-    '3 años': { CP: 56, CC: 27.0, CA: 17.5, 'C Puño': 13.0, LT: 40, LM: 33, PSisa: 12.0, AE: 24.0, CED: 6.0 },
-    '4 años': { CP: 60, CC: 28.0, CA: 18.5, 'C Puño': 13.5, LT: 42, LM: 36, PSisa: 12.5, AE: 25.0, CED: 6.2 },
-    '6 años': { CP: 64, CC: 29.5, CA: 19.5, 'C Puño': 14.0, LT: 46, LM: 40, PSisa: 13.5, AE: 27.0, CED: 6.5 },
-    '8 años': { CP: 70, CC: 31.0, CA: 21.0, 'C Puño': 14.5, LT: 50, LM: 45, PSisa: 14.5, AE: 29.0, CED: 6.8 },
-    '10 años': { CP: 76, CC: 32.5, CA: 22.5, 'C Puño': 15.0, LT: 54, LM: 49, PSisa: 15.5, AE: 31.0, CED: 7.0 },
+    // Tallas Inferidas (Añadidas y Ajustadas)
+    '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 13.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
+    '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 15.0, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
+    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 23.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
+    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 19.0, LT: 32.0, LM: 26.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
+    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 29.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
+
+    // Tallas de Niños (Según progresión interna)
+    '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 21.5, LT: 35.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, // Inferido
+    '4 años': { CP: 64.0, CC: 27.0, CA: 24.0, 'C Puño': 22.0, LT: 36.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
+    '6 años': { CP: 68.0, CC: 28.0, CA: 26.0, 'C Puño': 23.0, LT: 38.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 }, // Inferido
+    '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 }, // Inferido
+    '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
-    // Tallas de Mujer (Adulto)
-    '36': { CP: 84, CC: 36.0, CA: 26.0, 'C Puño': 20.0, LT: 58, LM: 58.5, PSisa: 19.0, AE: 33.0, CED: 7.5 },
-    '38': { CP: 88, CC: 37.0, CA: 27.5, 'C Puño': 20.5, LT: 59, LM: 59.0, PSisa: 19.8, AE: 34.0, CED: 7.8 },
-    '40': { CP: 92, CC: 38.0, CA: 29.0, 'C Puño': 21.0, LT: 60, LM: 60.0, PSisa: 20.6, AE: 35.0, CED: 8.0 },
-    '42': { CP: 98, CC: 39.5, CA: 31.0, 'C Puño': 22.0, LT: 61, LM: 60.5, PSisa: 21.9, AE: 36.5, CED: 8.3 },
-    '44': { CP: 104, CC: 41.0, CA: 33.0, 'C Puño': 23.0, LT: 62, LM: 61.0, PSisa: 23.2, AE: 38.0, CED: 8.6 },
-    '46': { CP: 110, CC: 42.5, CA: 36.0, 'C Puño': 24.0, LT: 63, LM: 61.5, PSisa: 24.5, AE: 39.5, CED: 9.0 },
-    '48': { CP: 118, CC: 44.5, CA: 38.0, 'C Puño': 25.5, LT: 64, LM: 62.0, PSisa: 26.0, AE: 41.5, CED: 9.3 },
-    '50': { CP: 126, CC: 46.5, CA: 40.0, 'C Puño': 27.0, LT: 65, LM: 62.0, PSisa: 27.5, AE: 43.5, CED: 9.6 }
+    // Tallas de Mujer (Adulto) - Extrapoladas
+    '36': { CP: 84.0, CC: 34.0, CA: 34.0, 'C Puño': 28.0, LT: 58.0, LM: 59.0, PSisa: 22.0, AE: 42.0, CED: 10.0 },
+    '38': { CP: 88.0, CC: 35.0, CA: 35.5, 'C Puño': 29.0, LT: 59.0, LM: 59.5, PSisa: 23.0, AE: 43.0, CED: 10.3 }, // Inferido
+    '40': { CP: 92.0, CC: 36.0, CA: 37.0, 'C Puño': 30.0, LT: 60.0, LM: 60.0, PSisa: 24.0, AE: 44.0, CED: 10.5 },
+    '42': { CP: 98.0, CC: 37.5, CA: 39.0, 'C Puño': 31.0, LT: 61.0, LM: 60.5, PSisa: 25.5, AE: 45.5, CED: 10.8 }, // Inferido
+    '44': { CP: 104.0, CC: 39.0, CA: 41.0, 'C Puño': 32.0, LT: 62.0, LM: 61.0, PSisa: 27.0, AE: 47.0, CED: 11.0 },
+    '46': { CP: 110.0, CC: 40.5, CA: 43.0, 'C Puño': 33.0, LT: 63.0, LM: 61.5, PSisa: 28.5, AE: 48.5, CED: 11.3 }, // Inferido
+    '48': { CP: 116.0, CC: 42.0, CA: 45.0, 'C Puño': 34.0, LT: 64.0, LM: 62.0, PSisa: 30.0, AE: 50.0, CED: 11.5 },
+    '50': { CP: 120.0, CC: 44.0, CA: 47.0, 'C Puño': 35.0, LT: 65.0, LM: 63.0, PSisa: 31.0, AE: 52.0, CED: 12.0 }
 };
 
 const ORDEN_TALLAS = {
-    'Bebé (Prematuro a 24m)': ['00 (Prematuro)', '0 meses', '1-3 meses', '3-6 meses', '6-12 meses', '12-18 meses', '18-24 meses'],
+    // Es necesario ajustar el 'ORDEN_TALLAS' para incluir las nuevas tallas de meses
+    'Bebé (Prematuro a 24m)': ['00 (Prematuro)', '0 meses', '1-3 meses', '3-6 meses', '6-9 meses', '9-12 meses', '12-15 meses', '15-18 meses', '18-24 meses'],
     'Niños (3 a 10 años)': ['3 años', '4 años', '6 años', '8 años', '10 años'],
     'Adulto (36 a 50)': ['36', '38', '40', '42', '44', '46', '48', '50']
 };
-
 
 // ====================================================================
 // 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
