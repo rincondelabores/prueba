@@ -171,10 +171,10 @@ function calcularPatron() {
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-             // Bebé/Niño: Margen pequeño para cabeza (5cm)
-             ccAjustadoCm = medidas.CC + 5; 
+             // 💡 CORRECCIÓN 1: Reducir el margen de holgura para el cuello inicial en bebés/niños
+             ccAjustadoCm = medidas.CC + 3; // Antes +5
         } else {
-             // Adulto: Margen más grande para pasar la cabeza (10cm)
+             // Adulto: Margen más grande para pasar la cabeza
              ccAjustadoCm = medidas.CC + 10; 
         }
     }
@@ -317,81 +317,70 @@ function calcularPatron() {
         resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
 
         // 1. REPARTO INICIAL
-        // Usamos el CC AJUSTADO (que ya incluye margen de holgura)
-        const puntosMontaje = Math.round(ccPts * 0.95); 
+        // 💡 CORRECCIÓN 2: Asegurar que los puntos iniciales (ccPts) reflejen la corrección 1.
+        const puntosMontaje = ccPts; // Usamos el CC ajustado directamente
+
         const puntosBase = puntosMontaje - 4; 
         
         const pEspalda = Math.round(puntosBase * 0.33);
         const pManga = Math.round((puntosBase * 0.33) / 2); 
         let pDelanteroBase = puntosBase - pEspalda - (pManga * 2);
         
+        // Ajuste fino para repartir los puntos restantes
+        const puntosRestantes = puntosBase - pEspalda - (pManga * 2) - pDelanteroBase;
+        pDelanteroBase += puntosRestantes;
+        
         let repartoStr;
         if (tipoPrenda === "JERSEY") {
-            repartoStr = `**${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroBase} p** (Delantero), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador).`;
+            // Si el delantero es impar, se ajusta al centro
+            const pDelanteroFinal = pDelanteroBase;
+            repartoStr = `**${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroFinal} p** (Delantero), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador).`;
         } else { // CHAQUETA
-            const pDelanteroParte = Math.round(pDelanteroBase / 2);
+            const pDelanteroParte1 = Math.floor(pDelanteroBase / 2);
+            const pDelanteroParte2 = pDelanteroBase - pDelanteroParte1;
             
-            repartoStr = `**${pDelanteroParte} p** (Del. 1), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroParte} p** (Del. 2).`;
+            repartoStr = `**${pDelanteroParte1} p** (Del. 1), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroParte2} p** (Del. 2).`;
             
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos montar **${puntosTapeta} puntos** *adicionales* a cada lado antes de comenzar el reparto, o tejerla después.</p>\n`;
         }
         
         resultado += `<u>1. Tira de Cuello y Reparto Inicial</u>\n`;
-        resultado += `* **Puntos Totales de Montaje:** **${puntosMontaje} puntos**.\n`;
+        resultado += `* **Puntos Totales de Montaje (Cuello):** **${puntosMontaje} puntos**.\n`;
         resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los puntos de montaje para formar la tira del cuello.\n`;
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
-        // 2. AUMENTOS RAGLÁN - ¡LÓGICA CORREGIDA AQUÍ!
+        // 2. AUMENTOS RAGLÁN - Lógica de Forzado y Puntos Sisa
         
         let raglanCmBase;
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-            // BEBÉ/NIÑO: Forzar un largo mínimo para una sisa cómoda (aprox. 10 cm)
-            raglanCmBase = 10.0;
+            // 💡 CORRECCIÓN 3: Ajustar el largo de Raglán forzado según la talla
+            // Bebé (0m-18m): 10 cm. Niños: 12 cm.
+            if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+                 raglanCmBase = 10.0;
+            } else {
+                 raglanCmBase = 12.0;
+            }
         } else {
             // ADULTO: Usar el largo de sisa ajustado
             raglanCmBase = medidas.PSisa * 1.1; 
         }
 
-        const puntosTotalSisaDeseados = Math.round(medidas.CA * 1.15 * densidadP); 
-        const puntosAlcanzadosRagland = puntosTotalSisaDeseados - pManga;
-        const hilerasRaglan = Math.round((puntosAlcanzadosRagland / 2) * 2); 
+        const hilerasRaglan = Math.round(raglanCmBase * densidadH);
+        const aumentosPorLado = Math.floor(hilerasRaglan / 2);
         
-        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : raglanCmBase.toFixed(1);
+        // Puntos totales añadidos en Raglán (para una manga)
+        const puntosAumentadosManga = aumentosPorLado; 
         
-        // Ajuste si la sisa calculada es muy corta para bebé/niño
-        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-             if (parseFloat(raglanCmFinal) < 9.0) {
-                 // Si el cálculo da menos de 9cm (ej. 7cm), lo forzamos a 10cm y recalcular las pasadas
-                 const hilerasRaglanForzada = Math.round(raglanCmBase * densidadH);
-                 const aumentosExtra = Math.floor(hilerasRaglanForzada / 2);
-                 
-                 // Recalculamos los puntos que se añadirán al separar (ahora serán menos)
-                 const puntosMangaFinal = pManga + aumentosExtra * 2; // Aumentos a cada lado de la manga
-                 const puntosAnadirSisaPts = Math.round((caPts * 1.15 * densidadP) - puntosMangaFinal);
+        // Puntos totales que tendrá la manga al separar
+        const puntosMangaFinal = pManga + puntosAumentadosManga; 
+        
+        // Puntos Añadidos en la sisa (Aproximadamente 10-20% de los puntos de la manga)
+        const puntosAnadirSisaPts = Math.max(4, Math.round(puntosMangaFinal * 0.1)); // Aseguramos un mínimo de 4 puntos
 
-                 resultado += `<u>2. Aumentos y Separación (Ajuste Bebé/Niño)</u>\n`;
-                 resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmBase.toFixed(1)} cm** (**${hilerasRaglanForzada} pasadas**).\n`;
-                 resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglanForzada} pasadas**.\n`;
-                 resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${Math.max(0, puntosAnadirSisaPts)} puntos** (montados o recogidos) bajo cada sisa. (Ahora menos, ¡como pediste!).\n\n`;
-                
-            } else {
-                 // Usamos el cálculo estándar si ya es suficientemente largo (Adulto o Talla Niña Grande)
-                 const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
-                 
-                 resultado += `<u>2. Aumentos y Separación</u>\n`;
-                 resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
-                 resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
-                 resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
-            }
-        } else {
-             // Lógica estándar para adultos
-             const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
-             
-             resultado += `<u>2. Aumentos y Separación</u>\n`;
-             resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
-             resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
-             resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
-        }
+        resultado += `<u>2. Aumentos y Separación (Ajuste Bebé/Niño)</u>\n`;
+        resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmBase.toFixed(1)} cm** (**${hilerasRaglan} pasadas**).\n`;
+        resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
+        resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa. \n\n`;
         
         
         // 3. LARGOS FINALES
