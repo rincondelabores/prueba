@@ -1,19 +1,19 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO con la última tabla)
-//    MODIFICACIONES SOLICITADAS: CP de tallas 36, 38 y 40 ajustados.
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
+//    CP DE TALLAS 36, 38, 40 MODIFICADOS.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
     // Tallas de Bebé (Se mantienen los datos anteriores)
     '00 (Prematuro)': { CP: 37.0, CC: 20.0, CA: 12.0, 'C Puño': 10.0, LT: 18.0, LM: 10.0, PSisa: 8.0, AE: 14.0, CED: 3.0 },
     '0 meses': { CP: 39.0, CC: 21.0, CA: 13.0, 'C Puño': 10.0, LT: 20.0, LM: 12.0, PSisa: 8.0, AE: 16.0, CED: 3.5 },
-    '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 15.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
+    '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 14.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
     '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 12.0, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
     '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 13.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
     '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 15.0, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
-    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 23.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
-    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 19.0, LT: 32.0, LM: 26.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
-    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 29.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
+    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 22.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
+    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 19.0, LT: 32.0, LM: 25.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
+    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 27.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
 
     // Tallas de Niños (Se mantienen los datos anteriores)
     '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 21.5, LT: 35.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
@@ -22,8 +22,7 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
     '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
-    // Tallas de Mujer (Adulto)
-    // CP MODIFICADO: 36: 82.0 (antes 88.0), 38: 86.0 (antes 92.0), 40: 92.0 (antes 96.0)
+    // Tallas de Mujer (Adulto) - CP MODIFICADO.
     '36': { CP: 82.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
     '38': { CP: 86.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
     '40': { CP: 92.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
@@ -103,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Holgura Modificada)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Holgura y Cuello Raglán Modificados)
 // ====================================================================
 
 /**
@@ -150,12 +149,12 @@ function calcularPatron() {
 
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
-    // --- LÓGICA DE HOLGURA (Holgura Actualizada) ---
-    let holguraCm = 8.0; // Holgura estándar para Adultos
+    // --- LÓGICA DE HOLGURA (Holgura Modificada) ---
+    let holguraCm = 8.0; // Default para Adultos (8cm)
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
-        holguraCm = 4.0; // Holgura para Bebés (Modificado de 6.0 a 4.0)
+        holguraCm = 4.0; // Holgura para Bebés (4cm)
     } else if (tallaSeleccionada.includes('años')) {
-        holguraCm = 6.0; // Holgura para Niños (Mantenido)
+        holguraCm = 6.0; // Holgura para Niños (6cm)
     }
     
     // --- LÓGICA DE RAGLÁN BASE (Para ambas direcciones) ---
@@ -179,10 +178,16 @@ function calcularPatron() {
     let tiraCuelloCm = (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) ? 1.5 : (tallaSeleccionada.includes('años') ? 2.0 : 2.5);
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
-    // Ajuste de CC para Top-Down (Raglán) para cuello más holgado
+    // Ajuste de CC para Top-Down (Raglán) para cuello más holgado (CORRECCIÓN: Bebé reducido a 1.0cm)
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
-        ccAjustadoCm = (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) ? medidas.CC + 3 : medidas.CC + 10; 
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+             ccAjustadoCm = medidas.CC + 1.0; // Holgura pequeña para bebé (1.0 cm)
+        } else if (tallaSeleccionada.includes('años')) {
+             ccAjustadoCm = medidas.CC + 3.0; // Holgura para niños (3.0 cm)
+        } else {
+             ccAjustadoCm = medidas.CC + 10.0; // Holgura grande para adultos (10.0 cm)
+        }
     }
     const ccPts = Math.round(ccAjustadoCm * densidadP);
     
@@ -271,7 +276,7 @@ function calcularPatron() {
         // =================================== INICIO OUTPUT ===================================
         resultado += `<h4>🧶 Resultados de Tejido (Del Bajo al Hombro - Por Piezas)</h4>\n`;
         resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n`; 
-        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; // HOLGURA MODIFICADA
+        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; 
         resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
         
         // 1. ESPALDA
@@ -342,7 +347,7 @@ function calcularPatron() {
         
         resultado += `<h4>🧶 Resultados de Tejido desde el Escote (Raglán)</h4>\n`;
         resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n`; 
-        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; // HOLGURA MODIFICADA
+        resultado += `* **Holgura Aplicada (Ajuste Normal):** **${holguraCm.toFixed(1)} cm**.\n`; 
         resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
 
         // 1. REPARTO INICIAL
@@ -375,7 +380,10 @@ function calcularPatron() {
         
         const aumentosPorLado = Math.floor(hilerasRaglan / 2);
         const puntosMangaFinal = pManga + (aumentosPorLado * 2); 
-        const puntosAnadirSisaPts = Math.max(4, Math.round(puntosMangaFinal * 0.1)); 
+        
+        // CORRECCIÓN: Asegurar que puntosAnadirSisaPts sea un número par.
+        const puntosAnadirSisaPtsBase = Math.max(4, Math.round(puntosMangaFinal * 0.1)); 
+        const puntosAnadirSisaPts = puntosAnadirSisaPtsBase % 2 === 0 ? puntosAnadirSisaPtsBase : puntosAnadirSisaPtsBase + 1; 
 
         resultado += `<u>2. Aumentos y Separación (Raglán)</u>\n`;
         resultado += `* **Largo de Línea Raglán:** **${raglanCmBase.toFixed(1)} cm** ${densidadH ? `(**${hilerasRaglan} pasadas**)` : ''}.\n`;
