@@ -171,8 +171,8 @@ function calcularPatron() {
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-             // 💡 CORRECCIÓN 1: Reducir el margen de holgura para el cuello inicial en bebés/niños
-             ccAjustadoCm = medidas.CC + 3; // Antes +5
+             // Bebé/Niño: Margen ajustado para cabeza
+             ccAjustadoCm = medidas.CC + 3; 
         } else {
              // Adulto: Margen más grande para pasar la cabeza
              ccAjustadoCm = medidas.CC + 10; 
@@ -218,14 +218,14 @@ function calcularPatron() {
 
         resultado += `<h4>🧶 Resultados de Tejido (Bajo a Escote - Por Piezas) ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP} cm**.\n\n`;
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
-        resultado += `* **Puntos de Montaje:** **${puntosEspalda} puntos**.\n`;
-        resultado += `* **Pasadas Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
-        resultado += `* **Pasadas Sisa a Hombro:** **${hilerasSisaHombro} pasadas** (**${medidas.PSisa.toFixed(1)} cm**).\n`;
-        resultado += `* **Total Pasadas (Bajo a Hombro):** **${hilerasTotalEspalda} pasadas** (**${medidas.LT.toFixed(1)} cm**).\n\n`;
+        resultado += `* **Montar:** **${puntosEspalda} puntos**.\n`;
+        resultado += `* **Tejer Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
+        resultado += `* **Continuar Sisa a Hombro:** **${hilerasSisaHombro} pasadas** (**${medidas.PSisa.toFixed(1)} cm**).\n`;
+        resultado += `* **Total Tejido:** **${hilerasTotalEspalda} pasadas** (**${medidas.LT.toFixed(1)} cm**).\n\n`;
 
         // 2. DELANTERO(S)
         
@@ -243,26 +243,43 @@ function calcularPatron() {
             cierreHombroTramos.push(baseCierre + (i < restoCierre ? 1 : 0));
         }
         const cierreHombroStr = cierreHombroTramos.join(', ');
+        const pasadaInicioEscoteDesdeSisa = Math.max(0, hilerasInicioEscote);
+
 
         resultado += `<u>2. Delantero(s)</u>\n`;
         
         if (tipoPrenda === "JERSEY") {
-            resultado += `* **Puntos de Montaje:** **${puntosTotalDelantero} puntos**.\n`;
-        } else { 
-            resultado += `* **Puntos de Montaje (Base):** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
+            resultado += `* **Montar:** **${puntosTotalDelantero} puntos**.\n`;
+        } else { // CHAQUETA
+            resultado += `* **Montar (Base):** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos añadir **${puntosTapeta} puntos** *adicionales* al inicio de cada Delantero. </p>\n`;
         }
         
-        resultado += `* **Pasadas Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
-        resultado += `* **Pasadas Sisa a Hombro:** **${hilerasSisaHombro} pasadas** (**${medidas.PSisa.toFixed(1)} cm**).\n`;
-
-        resultado += `<u>Instrucciones de Escote (a partir de ${hilerasInicioEscote} pasadas de Sisa)</u>\n`;
+        resultado += `* **Tejer Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
+        resultado += `* **Continuar Sisa a Hombro:** **${hilerasSisaHombro} pasadas** (**${medidas.PSisa.toFixed(1)} cm**).\n`;
         
+        // 💡 Instrucciones de Escote (Formato claro solicitado por Elena)
+        resultado += `<u>Instrucciones de Escote (Jersey)</u>\n`;
+
         if (tipoPrenda === "JERSEY") {
-            resultado += `* **Cierre Central:** En la pasada siguiente al inicio del escote, cerrar los **${puntosACerrarBase} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
+            resultado += `* **Inicio de Escote (desde Sisa):** En la pasada **${pasadaInicioEscoteDesdeSisa}** desde el inicio de la sisa, empezar a dar forma al escote.\n`;
+            resultado += `* **Cierre Central:** Cerrar los **${puntosACerrarBase} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
             resultado += `* **Puntos Restantes por Lado (Hombro):** **${puntosHombro} puntos**.\n\n`;
             
-            resultado += `<u>Cierre de Hombros (Pendiente)</u>\n`;
+            resultado += `<u>Forma de Escote y Hombros</u>\n`;
+            
+            // Cierres de escote (ej. 3, 2, 1) - Estimación simple
+            const cierresEscoteTramos = Math.min(3, Math.floor(puntosACerrarBase / 6));
+            const baseCierreEscote = Math.floor(puntosACerrarBase / cierresEscoteTramos);
+            const restoCierreEscote = puntosACerrarBase % cierresEscoteTramos;
+            
+            let cierresLadoEscote = [];
+            for (let i = 0; i < cierresEscoteTramos; i++) {
+                cierresLadoEscote.push(Math.floor(baseCierreEscote / 2) + (i < restoCierreEscote / 2 ? 1 : 0));
+            }
+            
+            resultado += `* **Escote (Por Separado):** Disminuir o cerrar puntos en el borde del escote para dar la curva. Por ejemplo, cerrando por lado: **${cierresLadoEscote.join(', ')} puntos**.\n`;
+            
             
             if (hilerasTrabajarAntesHombro > 0) {
                  resultado += `* **Trabajo Plano:** Trabajar recto (sin disminuciones) durante **${hilerasTrabajarAntesHombro} pasadas** hasta que queden ${hilerasCierreHombro} pasadas para terminar la sisa.\n`;
@@ -270,14 +287,13 @@ function calcularPatron() {
                  resultado += `* **Nota:** El cierre del hombro comienza inmediatamente.\n`;
             }
             
-            resultado += `* **Cierre Final:** Para dar pendiente, cerrar los **${puntosHombro} puntos** restantes en ${tramosCierreHombro} tramos iguales, en las últimas ${hilerasCierreHombro} pasadas. \n`;
-            resultado += `  * **Tramo de Cierre:** Cerrar en el borde de la sisa: **${cierreHombroStr} puntos**.\n\n`;
+            resultado += `* **Cierre de Hombro (Pendiente):** Para dar pendiente, cerrar los **${puntosHombro} puntos** restantes en ${tramosCierreHombro} tramos iguales, en las últimas ${hilerasCierreHombro} pasadas. \n`;
+            resultado += `  * **Tramos:** Cerrar en el borde de la sisa: **${cierreHombroStr} puntos**.\n\n`;
             
         } else { // CHAQUETA
-            resultado += `* **Inicio de Escote (desde Sisa):** Empezar a dar forma al escote a las **${hilerasInicioEscote} pasadas**.\n`;
+            resultado += `* **Inicio de Escote (desde Sisa):** Empezar a dar forma al escote a las **${pasadaInicioEscoteDesdeSisa} pasadas**.\n`;
             resultado += `* **Puntos a Cerrar (Escote):** **${puntosACerrarBase} puntos** (por cada delantero, para dar forma al escote).\n`;
-            
-            resultado += `  * **NOTA Tapeta:** Si has añadido **${puntosTapeta} puntos** para la tapeta, ciérralos *adicionalmente* al llegar al borde final del escote. (Los puntos del hombro restantes son **${puntosHombro}** por delantero).\n\n`;
+            resultado += `* **Puntos Restantes (Hombro):** **${puntosHombro} puntos** por delantero.\n\n`;
         }
 
         // 3. MANGAS
@@ -290,21 +306,20 @@ function calcularPatron() {
         const aumentosPorLado = Math.floor(totalAumentos / 2);
         const frecuenciaAumentos = (aumentosPorLado > 0) ? Math.round(largoMangaH / aumentosPorLado) : 0;
         
-        resultado += `* **Puntos de Montaje (Puño):** **${puntosPuño} puntos**.\n`;
-        resultado += `* **Puntos a alcanzar en la Sisa:** **${puntosSisaManga} puntos**.\n`;
+        resultado += `* **Montar:** **${puntosPuño} p.** (Puño de **${medidas['C Puño'].toFixed(1)} cm**).\n`;
+        resultado += `* **Tejer:** **${largoMangaH} pasadas** (**${largoMangaCm.toFixed(1)} cm**) hasta la sisa.\n`;
         
-        resultado += `* **Pasadas Total (Puño a Hombro):** **${largoMangaH} pasadas** (**${largoMangaCm.toFixed(1)} cm**).\n`;
-
         if (frecuenciaAumentos > 0) {
-            resultado += `* **Indicación de Aumentos:** Aumentar 1 punto a cada lado cada **${frecuenciaAumentos} pasadas** (${aumentosPorLado} veces) hasta alcanzar los puntos de sisa.\n\n`;
+            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (**${aumentosPorLado} veces**) hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
         } else {
-            resultado += `* **Indicación de Aumentos:** No se requieren aumentos (la medida inicial es suficiente).\n\n`;
+            resultado += `* **Aumentos:** No se requieren aumentos.\n\n`;
         }
+
 
         // 4. TIRA DE CUELLO
         resultado += `<u>4. Tira de Cuello</u>\n`;
-        resultado += `* **Puntos a Recoger/Montar (aprox.):** **${Math.round(medidas.CC * 0.9 * densidadP)} puntos** (90% del contorno cuello original).\n`;
-        resultado += `* **Ancho de la Tira de Cuello:** ${tiraCuelloCm} cm, lo que equivale a **${tiraCuelloPts} puntos** (tejer y coser/recoger).\n`;
+        resultado += `* **Puntos a Recoger/Montar (aprox.):** **${Math.round(medidas.CC * 0.9 * densidadP)} puntos** (**${medidas.CC.toFixed(1)} cm**).\n`;
+        resultado += `* **Tejer la Tira:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) y cerrar.\n`;
 
     } else if (metodoTejido === "ESCOTE" && densidadH) {
         // --- CÁLCULO TOP-DOWN (Escote a Bajo - Raglán) ---
@@ -314,12 +329,10 @@ function calcularPatron() {
         
         resultado += `<h4>🧶 Resultados de Tejido desde el Escote ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP} cm**.\n\n`;
 
         // 1. REPARTO INICIAL
-        // 💡 CORRECCIÓN 2: Asegurar que los puntos iniciales (ccPts) reflejen la corrección 1.
-        const puntosMontaje = ccPts; // Usamos el CC ajustado directamente
-
+        const puntosMontaje = ccPts; 
         const puntosBase = puntosMontaje - 4; 
         
         const pEspalda = Math.round(puntosBase * 0.33);
@@ -332,7 +345,6 @@ function calcularPatron() {
         
         let repartoStr;
         if (tipoPrenda === "JERSEY") {
-            // Si el delantero es impar, se ajusta al centro
             const pDelanteroFinal = pDelanteroBase;
             repartoStr = `**${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroFinal} p** (Delantero), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador).`;
         } else { // CHAQUETA
@@ -352,14 +364,11 @@ function calcularPatron() {
         // 2. AUMENTOS RAGLÁN - Lógica de Forzado y Puntos Sisa
         
         let raglanCmBase;
-        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-            // 💡 CORRECCIÓN 3: Ajustar el largo de Raglán forzado según la talla
-            // Bebé (0m-18m): 10 cm. Niños: 12 cm.
-            if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
-                 raglanCmBase = 10.0;
-            } else {
-                 raglanCmBase = 12.0;
-            }
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+             // Bebé (0m-18m): 10 cm.
+             raglanCmBase = 10.0;
+        } else if (tallaSeleccionada.includes('años')) {
+             raglanCmBase = 12.0;
         } else {
             // ADULTO: Usar el largo de sisa ajustado
             raglanCmBase = medidas.PSisa * 1.1; 
@@ -368,16 +377,13 @@ function calcularPatron() {
         const hilerasRaglan = Math.round(raglanCmBase * densidadH);
         const aumentosPorLado = Math.floor(hilerasRaglan / 2);
         
-        // Puntos totales añadidos en Raglán (para una manga)
-        const puntosAumentadosManga = aumentosPorLado; 
-        
         // Puntos totales que tendrá la manga al separar
-        const puntosMangaFinal = pManga + puntosAumentadosManga; 
+        const puntosMangaFinal = pManga + aumentosPorLado; 
         
         // Puntos Añadidos en la sisa (Aproximadamente 10-20% de los puntos de la manga)
         const puntosAnadirSisaPts = Math.max(4, Math.round(puntosMangaFinal * 0.1)); // Aseguramos un mínimo de 4 puntos
 
-        resultado += `<u>2. Aumentos y Separación (Ajuste Bebé/Niño)</u>\n`;
+        resultado += `<u>2. Aumentos y Separación (Raglán)</u>\n`;
         resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmBase.toFixed(1)} cm** (**${hilerasRaglan} pasadas**).\n`;
         resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
         resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa. \n\n`;
