@@ -158,7 +158,7 @@ function calcularPatron() {
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
     // Tapeta Suggestion (Calculada y redondeada al siguiente impar)
-    let puntosTapeta = tiraCuelloPts;
+    let puntosTapeta = Math.round(tiraCuelloCm * densidadP);
     if (puntosTapeta % 2 === 0) {
         puntosTapeta += 1; // Asegura que los puntos de la tapeta sean impares
     }
@@ -193,7 +193,7 @@ function calcularPatron() {
 
         resultado += `<h4>🧶 Resultados de Tejido (Bajo a Escote - Por Piezas) ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm** (Referencia de la medida antropométrica).\n\n`;
+        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
@@ -225,7 +225,7 @@ function calcularPatron() {
             resultado += `* **Puntos de Montaje:** **${puntosTotalDelantero} puntos**.\n`;
         } else { 
             resultado += `* **Puntos de Montaje (Base):** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
-            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos añadir **${puntosTapeta} puntos** (siendo impar para centrar el botón) al inicio de cada Delantero. </p>\n`;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos añadir **${puntosTapeta} puntos** *adicionales* al inicio de cada Delantero. </p>\n`;
         }
         
         resultado += `* **Pasadas Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
@@ -289,7 +289,7 @@ function calcularPatron() {
         
         resultado += `<h4>🧶 Resultados de Tejido (Escote a Bajo - Raglán) ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm** (Referencia de la medida antropométrica).\n\n`;
+        resultado += `* **Talla Seleccionada (Ancho de Busto):** **${medidas.CP} cm**.\n\n`;
 
         // 1. REPARTO INICIAL
         const puntosMontaje = Math.round(ccPts * 0.85);
@@ -307,7 +307,7 @@ function calcularPatron() {
             
             repartoStr = `**${pDelanteroParte} p** (Del. 1), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga), **1 p** (Marcador), **${pDelanteroParte} p** (Del. 2).`;
             
-            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos montar **${puntosTapeta} puntos** (siendo impar para centrar el botón) *adicionales* a cada lado antes de comenzar el reparto, o tejerla después.</p>\n`;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Opción Tapeta:** Si deseas añadir una tapeta de **${tiraCuelloCm.toFixed(1)} cm** de ancho, te sugerimos montar **${puntosTapeta} puntos** *adicionales* a cada lado antes de comenzar el reparto, o tejerla después.</p>\n`;
         }
         
         resultado += `<u>1. Tira de Cuello y Reparto Inicial</u>\n`;
@@ -316,13 +316,12 @@ function calcularPatron() {
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
         // 2. AUMENTOS RAGLÁN
-        const anchoHombroTeorico = (medidas.AE - (medidas.CC / 6)) / 2;
-        const raglanCm = medidas.PSisa + (anchoHombroTeorico / 2); 
-        
+        // La línea Raglán se calcula por los puntos de la manga necesarios (CA)
         const puntosAAumentarManga = Math.round(caPts * 1.15) - pManga; 
         const hilerasRaglan = Math.round((puntosAAumentarManga / 2) * 2); 
-        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : raglanCm.toFixed(1);
+        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : (medidas.PSisa * 1.1).toFixed(1); // Estimar con PSisa + 10% si no hay densidadH
         
+        // Puntos a añadir en la sisa: Usar PSisa vertical
         const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
 
         resultado += `<u>2. Aumentos y Separación</u>\n`;
@@ -330,10 +329,11 @@ function calcularPatron() {
         resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
         resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
         
-        // 3. LARGOS FINALES (CORREGIDO)
+        // 3. LARGOS FINALES
         const largoCuerpoCm = medidas.LT - medidas.PSisa;
         const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
         
+        // Largo Manga: Usar la medida LM (Largo Manga Total) - Largo Raglán REAL
         const largoMangaCm = medidas.LM - parseFloat(raglanCmFinal); 
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
