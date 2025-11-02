@@ -1,5 +1,5 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (ACTUALIZADAS POR INFERENCIA)
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS 
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
@@ -22,18 +22,17 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
     // Tallas de Mujer (Adulto) - Extrapoladas
-    '36': { CP: 84.0, CC: 34.0, CA: 34.0, 'C Puño': 28.0, LT: 58.0, LM: 59.0, PSisa: 22.0, AE: 42.0, CED: 10.0 },
-    '38': { CP: 88.0, CC: 35.0, CA: 35.5, 'C Puño': 29.0, LT: 59.0, LM: 59.5, PSisa: 23.0, AE: 43.0, CED: 10.3 },
-    '40': { CP: 92.0, CC: 36.0, CA: 37.0, 'C Puño': 30.0, LT: 60.0, LM: 60.0, PSisa: 24.0, AE: 44.0, CED: 10.5 },
-    '42': { CP: 98.0, CC: 37.5, CA: 39.0, 'C Puño': 31.0, LT: 61.0, LM: 60.5, PSisa: 25.5, AE: 45.5, CED: 10.8 },
-    '44': { CP: 104.0, CC: 39.0, CA: 41.0, 'C Puño': 32.0, LT: 62.0, LM: 61.0, PSisa: 27.0, AE: 47.0, CED: 11.0 },
-    '46': { CP: 110.0, CC: 40.5, CA: 43.0, 'C Puño': 33.0, LT: 63.0, LM: 61.5, PSisa: 28.5, AE: 48.5, CED: 11.3 },
-    '48': { CP: 116.0, CC: 42.0, CA: 45.0, 'C Puño': 34.0, LT: 64.0, LM: 62.0, PSisa: 30.0, AE: 50.0, CED: 11.5 },
-    '50': { CP: 120.0, CC: 44.0, CA: 47.0, 'C Puño': 35.0, LT: 65.0, LM: 63.0, PSisa: 31.0, AE: 52.0, CED: 12.0 }
+    '36': { CP: 84.0, CC: 34.0, CA: 34.0, 'C Puño': 28.0, LT: 58.0, LM: 37.0, PSisa: 22.0, AE: 42.0, CED: 10.0 }, // LM = 59.0 - 22.0 (raglán) = 37.0
+    '38': { CP: 88.0, CC: 35.0, CA: 35.5, 'C Puño': 29.0, LT: 59.0, LM: 36.5, PSisa: 23.0, AE: 43.0, CED: 10.3 }, // LM = 59.5 - 23.0 (raglán) = 36.5
+    '40': { CP: 92.0, CC: 36.0, CA: 37.0, 'C Puño': 30.0, LT: 60.0, LM: 36.0, PSisa: 24.0, AE: 44.0, CED: 10.5 }, // LM = 60.0 - 24.0 (raglán) = 36.0
+    '42': { CP: 98.0, CC: 37.5, CA: 39.0, 'C Puño': 31.0, LT: 61.0, LM: 35.5, PSisa: 25.5, AE: 45.5, CED: 10.8 }, // LM = 60.5 - 25.0 (raglán) = 35.5
+    '44': { CP: 104.0, CC: 39.0, CA: 41.0, 'C Puño': 32.0, LT: 62.0, LM: 36.0, PSisa: 27.0, AE: 47.0, CED: 11.0 }, // LM = 61.0 - 25.0 (raglán) = 36.0
+    '46': { CP: 110.0, CC: 40.5, CA: 43.0, 'C Puño': 33.0, LT: 63.0, LM: 38.0, PSisa: 28.5, AE: 48.5, CED: 11.3 }, // LM = 61.5 - 23.5 (raglán) = 38.0 (Usando el tope de 25cm para raglán)
+    '48': { CP: 116.0, CC: 42.0, CA: 45.0, 'C Puño': 34.0, LT: 64.0, LM: 37.0, PSisa: 30.0, AE: 50.0, CED: 11.5 }, // LM = 62.0 - 25.0 (raglán) = 37.0
+    '50': { CP: 120.0, CC: 44.0, CA: 47.0, 'C Puño': 35.0, LT: 65.0, LM: 38.0, PSisa: 31.0, AE: 52.0, CED: 12.0 } // LM = 63.0 - 25.0 (raglán) = 38.0
 };
 
 const ORDEN_TALLAS = {
-    // Orden de tallas ajustado
     'Bebé (Prematuro a 24m)': ['00 (Prematuro)', '0 meses', '1-3 meses', '3-6 meses', '6-9 meses', '9-12 meses', '12-15 meses', '15-18 meses', '18-24 meses'],
     'Niños (3 a 10 años)': ['3 años', '4 años', '6 años', '8 años', '10 años'],
     'Adulto (36 a 50)': ['36', '38', '40', '42', '44', '46', '48', '50']
@@ -44,14 +43,10 @@ const ORDEN_TALLAS = {
 // 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
 // ====================================================================
 
-/**
- * Rellena el select de tallas. 
- */
 function poblarTallas() {
     const select = document.getElementById('talla_seleccionada');
     if (!select) return; 
 
-    // Limpia el select antes de poblar
     select.innerHTML = '<option value="">Selecciona una Talla...</option>';
     
     for (const [label, tallas] of Object.entries(ORDEN_TALLAS)) {
@@ -71,9 +66,6 @@ function poblarTallas() {
     }
 }
 
-/**
- * Muestra u oculta los campos condicionales.
- */
 function manejarVisibilidadCampos() {
     const tipoPrenda = document.getElementById('tipo_prenda').value;
     const metodoGroup = document.getElementById('metodo-group');
@@ -94,7 +86,6 @@ function manejarVisibilidadCampos() {
     }
 }
 
-// Inicialización de funciones al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
     poblarTallas();
     const tipoPrendaSelect = document.getElementById('tipo_prenda');
@@ -103,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     manejarVisibilidadCampos();
     
-    // Añade el evento de cálculo al botón/formulario
     const botonCalcular = document.getElementById('calcular_patron');
     if (botonCalcular) {
         botonCalcular.addEventListener('click', calcularPatron);
@@ -156,14 +146,12 @@ function calcularPatron() {
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
     // --- LÓGICA DE HOLGURA (Holgura Normal/Estándar) ---
-    // Holgura base de 10 cm para adulto y 6 cm para niño para un ajuste cómodo
     let holguraCm = 10.0; 
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
         holguraCm = 6.0; 
     }
     
     // --- LÓGICA DE RAGLÁN BASE (Para ambas direcciones) ---
-    // Se calcula aquí para ser usada en ambos métodos (BAJO y ESCOTE)
     let raglanCmBase;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
          raglanCmBase = 10.0;
@@ -175,8 +163,8 @@ function calcularPatron() {
     }
 
     // Puntos y Hileras Base (USANDO HOLGURA)
-    const anchoPrendaCm = medidas.CP + holguraCm; // APLICA HOLGURA
-    const cpPts = Math.round(anchoPrendaCm * densidadP); // Puntos totales del contorno final (Prenda)
+    const anchoPrendaCm = medidas.CP + holguraCm; 
+    const cpPts = Math.round(anchoPrendaCm * densidadP); 
     
     const caPts = Math.round(medidas.CA * densidadP);
     
@@ -203,7 +191,7 @@ function calcularPatron() {
     
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
-    // Tapeta Suggestion (Calculada y redondeada al siguiente impar)
+    // Tapeta Suggestion
     let puntosTapeta = Math.round(tiraCuelloCm * densidadP);
     if (puntosTapeta % 2 === 0) {
         puntosTapeta += 1;
@@ -322,8 +310,8 @@ function calcularPatron() {
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         const puntosSisaManga = caPts; 
         
-        // CORRECCIÓN LARGO MANGA: Largo de Puño a Sisa (LM Total - Altura Raglán)
-        const largoMangaSisaPuñoCm = medidas.LM - raglanCmBase; 
+        // CORRECCIÓN LARGO MANGA: Si LM es de sisa a puño, no restamos el raglán.
+        const largoMangaSisaPuñoCm = medidas.LM; // Usa el LM directo de la tabla
         const largoMangaH = Math.round(largoMangaSisaPuñoCm * densidadH);
         
         const totalAumentos = puntosSisaManga - puntosPuño;
@@ -400,8 +388,8 @@ function calcularPatron() {
         const largoCuerpoCm = medidas.LT - raglanCmBase;
         const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
         
-        // CORRECCIÓN LARGO MANGA: Largo de Sisa a Puño (LM Total - Altura Raglán)
-        const largoMangaCm = medidas.LM - raglanCmBase; 
+        // Largo de Manga de Sisa a Puño
+        const largoMangaCm = medidas.LM; // Usa el LM directo de la tabla
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
         const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : (0.0).toFixed(1);
