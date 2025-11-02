@@ -4,31 +4,39 @@
 
 const MEDIDAS_ANTROPOMETRICAS = {
     // Tallas de Bebé (Prematuro a 24 meses)
-    '00 (Prematuro)': { CP: 37, CC: 20.0, CA: 10.5, C Puño: 9.0, LT: 23, LM: 14, PSisa: 8.0, AE: 15.5, CED: 3.0 },
-    '0 meses': { CP: 39, CC: 21.0, CA: 11.5, C Puño: 9.5, LT: 25, LM: 16, PSisa: 9.0, AE: 16.5, CED: 3.5 },
-    '1-3 meses': { CP: 41, CC: 22.0, CA: 12.5, C Puño: 10.0, LT: 27, LM: 18, PSisa: 9.5, AE: 17.5, CED: 3.5 },
-    '3-6 meses': { CP: 44, CC: 23.0, CA: 13.5, C Puño: 10.5, LT: 29, LM: 21, PSisa: 10.0, AE: 18.5, CED: 4.0 },
-    '6-12 meses': { CP: 47, CC: 24.0, CA: 14.5, C Puño: 11.0, LT: 32, LM: 25, PSisa: 10.5, AE: 19.5, CED: 4.5 },
-    '12-18 meses': { CP: 50, CC: 25.0, CA: 15.5, C Puño: 11.5, LT: 35, LM: 28, PSisa: 11.0, AE: 20.5, CED: 5.0 },
-    '18-24 meses': { CP: 53, CC: 26.0, CA: 16.5, C Puño: 12.0, LT: 38, LM: 30, PSisa: 11.5, AE: 21.5, CED: 5.5 },
+    '00 (Prematuro)': { CP: 37, CC: 20.0, CA: 10.5, 'C Puño': 9.0, LT: 23, LM: 14, PSisa: 8.0, AE: 15.5, CED: 3.0 },
+    '0 meses': { CP: 39, CC: 21.0, CA: 11.5, 'C Puño': 9.5, LT: 25, LM: 16, PSisa: 9.0, AE: 16.5, CED: 3.5 },
+    '1-3 meses': { CP: 41, CC: 22.0, CA: 12.5, 'C Puño': 10.0, LT: 27, LM: 18, PSisa: 9.5, AE: 17.5, CED: 3.5 },
+    '3-6 meses': { CP: 44, CC: 23.0, CA: 13.5, 'C Puño': 10.5, LT: 29, LM: 21, PSisa: 10.0, AE: 18.5, CED: 4.0 },
+    '6-12 meses': { CP: 47, CC: 24.0, CA: 14.5, 'C Puño': 11.0, LT: 32, LM: 25, PSisa: 10.5, AE: 19.5, CED: 4.5 },
+    '12-18 meses': { CP: 50, CC: 25.0, CA: 15.5, 'C Puño': 11.5, LT: 35, LM: 28, PSisa: 11.0, AE: 20.5, CED: 5.0 },
+    '18-24 meses': { CP: 53, CC: 26.0, CA: 16.5, 'C Puño': 12.0, LT: 38, LM: 30, PSisa: 11.5, AE: 21.5, CED: 5.5 },
     
     // Tallas de Niños
-    '3 años': { CP: 56, CC: 27.0, CA: 17.5, C Puño: 13.0, LT: 40, LM: 33, PSisa: 12.0, AE: 24.0, CED: 6.0 },
-    '4 años': { CP: 60, CC: 28.0, CA: 18.5, C Puño: 13.5, LT: 42, LM: 36, PSisa: 12.5, AE: 25.0, CED: 6.2 },
-    '6 años': { CP: 64, CC: 29.5, CA: 19.5, C Puño: 14.0, LT: 46, LM: 40, PSisa: 13.5, AE: 27.0, CED: 6.5 },
-    '8 años': { CP: 70, CC: 31.0, CA: 21.0, C Puño: 14.5, LT: 50, LM: 45, PSisa: 14.5, AE: 29.0, CED: 6.8 },
-    '10 años': { CP: 76, CC: 32.5, CA: 22.5, C Puño: 15.0, LT: 54, LM: 49, PSisa: 15.5, AE: 31.0, CED: 7.0 },
+    '3 años': { CP: 56, CC: 27.0, CA: 17.5, 'C Puño': 13.0, LT: 40, LM: 33, PSisa: 12.0, AE: 24.0, CED: 6.0 },
+    '4 años': { CP: 60, CC: 28.0, CA: 18.5, 'C Puño': 13.5, LT: 42, LM: 36, PSisa: 12.5, AE: 25.0, CED: 6.2 },
+    '6 años': { CP: 64, CC: 29.5, CA: 19.5, 'C Puño': 14.0, LT: 46, LM: 40, PSisa: 13.5, AE: 27.0, CED: 6.5 },
+    '8 años': { CP: 70, CC: 31.0, CA: 21.0, 'C Puño': 14.5, LT: 50, LM: 45, PSisa: 14.5, AE: 29.0, CED: 6.8 },
+    '10 años': { CP: 76, CC: 32.5, CA: 22.5, 'C Puño': 15.0, LT: 54, LM: 49, PSisa: 15.5, AE: 31.0, CED: 7.0 },
     
     // Tallas de Mujer (Adulto)
-    '36': { CP: 84, CC: 36.0, CA: 26.0, C Puño: 20.0, LT: 58, LM: 58.5, PSisa: 19.0, AE: 33.0, CED: 7.5 },
-    '38': { CP: 88, CC: 37.0, CA: 27.5, C Puño: 20.5, LT: 59, LM: 59.0, PSisa: 19.8, AE: 34.0, CED: 7.8 },
-    '40': { CP: 92, CC: 38.0, CA: 29.0, C Puño: 21.0, LT: 60, LM: 60.0, PSisa: 20.6, AE: 35.0, CED: 8.0 },
-    '42': { CP: 98, CC: 39.5, CA: 31.0, C Puño: 22.0, LT: 61, LM: 60.5, PSisa: 21.9, AE: 36.5, CED: 8.3 },
-    '44': { CP: 104, CC: 41.0, CA: 33.0, C Puño: 23.0, LT: 62, LM: 61.0, PSisa: 23.2, AE: 38.0, CED: 8.6 },
-    '46': { CP: 110, CC: 42.5, CA: 36.0, C Puño: 24.0, LT: 63, LM: 61.5, PSisa: 24.5, AE: 39.5, CED: 9.0 },
-    '48': { CP: 118, CC: 44.5, CA: 38.0, C Puño: 25.5, LT: 64, LM: 62.0, PSisa: 26.0, AE: 41.5, CED: 9.3 },
-    '50': { CP: 126, CC: 46.5, CA: 40.0, C Puño: 27.0, LT: 65, LM: 62.0, PSisa: 27.5, AE: 43.5, CED: 9.6 }
+    '36': { CP: 84, CC: 36.0, CA: 26.0, 'C Puño': 20.0, LT: 58, LM: 58.5, PSisa: 19.0, AE: 33.0, CED: 7.5 },
+    '38': { CP: 88, CC: 37.0, CA: 27.5, 'C Puño': 20.5, LT: 59, LM: 59.0, PSisa: 19.8, AE: 34.0, CED: 7.8 },
+    '40': { CP: 92, CC: 38.0, CA: 29.0, 'C Puño': 21.0, LT: 60, LM: 60.0, PSisa: 20.6, AE: 35.0, CED: 8.0 },
+    '42': { CP: 98, CC: 39.5, CA: 31.0, 'C Puño': 22.0, LT: 61, LM: 60.5, PSisa: 21.9, AE: 36.5, CED: 8.3 },
+    '44': { CP: 104, CC: 41.0, CA: 33.0, 'C Puño': 23.0, LT: 62, LM: 61.0, PSisa: 23.2, AE: 38.0, CED: 8.6 },
+    '46': { CP: 110, CC: 42.5, CA: 36.0, 'C Puño': 24.0, LT: 63, LM: 61.5, PSisa: 24.5, AE: 39.5, CED: 9.0 },
+    '48': { CP: 118, CC: 44.5, CA: 38.0, 'C Puño': 25.5, LT: 64, LM: 62.0, PSisa: 26.0, AE: 41.5, CED: 9.3 },
+    '50': { CP: 126, CC: 46.5, CA: 40.0, 'C Puño': 27.0, LT: 65, LM: 62.0, PSisa: 27.5, AE: 43.5, CED: 9.6 }
 };
+
+// **NUEVA CONSTANTE: Orden explícito de las tallas para asegurar la carga.**
+const ORDEN_TALLAS = {
+    'Bebé (Prematuro a 24m)': ['00 (Prematuro)', '0 meses', '1-3 meses', '3-6 meses', '6-12 meses', '12-18 meses', '18-24 meses'],
+    'Niños (3 a 10 años)': ['3 años', '4 años', '6 años', '8 años', '10 años'],
+    'Adulto (36 a 50)': ['36', '38', '40', '42', '44', '46', '48', '50']
+};
+
 
 // ====================================================================
 // 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
@@ -39,30 +47,28 @@ const MEDIDAS_ANTROPOMETRICAS = {
  */
 function poblarTallas() {
     const select = document.getElementById('talla_seleccionada');
+    // Si el elemento no existe, salimos
+    if (!select) return; 
+
     select.innerHTML = '<option value="">Selecciona una Talla...</option>';
     
-    // Agrupar y ordenar para mejor UX
-    const tallasBebe = Object.keys(MEDIDAS_ANTROPOMETRICAS).filter(t => t.includes('meses') || t.includes('00') || t.includes('0'));
-    const tallasNino = Object.keys(MEDIDAS_ANTROPOMETRICAS).filter(t => t.includes('años'));
-    const tallasAdulto = Object.keys(MEDIDAS_ANTROPOMETRICAS).filter(t => !isNaN(parseInt(t)) && parseInt(t) >= 36);
-
-    const grupos = [
-        { label: "Bebé (Prematuro a 24m)", tallas: tallasBebe.sort() },
-        { label: "Niños (3 a 10 años)", tallas: tallasNino },
-        { label: "Adulto (36 a 50)", tallas: tallasAdulto.map(t => parseInt(t)).sort((a, b) => a - b).map(String) }
-    ];
-
-    grupos.forEach(grupo => {
+    // Iteramos sobre el orden definido
+    for (const [label, tallas] of Object.entries(ORDEN_TALLAS)) {
         const optgroup = document.createElement('optgroup');
-        optgroup.label = grupo.label;
-        grupo.tallas.forEach(talla => {
-            const option = document.createElement('option');
-            option.value = talla;
-            option.textContent = `Talla ${talla}`;
-            optgroup.appendChild(option);
+        optgroup.label = label;
+        
+        tallas.forEach(tallaKey => {
+            // Verificamos que la clave exista en el diccionario de medidas
+            if (MEDIDAS_ANTROPOMETRICAS.hasOwnProperty(tallaKey)) { 
+                const option = document.createElement('option');
+                option.value = tallaKey;
+                option.textContent = `Talla ${tallaKey}`;
+                optgroup.appendChild(option);
+            }
         });
+        
         select.appendChild(optgroup);
-    });
+    }
 }
 
 /**
@@ -76,23 +82,28 @@ function manejarVisibilidadCampos() {
     if (tipoPrenda === 'CM_DESEADOS') {
         metodoGroup.style.display = 'none';
         cmGroup.style.display = 'block';
+        document.getElementById('talla_seleccionada').removeAttribute('required'); // No se requiere talla para CM
     } else if (tipoPrenda === 'JERSEY' || tipoPrenda === 'CHAQUETA') {
         metodoGroup.style.display = 'block';
         cmGroup.style.display = 'none';
+        document.getElementById('talla_seleccionada').setAttribute('required', 'required');
     } else {
         metodoGroup.style.display = 'none';
         cmGroup.style.display = 'none';
+        document.getElementById('talla_seleccionada').setAttribute('required', 'required');
     }
 }
 
-// Inicializar al cargar
+// Inicializar al cargar: Aseguramos que se llame a poblarTallas después de que el DOM esté listo.
 document.addEventListener('DOMContentLoaded', () => {
     poblarTallas();
     document.getElementById('tipo_prenda').addEventListener('change', manejarVisibilidadCampos);
+    // Asegurar que el elemento esté visible al cargar si es necesario
+    manejarVisibilidadCampos();
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO
+// 3. LÓGICA CENTRAL DE CÁLCULO (Se mantiene igual, solo se actualiza el uso de claves)
 // ====================================================================
 
 function calcularPatron() {
@@ -107,10 +118,6 @@ function calcularPatron() {
     // 1. Validaciones
     if (isNaN(puntosMuestra) || puntosMuestra <= 0) {
         resultadoDiv.innerHTML = '<p class="error">Error: Debe introducir los puntos de la muestra de tensión (en 10 cm).</p>';
-        return;
-    }
-    if (!tallaSeleccionada && tipoPrenda !== 'CM_DESEADOS') {
-        resultadoDiv.innerHTML = '<p class="error">Error: Debe seleccionar una talla.</p>';
         return;
     }
     if (!tipoPrenda) {
@@ -133,20 +140,21 @@ function calcularPatron() {
         return;
     }
 
+    if (!tallaSeleccionada) {
+         resultadoDiv.innerHTML = '<p class="error">Error: Debe seleccionar una talla.</p>';
+        return;
+    }
+
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
     // Determinar Rango y Ancho de Tira de Cuello (cm)
     let tiraCuelloCm;
-    let rango;
-    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
         tiraCuelloCm = 1.5;
-        rango = "bebé";
     } else if (tallaSeleccionada.includes('años')) {
         tiraCuelloCm = 2.0;
-        rango = "niño";
     } else {
         tiraCuelloCm = 2.5;
-        rango = "adulto";
     }
 
     // Puntos y Hileras Base
@@ -251,10 +259,10 @@ function calcularPatron() {
         
         let repartoStr;
         if (tipoPrenda === "JERSEY") {
-            repartoStr = `**${p_manga} p** (Manga 1), **1 p** (Marcador), **${p_delantero_base} p** (Delantero), **1 p** (Marcador), **${p_manga} p** (Manga 2), **1 p** (Marcador).`;
+            repartoStr = `**${pManga} p** (Manga 1), **1 p** (Marcador), **${pDelanteroBase} p** (Delantero), **1 p** (Marcador), **${pManga} p** (Manga 2), **1 p** (Marcador).`;
         } else { // CHAQUETA
             const pDelanteroParte = Math.round(pDelanteroBase / 2);
-            const puntosTapetaRaglan = Math.round(2 * densidadP);
+            const puntosTapetaRaglan = Math.round(2 * densidadP); // 2 cm de borde
             repartoStr = `**${pDelanteroParte + puntosTapetaRaglan} p** (Del. 1), **1 p** (Marcador), **${pManga} p** (Manga 1), **1 p** (Marcador), **${pEspalda} p** (Espalda), **1 p** (Marcador), **${pManga} p** (Manga 2), **1 p** (Marcador), **${pDelanteroParte + puntosTapetaRaglan} p** (Del. 2).`;
             resultado += `* **Nota Chaqueta:** Los delanteros inician con **${puntosTapetaRaglan} puntos** extra para el borde de la tapeta.\n`;
         }
