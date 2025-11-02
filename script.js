@@ -42,12 +42,13 @@ const ORDEN_TALLAS = {
 // ====================================================================
 
 /**
- * Rellena el select de tallas.
+ * Rellena el select de tallas. (Corregido)
  */
 function poblarTallas() {
     const select = document.getElementById('talla_seleccionada');
     if (!select) return; 
 
+    // Limpia el select antes de poblar
     select.innerHTML = '<option value="">Selecciona una Talla...</option>';
     
     for (const [label, tallas] of Object.entries(ORDEN_TALLAS)) {
@@ -55,7 +56,8 @@ function poblarTallas() {
         optgroup.label = label;
         
         tallas.forEach(tallaKey => {
-            if (MEDIDAS_ANTROPOMETRICAS.hasOwnProperty(tallaKey)) { 
+            // Usa 'in' o hasOwnProperty para verificar la clave
+            if (tallaKey in MEDIDAS_ANTROPOMETRICAS) { 
                 const option = document.createElement('option');
                 option.value = tallaKey;
                 option.textContent = `Talla ${tallaKey}`;
@@ -90,9 +92,13 @@ function manejarVisibilidadCampos() {
     }
 }
 
+// Inicialización de funciones al cargar el DOM (Asegura que el select existe)
 document.addEventListener('DOMContentLoaded', () => {
     poblarTallas();
-    document.getElementById('tipo_prenda').addEventListener('change', manejarVisibilidadCampos);
+    const tipoPrendaSelect = document.getElementById('tipo_prenda');
+    if (tipoPrendaSelect) {
+        tipoPrendaSelect.addEventListener('change', manejarVisibilidadCampos);
+    }
     manejarVisibilidadCampos();
 });
 
@@ -326,4 +332,40 @@ function calcularPatron() {
         
         resultado += `<u>1. Tira de Cuello y Reparto Inicial</u>\n`;
         resultado += `* **Puntos Totales de Montaje:** **${puntosMontaje} puntos**.\n`;
-        resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los
+        resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los puntos de montaje para formar la tira del cuello.\n`;
+        resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
+
+        // 2. AUMENTOS RAGLÁN
+        const puntosAAumentarManga = Math.round(caPts * 1.15) - pManga; 
+        const hilerasRaglan = Math.round((puntosAAumentarManga / 2) * 2); 
+        const raglanCmFinal = (densidadH > 0) ? (hilerasRaglan / densidadH).toFixed(1) : (medidas.PSisa * 1.1).toFixed(1);
+        
+        const puntosAnadirSisaPts = Math.round((medidas.PSisa / 2) * densidadP);
+
+        resultado += `<u>2. Aumentos y Separación</u>\n`;
+        resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmFinal} cm** (**${hilerasRaglan} pasadas**).\n`;
+        resultado += `* **Instrucción de Aumentos:** Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
+        resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa.\n\n`;
+        
+        // 3. LARGOS FINALES
+        const largoCuerpoCm = medidas.LT - medidas.PSisa;
+        const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
+        
+        const largoMangaCm = medidas.LM - parseFloat(raglanCmFinal); 
+        const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
+
+        const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : 0;
+        const finalLargoMangaCm = largoMangaCm > 0 ? largoMangaCm.toFixed(1) : 0;
+        
+        resultado += `<u>3. Largos Finales</u>\n`;
+        resultado += `* **Largo del Cuerpo (desde Sisa a Bajo):** **${finalLargoCuerpoCm} cm** (**${largoCuerpoRestanteH} pasadas**).\n`;
+        resultado += `* **Largo de la Manga (desde Sisa a Puño):** **${finalLargoMangaCm} cm** (**${largoMangaRestanteH} pasadas**).\n`;
+
+    } else {
+        resultadoDiv.innerHTML = '<p class="error">Error: Por favor, complete todos los campos obligatorios y/o introduzca las **pasadas en 10 cm** para calcular las instrucciones de tejido.</p>';
+        return;
+    }
+
+    // El reemplazo final asegura que negritas (**) se muestren como negritas (<b>) en HTML
+    resultadoDiv.innerHTML = resultado.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+}
