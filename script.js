@@ -1,365 +1,528 @@
-/**
- * Lógica para la Calculadora de Puntos de Rincón de Labores
- * Incluye la Base de Datos de Tallas y la Lógica Específica para Raglán
- */
-
-// --- 1. BASE DE DATOS DE TALLAS CON AJUSTES DE HOLGURA ---
-// NOTA: Los valores se basan en las tablas proporcionadas, aplicando la holgura de comodidad al ancho del pecho.
-
-const SIZES_DATA = {
-    // --- TALLAS DE ADULTO (Holgura de 10 cm aplicada al Contorno de Tórax) ---
-    adult: {
-        type: 'adult',
-        holguraContorno: 10,
-        dropEscote: 2.5, // Ajuste para compensar tira de cuello (2.5 cm)
-        holguraRaglan: 3, // Ajuste vertical para Raglan (3 cm)
-        xs: { label: 'XS (32-34)', contornoFinal: 84 + 10, cuello: 33, largoSisa: 20, contornoBrazo: 27, contornoPuno: 16, largoMangaSisa: 45, largoSisaCadera: 38 },
-        s: { label: 'S (36-38)', contornoFinal: 89 + 10, cuello: 34, largoSisa: 21, contornoBrazo: 29, contornoPuno: 17, largoMangaSisa: 46, largoSisaCadera: 39 },
-        m: { label: 'M (40-42)', contornoFinal: 95 + 10, cuello: 35, largoSisa: 22, contornoBrazo: 31, contornoPuno: 18, largoMangaSisa: 47, largoSisaCadera: 40 },
-        l: { label: 'L (42-44)', contornoFinal: 103 + 10, cuello: 36, largoSisa: 23, contornoBrazo: 33, contornoPuno: 19, largoMangaSisa: 48, largoSisaCadera: 41 },
-        xl: { label: 'XL (46-48)', contornoFinal: 111 + 10, cuello: 37, largoSisa: 24, contornoBrazo: 35, contornoPuno: 20, largoMangaSisa: 49, largoSisaCadera: 42 },
-        xxl: { label: 'XXL (50-52)', contornoFinal: 119 + 10, cuello: 38, largoSisa: 25, contornoBrazo: 37, contornoPuno: 21, largoMangaSisa: 49, largoSisaCadera: 43 }
-    },
-    // --- TALLAS DE NIÑO (Holgura promedio de 6 cm aplicada al Contorno de Tórax) ---
-    child: {
-        type: 'child',
-        holguraContorno: 6,
-        dropEscote: 2.0, // Ajuste para compensar tira de cuello (2.0 cm)
-        holguraRaglan: 3, // Ajuste vertical para Raglan (3 cm)
-        '2y': { label: '2 Años', contornoFinal: 58 + 6, cuello: 28, largoSisa: 13, contornoBrazo: 21, contornoPuno: 14, largoMangaSisa: 25, largoSisaCadera: 22 },
-        '4y': { label: '4 Años', contornoFinal: 64 + 6, cuello: 30, largoSisa: 14, contornoBrazo: 23, contornoPuno: 15, largoMangaSisa: 29, largoSisaCadera: 26 },
-        '6y': { label: '6 Años', contornoFinal: 68 + 6, cuello: 31, largoSisa: 15, contornoBrazo: 25, contornoPuno: 16, largoMangaSisa: 33, largoSisaCadera: 30 },
-        '8y': { label: '8 Años', contornoFinal: 72 + 6, cuello: 32, largoSisa: 16, contornoBrazo: 27, contornoPuno: 17, largoMangaSisa: 37, largoSisaCadera: 34 },
-        '10y': { label: '10 Años', contornoFinal: 76 + 6, cuello: 33, largoSisa: 17, contornoBrazo: 28, contornoPuno: 18, largoMangaSisa: 41, largoSisaCadera: 38 }
-    }
-};
-
-// --- 2. SELECTORES DE ELEMENTOS DEL DOM ---
-const $ = (id) => document.getElementById(id);
-const $stitches = $('stitches');
-const $rows = $('rows');
-const $garmentType = $('garmentType');
-const $customCm = $('customCm');
-const $constructionMethod = $('constructionMethod');
-const $size = $('size');
-const $garmentPiece = $('garmentPiece');
-const $calculateBtn = $('calculate-btn');
-const $resetBtn = $('reset-btn');
-const $errorContainer = $('error-container');
-const $resultsContainer = $('results-container');
-
-// Contenedores
-const $customCmContainer = $('custom-cm-container');
-const $constructionMethodContainer = $('construction-method-container');
-const $sizeContainer = $('size-container');
-const $garmentPieceContainer = $('garment-piece-container');
-
-// --- 3. FUNCIONES DE UTILIDAD Y LÓGICA PRINCIPAL ---
-
-/** Muestra un mensaje de error y oculta los resultados */
-function displayError(message) {
-    $errorContainer.textContent = message;
-    $errorContainer.classList.remove('hidden');
-    $resultsContainer.innerHTML = '';
-}
-
-/** Oculta el mensaje de error */
-function clearError() {
-    $errorContainer.classList.add('hidden');
-    $errorContainer.textContent = '';
-}
-
-/** Limpia los resultados */
-function clearResults() {
-    $resultsContainer.innerHTML = '';
-}
-
-/** Genera la estructura HTML de un resultado */
-function renderResult(title, content, notes = '') {
-    return `
-        <div class="bg-purple-50 p-6 rounded-lg shadow-xl border-t-4 border-purple-500 mb-6">
-            <h3 class="text-xl font-bold text-purple-800 mb-3">${title}</h3>
-            <div class="text-3xl font-extrabold text-pink-600">${content}</div>
-            ${notes ? `<p class="mt-4 text-sm text-gray-600 border-l-2 border-gray-400 pl-3">${notes}</p>` : ''}
-        </div>
-    `;
-}
-
-/** Genera el CTA de Rincón de labores */
-function renderCTA() {
-    return `
-        <div class="text-center mt-6 p-4 bg-pink-100 rounded-lg border-2 border-pink-300">
-            <p class="text-lg text-pink-700 font-bold">
-                ¡Comparte tu creación!
-            </p>
-            <p class="text-gray-600 mt-1">
-                Nos encantaría ver tu proyecto terminado. Sube una foto a Instagram y etiquétanos 
-                <a href="https://www.instagram.com/rincondlabores/" target="_blank" rel="noopener noreferrer" class="text-purple-600 font-semibold hover:underline">
-                    @rincondlabores
-                </a>.
-            </p>
-        </div>
-    `;
-}
-
-/** Lógica de Cálculo Principal */
-function calculate() {
-    clearError();
-    clearResults();
-
-    const stitches = parseFloat($stitches.value);
-    const rows = parseFloat($rows.value) || 0; // rows es opcional
-    const garmentType = $garmentType.value;
-    const constructionMethod = $constructionMethod.value;
-    const sizeKey = $size.value;
-    const garmentPiece = $garmentPiece.value;
-    const customCm = parseFloat($customCm.value);
-
-    // Validación inicial de la muestra
-    if (isNaN(stitches) || stitches <= 0) {
-        displayError('🚨 Por favor, introduce un valor válido para "Puntos en 10 cm" (Muestra de Tensión).');
-        return;
-    }
-
-    const stitchesPerCm = stitches / 10;
-    const rowsPerCm = rows / 10;
-
-    let htmlOutput = '';
-
-    // --- CÁLCULO PERSONALIZADO (Medida en cm deseados) ---
-    if (garmentType === 'custom') {
-        if (isNaN(customCm) || customCm <= 0) {
-            displayError('🚨 Por favor, introduce los "Centímetros Deseados" para el cálculo personalizado.');
-            return;
-        }
-
-        const requiredStitches = Math.round(customCm * stitchesPerCm);
-        
-        htmlOutput += renderResult(
-            'Resultado Personalizado',
-            `${requiredStitches} puntos`,
-            `Para un ancho de ${customCm} cm, necesitas montar ${requiredStitches} puntos.`
-        );
-
-        if (rows > 0) {
-            const requiredRows = Math.round(customCm * rowsPerCm);
-            htmlOutput += renderResult(
-                'Pasadas por Centímetro (Recomendado)',
-                `${requiredRows} pasadas/vueltas`,
-                `Para una altura de ${customCm} cm, necesitas tejer ${requiredRows} pasadas/vueltas.`
-            );
-        }
-
-        $resultsContainer.innerHTML = htmlOutput + renderCTA();
-        return;
-    }
-
-    // --- CÁLCULO CON TALLAS ESTÁNDAR ---
-    if (!sizeKey || !constructionMethod || !garmentPiece) {
-        displayError('🚨 Por favor, completa la selección de Talla, Método y Pieza para calcular la prenda.');
-        return;
-    }
-
-    // Determinar el grupo de tallas
-    const sizeGroup = SIZES_DATA.adult.hasOwnProperty(sizeKey) ? SIZES_DATA.adult : SIZES_DATA.child;
-    const sizeData = sizeGroup[sizeKey];
-    const commonData = sizeGroup;
-    const isAdult = commonData.type === 'adult';
-
-    // --- TOP-DOWN (RAGLÁN) LÓGICA ---
-    if (constructionMethod === 'top-down') {
-        htmlOutput = calculateTopDown(sizeData, commonData, stitchesPerCm, rowsPerCm, garmentType, garmentPiece);
-    } else {
-        // La lógica de Bottom-Up Set-in puede ser añadida aquí si es requerida más tarde.
-        // Por ahora, nos enfocamos en el Raglán Top-Down según la última actualización de datos.
-        displayError('⚠️ El método "Tejido por piezas" (Bottom-Up) aún está en desarrollo. Por favor, selecciona el método "Empezar por el escote" (Raglán) para ver los cálculos completos basados en tus tablas.');
-        return;
-    }
-
-    $resultsContainer.innerHTML = htmlOutput + renderCTA();
-}
-
-/**
- * Lógica específica para Raglán Top-Down.
- */
-function calculateTopDown(sizeData, commonData, stitchesPerCm, rowsPerCm, garmentType, garmentPiece) {
-    let output = '';
-
-    // 1. CÁLCULO DE PUNTOS A MONTAR (CUERPO COMPLETO)
-    const puntosCuello = Math.round(sizeData.cuello * stitchesPerCm);
-    output += renderResult(
-        '1. Puntos a Montar (Cuello)',
-        `${puntosCuello} puntos`,
-        `Esta es la cantidad de puntos que debes montar inicialmente para el contorno de tu cuello.`
-    );
-
-    // 2. DISTRIBUCIÓN INICIAL DE PUNTOS
-    const puntosRaglanFijos = 8; // 2 puntos por línea de raglán x 4 líneas
-    const restantes = puntosCuello - puntosRaglanFijos;
-    let puntosEspalda = Math.round(restantes / 3);
-    let puntosDelanteroTotal = restantes - puntosEspalda; // Delantero + 2 Mangas
-
-    // El resto se divide entre Delantero y Mangas. Para Raglán, la distribución suele ser: 1/3 Espalda, 1/3 Delantero, 1/6 cada manga)
-    
-    // Reparto Clásico (1/3, 1/3, 1/6, 1/6)
-    puntosEspalda = Math.round(restantes / 3);
-    let puntosDelantero = puntosEspalda; // 1/3
-    const puntosRestantesParaMangas = restantes - puntosEspalda - puntosDelantero;
-    let puntosManga = Math.round(puntosRestantesParaMangas / 2); // 1/6 cada manga
-    
-    // Ajuste final por si el redondeo dejó puntos sobrantes (los asignamos a la espalda)
-    const totalRepartido = puntosEspalda + puntosDelantero + (puntosManga * 2) + puntosRaglanFijos;
-    puntosEspalda += puntosCuello - totalRepartido; 
-
-    // Adaptación para Chaqueta (Cárdigan)
-    if (garmentType === 'chaqueta') {
-        puntosDelantero = Math.round(puntosDelantero / 2); // Dividido en dos frentes
-    }
-
-    let distribucionNota = `
-        **Espalda:** ${puntosEspalda} puntos<br>
-        **Línea Raglán (x4):** ${puntosRaglanFijos / 4} puntos cada una<br>
-        **Mangas (x2):** ${puntosManga} puntos cada una<br>
-        ${garmentType === 'jersey' 
-            ? `**Delantero:** ${puntosDelantero} puntos` 
-            : `**Delantero (x2):** ${puntosDelantero} puntos (Cada lado)`
-        }
-    `;
-
-    if (garmentType === 'chaqueta') {
-        distribucionNota += `<br><span class="font-bold text-red-700">¡ATENCIÓN CHAQUETA!</span> Recuerda añadir los puntos necesarios para la tapeta de botones a cada lado del Delantero (Generalmente unos 5-8 puntos extra).`;
-    }
-
-    output += renderResult(
-        '2. Distribución Inicial de Puntos',
-        `Total ${puntosCuello} puntos repartidos`,
-        distribucionNota
-    );
-
-    // 3. CÁLCULO DE LA LÍNEA RAGLÁN Y AUMENTOS
-    const raglanCmFinal = sizeData.largoSisa + commonData.holguraRaglan; // Largo de Sisa + 3 cm de holgura vertical
-    const raglanRowsFinal = (rows > 0) ? Math.round(raglanCmFinal * rowsPerCm) : 'N/A';
-    
-    // Puntos finales del cuerpo y mangas en la sisa
-    const contornoTotalCuerpo = sizeData.contornoFinal - (sizeData.contornoBrazo * 2); // Pecho - Ambos Brazos
-    const anchoFinalEspaldaDelantero = Math.round(contornoTotalCuerpo * stitchesPerCm);
-    const puntosFinalBrazo = Math.round(sizeData.contornoBrazo * stitchesPerCm);
-
-    // Aumentos necesarios para llegar al ancho final de la sisa (ej: Espalda)
-    const aumentosNecesariosPorLado = Math.round((anchoFinalEspaldaDelantero / 2 - puntosEspalda) / 2); // Aumentos por línea de raglán
-
-    output += renderResult(
-        '3. Guía para Aumentos Raglán',
-        `Altura final de Raglán: ${raglanCmFinal} cm${rows > 0 ? ` (${raglanRowsFinal} hileras)` : ''}`,
-        `
-            Debes aumentar **${aumentosNecesariosPorLado} puntos en cada lado** de la espalda y delantero, y un total de **${puntosFinalBrazo - puntosManga} puntos en cada manga**.<br>
-            ${rows > 0 
-                ? `Sugerencia: Reparte los aumentos para realizar 1 aumento doble (antes y después de las líneas Raglán) aproximadamente cada **${Math.floor(raglanRowsFinal / aumentosNecesariosPorLado)} hileras** hasta alcanzar los ${raglanCmFinal} cm de altura.`
-                : 'TIP: Realiza aumentos en las vueltas del derecho hasta que la línea Raglán mida un total de aproximadamente ' + raglanCmFinal + ' cm.'
-            }
-        `
-    );
-
-    // 4. GUÍA DE DISMINUCIONES DE MANGA (Si se selecciona Mangas)
-    if (garmentPiece === 'mangas') {
-        const totalDisminuciones = puntosFinalBrazo - Math.round(sizeData.contornoPuno * stitchesPerCm);
-        const largoMangaRows = (rows > 0) ? Math.round(sizeData.largoMangaSisa * rowsPerCm) : 'N/A';
-        const frecuencia = (rows > 0 && totalDisminuciones > 0) ? Math.floor(largoMangaRows / (totalDisminuciones)) : 'N/A';
-
-        output += renderResult(
-            '4. Disminuciones en la Manga',
-            `Total: ${totalDisminuciones} disminuciones por manga`,
-            `
-                Para ir desde la sisa hasta el puño necesitas disminuir **${totalDisminuciones} puntos** en total en el largo de ${sizeData.largoMangaSisa} cm.<br>
-                ${rows > 0 
-                    ? `Sugerencia: Haz 1 disminución a cada lado de la manga aproximadamente cada **${frecuencia * 2} hileras** para repartir los puntos de forma uniforme.`
-                    : 'TIP: Realiza las disminuciones distribuidas uniformemente en la longitud de la manga, especialmente al inicio y justo antes del puño.'
-                }
-            `
-        );
-    }
-
-    // 5. NOTA CLAVE DE ALTURA DEL ESCOTE
-    const alturaSisaCaderaRows = (rows > 0) ? Math.round(sizeData.largoSisaCadera * rowsPerCm) : 'N/A';
-    const alturaEscoteFinal = sizeData.largoSisaCadera + commonData.dropEscote;
-
-    output += renderResult(
-        '5. Altura de Cuerpo y Escote',
-        `Altura de Sisa a Cadera: ${sizeData.largoSisaCadera} cm${rows > 0 ? ` (${alturaSisaCaderaRows} hileras)` : ''}`,
-        `
-            Una vez separados el cuerpo y las mangas, teje el cuerpo hasta la altura deseada.<br>
-            **AJUSTE DE ESCOTE:** La altura del escote delantero debe ser **${commonData.dropEscote} cm más baja** que el escote trasero para compensar la tira del cuello y el ajuste.
-        `
-    );
-    return output;
-}
-
-// --- 4. GESTIÓN DE EVENTOS Y LÓGICA DE INTERFAZ ---
-
-/** Llena el select de tallas en función del tipo de prenda */
-function populateSizeOptions() {
-    const options = [
-        '<option value="" disabled selected>Elige una talla...</option>',
-        `<optgroup label="Adultos (Recomendado)"></optgroup>`
-    ];
-    
-    // Adult sizes
-    for (const key in SIZES_DATA.adult) {
-        if (key !== 'type' && key !== 'holguraContorno' && key !== 'dropEscote' && key !== 'holguraRaglan') {
-            options.push(`<option value="${key}">${SIZES_DATA.adult[key].label}</option>`);
-        }
-    }
-
-    options.push(`<optgroup label="Niños"></optgroup>`);
-    // Child sizes
-    for (const key in SIZES_DATA.child) {
-        if (key !== 'type' && key !== 'holguraContorno' && key !== 'dropEscote' && key !== 'holguraRaglan') {
-            options.push(`<option value="${key}">${SIZES_DATA.child[key].label}</option>`);
-        }
-    }
-
-    $size.innerHTML = options.join('');
-}
-
-/** Gestiona la visibilidad de los campos en el Paso 2 */
-function handleGarmentTypeChange() {
-    const type = $garmentType.value;
-    clearResults();
-    clearError();
-
-    // Resetear valores
-    $customCm.value = '';
-    $constructionMethod.value = '';
-    $size.value = '';
-    $garmentPiece.value = '';
-    
-    // Ocultar todos los campos de talla
-    $customCmContainer.classList.add('hidden');
-    $constructionMethodContainer.classList.add('hidden');
-    $sizeContainer.classList.add('hidden');
-    $garmentPieceContainer.classList.add('hidden');
-
-    if (type === 'custom') {
-        $customCmContainer.classList.remove('hidden');
-    } else if (type === 'jersey' || type === 'chaqueta') {
-        populateSizeOptions();
-        $constructionMethodContainer.classList.remove('hidden');
-        $sizeContainer.classList.remove('hidden');
-        $garmentPieceContainer.classList.remove('hidden');
-    }
-}
-
-/** Inicializa la aplicación */
 document.addEventListener('DOMContentLoaded', () => {
-    $garmentType.addEventListener('change', handleGarmentTypeChange);
-    $calculateBtn.addEventListener('click', calculate);
-    $resetBtn.addEventListener('click', () => {
-        document.querySelector('form')?.reset();
-        $stitches.value = '';
-        $rows.value = '';
-        $garmentType.value = '';
-        handleGarmentTypeChange();
-        clearResults();
-        clearError();
-    });
+
+    // --- BASE DE DATOS Y CONSTANTES ---
+    const SIZES = [
+      // Bebés (SIN CAMBIOS)
+      { id: 'preemie', label: 'Prematuro (00)', chestContour: 35, totalLength: 18, sleeveLength: 11, cuffContour: 11, upperArmContour: 13, armholeDepth: 7, backWidth: 17.5, neckContour: 19, armholeStartHeight: 11, raglanLength: 9, finalFrontNeckDrop: 4, backNeckDrop: 1.5 },
+      { id: 'newborn', label: 'Recién Nacido (0 meses)', chestContour: 40, totalLength: 20, sleeveLength: 13, cuffContour: 13, upperArmContour: 15, armholeDepth: 8, backWidth: 20, neckContour: 22, armholeStartHeight: 12, raglanLength: 10, finalFrontNeckDrop: 4.5, backNeckDrop: 1.5 },
+      { id: '1-3m', label: '1-3 Meses', chestContour: 44, totalLength: 24, sleeveLength: 15, cuffContour: 14, upperArmContour: 16.5, armholeDepth: 9, backWidth: 22, neckContour: 23, armholeStartHeight: 15, raglanLength: 11, finalFrontNeckDrop: 4.5, backNeckDrop: 1.5 },
+      { id: '3-6m', label: '3-6 Meses', chestContour: 46, totalLength: 28, sleeveLength: 17, cuffContour: 14.5, upperArmContour: 17.5, armholeDepth: 10, backWidth: 23, neckContour: 24, armholeStartHeight: 18, raglanLength: 12.5, finalFrontNeckDrop: 5, backNeckDrop: 2 },
+      { id: '6-9m', label: '6-9 Meses', chestContour: 48, totalLength: 30, sleeveLength: 19, cuffContour: 15, upperArmContour: 18, armholeDepth: 11, backWidth: 24, neckContour: 25, armholeStartHeight: 19, raglanLength: 13.5, finalFrontNeckDrop: 5, backNeckDrop: 2 },
+      { id: '9-12m', label: '9-12 Meses', chestContour: 50, totalLength: 32, sleeveLength: 21, cuffContour: 15.5, upperArmContour: 19, armholeDepth: 12, backWidth: 25, neckContour: 26, armholeStartHeight: 20, raglanLength: 15, finalFrontNeckDrop: 5.5, backNeckDrop: 2 },
+      { id: '12-18m', label: '12-18 Meses', chestContour: 52, totalLength: 34, sleeveLength: 23, cuffContour: 16, upperArmContour: 20, armholeDepth: 13, backWidth: 26, neckContour: 27, armholeStartHeight: 21, raglanLength: 16, finalFrontNeckDrop: 5.5, backNeckDrop: 2 },
+      
+      // Niños (ACTUALIZADO con medidas de 2, 4, 6, 8, 10 años)
+      // 18-24m (2 años)
+      { id: '18-24m', label: '18-24 Meses (2 años)', chestContour: 56.5, totalLength: 35, sleeveLength: 25, cuffContour: 14, upperArmContour: 21, armholeDepth: 13, backWidth: 28.25, neckContour: 28, armholeStartHeight: 22, raglanLength: 16.5, finalFrontNeckDrop: 6, backNeckDrop: 2 },
+      
+      // 3y (Se mantienen los valores originales al no haber sido proporcionados)
+      { id: '3y', label: '3 Años', chestContour: 62, totalLength: 40, sleeveLength: 28, cuffContour: 17, upperArmContour: 22.5, armholeDepth: 15, backWidth: 31, neckContour: 29, armholeStartHeight: 25, raglanLength: 18.5, finalFrontNeckDrop: 6.5, backNeckDrop: 2 },
+      
+      // 4y
+      { id: '4y', label: '4 Años', chestContour: 62, totalLength: 40, sleeveLength: 29, cuffContour: 15, upperArmContour: 23, armholeDepth: 14, backWidth: 31, neckContour: 30, armholeStartHeight: 26, raglanLength: 18.0, finalFrontNeckDrop: 6.5, backNeckDrop: 2 },
+      
+      // 6y
+      { id: '6y', label: '6 Años', chestContour: 66, totalLength: 45, sleeveLength: 33, cuffContour: 16, upperArmContour: 25, armholeDepth: 15, backWidth: 33, neckContour: 31, armholeStartHeight: 30, raglanLength: 19.5, finalFrontNeckDrop: 7, backNeckDrop: 2.5 },
+      
+      // 8y
+      { id: '8y', label: '8 Años', chestContour: 69.5, totalLength: 50, sleeveLength: 37, cuffContour: 17, upperArmContour: 27, armholeDepth: 16, backWidth: 34.75, neckContour: 32, armholeStartHeight: 34, raglanLength: 21.0, finalFrontNeckDrop: 7, backNeckDrop: 2.5 },
+      
+      // 10y
+      { id: '10y', label: '10 Años', chestContour: 73, totalLength: 55, sleeveLength: 41, cuffContour: 18, upperArmContour: 28, armholeDepth: 17, backWidth: 36.5, neckContour: 33, armholeStartHeight: 38, raglanLength: 22.5, finalFrontNeckDrop: 7.5, backNeckDrop: 2.5 },
+
+      // Adultos (ACTUALIZADO con nuevos datos)
+      // XS
+      { id: 'xs', label: 'XS (32-34)', chestContour: 82, totalLength: 58, sleeveLength: 45, cuffContour: 16, upperArmContour: 27, armholeDepth: 20, backWidth: 41, neckContour: 33, armholeStartHeight: 38, raglanLength: 20, finalFrontNeckDrop: 8, backNeckDrop: 2.5 },
+      
+      // S
+      { id: 's', label: 'S (36-38)', chestContour: 87, totalLength: 60, sleeveLength: 46, cuffContour: 17, upperArmContour: 29, armholeDepth: 21, backWidth: 43.5, neckContour: 34, armholeStartHeight: 39, raglanLength: 21, finalFrontNeckDrop: 8, backNeckDrop: 2.5 },
+      
+      // M
+      { id: 'm', label: 'M (40-42)', chestContour: 93, totalLength: 62, sleeveLength: 47, cuffContour: 18, upperArmContour: 31, armholeDepth: 22, backWidth: 46.5, neckContour: 35, armholeStartHeight: 40, raglanLength: 22, finalFrontNeckDrop: 8.5, backNeckDrop: 2.5 },
+      
+      // L
+      { id: 'l', label: 'L (42-44)', chestContour: 100, totalLength: 64, sleeveLength: 48, cuffContour: 19, upperArmContour: 33, armholeDepth: 23, backWidth: 50, neckContour: 36, armholeStartHeight: 41, raglanLength: 23, finalFrontNeckDrop: 8.5, backNeckDrop: 3 },
+      
+      // XL
+      { id: 'xl', label: 'XL (46-48)', chestContour: 108, totalLength: 66, sleeveLength: 49, cuffContour: 20, upperArmContour: 35, armholeDepth: 24, backWidth: 54, neckContour: 37, armholeStartHeight: 42, raglanLength: 24, finalFrontNeckDrop: 9, backNeckDrop: 3 },
+      
+      // XXL
+      { id: 'xxl', label: 'XXL (50-52)', chestContour: 116, totalLength: 68, sleeveLength: 49, cuffContour: 21, upperArmContour: 37, armholeDepth: 25, backWidth: 58, neckContour: 38, armholeStartHeight: 43, raglanLength: 25, finalFrontNeckDrop: 9.5, backNeckDrop: 3 },
+    ];
+
+    // --- ELEMENTOS DEL DOM ---
+    const stitchesInput = document.getElementById('stitches');
+    const rowsInput = document.getElementById('rows');
+    const garmentTypeSelect = document.getElementById('garmentType');
+    const customCmContainer = document.getElementById('custom-cm-container');
+    const customCmInput = document.getElementById('customCm');
+    const constructionMethodContainer = document.getElementById('construction-method-container');
+    const constructionMethodSelect = document.getElementById('constructionMethod');
+    const sizeContainer = document.getElementById('size-container');
+    const sizeSelect = document.getElementById('size');
+    const garmentPieceContainer = document.getElementById('garment-piece-container');
+    const garmentPieceSelect = document.getElementById('garmentPiece');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const errorContainer = document.getElementById('error-container');
+    const resultsContainer = document.getElementById('results-container');
+    
+    // --- LÓGICA DE LA INTERFAZ ---
+
+    function populateSizes() {
+        sizeSelect.innerHTML = '<option value="" disabled selected>Elige una talla...</option>';
+        const babySizes = SIZES.slice(0, 7);
+        const kidSizes = SIZES.slice(7, 13);
+        const adultSizes = SIZES.slice(13);
+
+        const createOptgroup = (label, sizes) => {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = label;
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size.id;
+                option.textContent = size.label;
+                optgroup.appendChild(option);
+            });
+            return optgroup;
+        };
+
+        sizeSelect.appendChild(createOptgroup('Bebé', babySizes));
+        sizeSelect.appendChild(createOptgroup('Niño/a', kidSizes));
+        sizeSelect.appendChild(createOptgroup('Adulto', adultSizes));
+    }
+
+    function updateFormVisibility() {
+        const garmentType = garmentTypeSelect.value;
+        const constructionMethod = constructionMethodSelect.value;
+
+        // Reset visibility
+        customCmContainer.classList.add('hidden');
+        constructionMethodContainer.classList.add('hidden');
+        sizeContainer.classList.add('hidden');
+        garmentPieceContainer.classList.add('hidden');
+
+        if (garmentType === 'custom') {
+            customCmContainer.classList.remove('hidden');
+        } else if (garmentType) {
+            constructionMethodContainer.classList.remove('hidden');
+            if(constructionMethod) {
+              sizeContainer.classList.remove('hidden');
+            }
+            if (constructionMethod === 'bottom-up') {
+                garmentPieceContainer.classList.remove('hidden');
+            }
+        }
+    }
+    
+    garmentTypeSelect.addEventListener('change', updateFormVisibility);
+    constructionMethodSelect.addEventListener('change', updateFormVisibility);
+
+    function showError(message) {
+        errorContainer.textContent = message;
+        errorContainer.classList.remove('hidden');
+    }
+
+    function clearError() {
+        errorContainer.classList.add('hidden');
+    }
+
+    function resetForm() {
+        stitchesInput.value = '';
+        rowsInput.value = '';
+        garmentTypeSelect.value = '';
+        customCmInput.value = '';
+        constructionMethodSelect.value = '';
+        sizeSelect.value = '';
+        garmentPieceSelect.value = '';
+        resultsContainer.innerHTML = '';
+        clearError();
+        updateFormVisibility();
+    }
+    
+    // --- LÓGICA DE CÁLCULO AUXILIAR PARA ESCOTE REDONDO (JERSEY Y CHAQUETA) ---
+    function calculateFrontNecklineShaping(size, stitchesPerCm, rowsPerCm, notes, isJacket) {
+        const sizeIndex = SIZES.findIndex(s => s.id === size.id);
+        let neckbandWidthCm = 2.5; // Adulto por defecto
+        if (sizeIndex !== -1) {
+            if (sizeIndex < 7) neckbandWidthCm = 1.5; // Bebé
+            else if (sizeIndex < 13) neckbandWidthCm = 2.0; // Niño
+        }
+        
+        const knittedNeckDropCm = size.finalFrontNeckDrop + neckbandWidthCm;
+        const necklineStartCmOverride = size.totalLength - knittedNeckDropCm;
+        const necklineStartRowsOverride = rowsPerCm ? Math.round(necklineStartCmOverride * rowsPerCm) : null;
+
+        // --- CÁLCULO DE PUNTOS PARA EL ESCOTE COMPLETO (JERSEY) ---
+        const fullFrontWidthStitches = Math.round(size.backWidth * stitchesPerCm);
+        const frontNeckWidthStitches = Math.round((size.neckContour * 0.45) * stitchesPerCm);
+        // Asegurar paridad correcta para la distribución
+        const adjustedFrontNeckWidthStitches = (fullFrontWidthStitches % 2 === frontNeckWidthStitches % 2) ? frontNeckWidthStitches : frontNeckWidthStitches + 1;
+        
+        // Puntos centrales y laterales del escote de un JERSEY COMPLETO
+        const centralCastOff = Math.round(adjustedFrontNeckWidthStitches / 3);
+        const adjustedCentralCastOff = ((adjustedFrontNeckWidthStitches - centralCastOff) % 2 === 0) ? centralCastOff : centralCastOff + 1;
+        const remainingToDecrease = adjustedFrontNeckWidthStitches - adjustedCentralCastOff;
+        const decreasesPerSide = remainingToDecrease / 2; // Gradual decreases for one side of a JERSEY
+
+        let initialCastOff = 0; // El primer bloque de puntos a cerrar
+        let stitchesToShape = 0; // Los puntos restantes para la curva gradual (3s, 2s, 1s)
+
+        if (isJacket) {
+            // --- LÓGICA PARA DELANTERO DE CHAQUETA ---
+            const neckStitchesPerFront = Math.round(adjustedFrontNeckWidthStitches / 2);
+
+            // 1. Cierre Inicial (El bloque grande al principio de la sisa. Máx 6. Min 2. Aprox. 20-30% de los puntos totales)
+            initialCastOff = Math.min(6, Math.floor(neckStitchesPerFront * 0.3 / 2) * 2);
+            if (initialCastOff === 0 && neckStitchesPerFront > 0) initialCastOff = 2; // Mínimo 2.
+            
+            // 2. Puntos restantes para la curva gradual
+            stitchesToShape = neckStitchesPerFront - initialCastOff;
+
+        } else { // Jersey
+            // --- LÓGICA PARA DELANTERO DE JERSEY ---
+            initialCastOff = adjustedCentralCastOff; // For the jersey, this variable is used for the *center* cast off
+            stitchesToShape = decreasesPerSide; // The stitches for the gradual curve on *one side*
+        }
+        
+        // --- LÓGICA DE CONFORMACIÓN DE LA CURVA (Aplicable a Jersey (lateral) y Chaqueta (gradual)) ---
+        const shapingInstructions = [];
+        let remaining = isJacket ? stitchesToShape : decreasesPerSide; // Use decreasesPerSide for Jersey shaping
+        
+        if (remaining >= 0) {
+            // Cierre de 3 puntos (Máximo 1 vez)
+            if (remaining >= 3) {
+                shapingInstructions.push(`  - Cerrar **3** puntos (1 vez)`);
+                remaining -= 3;
+            }
+
+            // Cierre de 2 puntos
+            const numTwos = Math.floor(remaining / 2);
+            if (numTwos > 0) shapingInstructions.push(`  - Cerrar **2** puntos (${numTwos} ${numTwos > 1 ? 'veces' : 'vez'})`);
+            remaining -= numTwos * 2;
+
+            // Cierre de 1 punto
+            if (remaining > 0) shapingInstructions.push(`  - Cerrar **1** punto (${remaining} ${remaining > 1 ? 'veces' : 'vez'})`);
+        }
+
+
+        notes.push('**Guía para el Escote Delantero (Redondo)**');
+        notes.push(`Para que el escote final tenga la profundidad perfecta después de añadir la tira del cuello, empezamos a tejerlo **${neckbandWidthCm} cm más abajo** de lo normal. Este espacio será ocupado por la tira.`);
+
+        if (isJacket) {
+             // Instrucciones para CHAQUETA (Delantero, lado de la tapeta)
+             notes.push(`**Paso 1: Empezar el escote.** Cuando tu tejido mida **${necklineStartCmOverride.toFixed(1)} cm** ${necklineStartRowsOverride ? `(aprox. en la pasada ${necklineStartRowsOverride})` : ''}, cierra el escote de la siguiente manera: (siempre al principio de la pasada)`);
+             notes.push(`  - Cerrar **${initialCastOff}** puntos en el borde (en el lado de la tapeta).`);
+             notes.push(...shapingInstructions);
+             notes.push(`  - Una vez hechas todas las disminuciones del escote, continúa teje recto hasta que la pieza alcance su largo total.`);
+             // Nota de Tapeta SOLICITADA
+             notes.push('**¡ATENCIÓN! PUNTOS DE TAPETA:** Las instrucciones anteriores son para la forma del escote. **NO** incluyen los puntos que hayas añadido para la tapeta de botones. Debes tener en cuenta esos puntos adicionales y cerrarlos o tejerlos hasta el final separadamente.');
+
+        } else { // Jersey
+            // Instrucciones para JERSEY (Paso 1: Cierre Central, Paso 2: Forma a los lados)
+            notes.push(`**Paso 1: Empezar el escote.** Cuando tu tejido mida **${necklineStartCmOverride.toFixed(1)} cm** ${necklineStartRowsOverride ? `(aprox. en la pasada ${necklineStartRowsOverride})` : ''}, cierra los **${adjustedCentralCastOff}** puntos centrales.`);
+            if (shapingInstructions.length > 0) {
+                notes.push(`**Paso 2: Dar forma a los lados.** Teje cada lado por separado, cerrando puntos en el borde del escote (al principio de cada pasada del derecho) así:`);
+                notes.push(...shapingInstructions);
+            }
+            notes.push(`**Paso 3: Terminar.** Una vez hechas todas las disminuciones del escote, continúa teje recto hasta que la pieza alcance su largo total.`);
+        }
+
+        return { necklineStartCmOverride, necklineStartRowsOverride };
+    }
+    
+    // --- LÓGICA DE CÁLCULO PRINCIPAL ---
+    function handleCalculate() {
+        clearError();
+        resultsContainer.innerHTML = '';
+
+        const stitches = parseFloat(stitchesInput.value);
+        if (!stitches || stitches <= 0) {
+            showError('Por favor, introduce un número válido de puntos en la muestra.');
+            return;
+        }
+
+        const rows = parseFloat(rowsInput.value) || null;
+        const stitchesPerCm = stitches / 10;
+        const rowsPerCm = rows ? rows / 10 : null;
+
+        const garmentType = garmentTypeSelect.value;
+        if (garmentType === 'custom') {
+            const customCm = parseFloat(customCmInput.value);
+            if (!customCm || customCm <= 0) {
+                showError('Por favor, introduce una medida válida en cm.');
+                return;
+            }
+            const resultStitches = Math.round(customCm * stitchesPerCm);
+            const resultRows = rowsPerCm ? Math.round(customCm * rowsPerCm) : null;
+            renderCustomResults(resultStitches, resultRows);
+            return;
+        }
+        
+        const constructionMethod = constructionMethodSelect.value;
+        const selectedSizeId = sizeSelect.value;
+
+        if (!garmentType) {
+            showError('Por favor, elige un tipo de prenda.');
+            return;
+        }
+        if (!constructionMethod) {
+            showError('Por favor, elige un método de construcción.');
+            return;
+        }
+        if (!selectedSizeId) {
+            showError('Por favor, elige una talla.');
+            return;
+        }
+        
+        const size = SIZES.find(s => s.id === selectedSizeId);
+        if (!size) {
+            showError('Talla no encontrada. Por favor, selecciona una de la lista.');
+            return;
+        }
+
+        if (constructionMethod === 'bottom-up') {
+            calculateBottomUp(size, stitchesPerCm, rowsPerCm);
+        } else if (constructionMethod === 'top-down') {
+            calculateTopDown(size, stitchesPerCm, rowsPerCm);
+        }
+    }
+
+    function calculateBottomUp(size, stitchesPerCm, rowsPerCm) {
+        const garmentPiece = garmentPieceSelect.value;
+        if (!garmentPiece) {
+            showError('Por favor, elige una pieza de la prenda.');
+            return;
+        }
+
+        let width = 0;
+        let notes = [];
+        let measurements = [];
+        let sleeveEndStitches;
+        let necklineStartCmOverride = null;
+        let necklineStartRowsOverride = null;
+        const garmentType = garmentTypeSelect.value;
+
+        switch(garmentPiece) {
+            case 'espalda':
+                width = size.backWidth;
+                measurements.push({label: 'Ancho de espalda', value: `${size.backWidth} cm`});
+                break;
+            case 'delantero':
+                if (garmentType === 'chaqueta') {
+                    // CÁLCULO PARA UNA PIEZA DELANTERA (mitad del ancho)
+                    width = size.backWidth / 2;
+                    measurements.push({label: 'Ancho de un delantero', value: `${width.toFixed(1)} cm`});
+                    notes.push('¡Atención! Este es el cálculo para UNA de las dos piezas delanteras. A los puntos calculados, debes sumar los necesarios para la tapeta de los botones.');
+                    
+                    // Lógica de Escote Redondo para Chaqueta (Delantero)
+                    const neckInstructions = calculateFrontNecklineShaping(size, stitchesPerCm, rowsPerCm, notes, true);
+                    necklineStartCmOverride = neckInstructions.necklineStartCmOverride;
+                    necklineStartRowsOverride = neckInstructions.necklineStartRowsOverride;
+
+                } else { // Jersey
+                    // CÁLCULO PARA EL DELANTERO COMPLETO (escote redondo)
+                    width = size.backWidth;
+                    measurements.push({label: 'Ancho de delantero', value: `${size.backWidth} cm`});
+
+                    // Lógica de Escote Redondo para Jersey (Delantero)
+                    const neckInstructions = calculateFrontNecklineShaping(size, stitchesPerCm, rowsPerCm, notes, false);
+                    necklineStartCmOverride = neckInstructions.necklineStartCmOverride;
+                    necklineStartRowsOverride = neckInstructions.necklineStartRowsOverride;
+                }
+                break;
+            case 'mangas':
+                width = size.cuffContour;
+                measurements.push({label: 'Contorno de puño', value: `${size.cuffContour} cm`});
+                measurements.push({label: 'Ancho de sisa (brazo)', value: `${size.upperArmContour} cm`});
+                const startStitches = Math.round(size.cuffContour * stitchesPerCm);
+                const endStitches = Math.round(size.upperArmContour * stitchesPerCm);
+                sleeveEndStitches = endStitches;
+                const totalIncreaseStitches = endStitches - startStitches;
+                if (totalIncreaseStitches > 0) {
+                    let increaseNote = `Para dar forma a la manga, deberás aumentar un total de ${totalIncreaseStitches} puntos.`;
+                    if (rowsPerCm) {
+                        const totalRowsForSleeve = Math.round(size.sleeveLength * rowsPerCm);
+                        const numberOfIncreaseEvents = totalIncreaseStitches / 2;
+                        if (numberOfIncreaseEvents > 0) {
+                            const increaseFrequencyInRows = Math.floor(totalRowsForSleeve / numberOfIncreaseEvents);
+                            increaseNote += ` Esto se consigue haciendo 1 aumento a cada lado (${Math.ceil(numberOfIncreaseEvents)} veces) aproximadamente cada ${increaseFrequencyInRows} pasadas, repartidos uniformemente a lo largo de la manga.`;
+                        }
+                    } else {
+                        increaseNote += ` Estos aumentos deben repartirse de manera uniforme a lo largo de los ${size.sleeveLength} cm de la manga hasta alcanzar la anchura necesaria.`;
+                    }
+                    notes.push(increaseNote);
+                } else {
+                    notes.push("No se necesitan aumentos para la manga. Tejer recto hasta la sisa.");
+                }
+                break;
+        }
+
+        if (garmentPiece === 'mangas') {
+            measurements.push({label: 'Largo total de manga', value: `${size.sleeveLength} cm`});
+        } else {
+            measurements.push({label: 'Largo total', value: `${size.totalLength} cm`});
+            measurements.push({label: 'Largo hasta sisa', value: `${size.armholeStartHeight} cm`});
+        }
+        measurements.push({label: 'Alto de sisa', value: `${size.armholeDepth} cm`});
+
+        let necklineStartCm = necklineStartCmOverride !== null ? necklineStartCmOverride : (size.totalLength - (garmentPiece === 'delantero' ? size.finalFrontNeckDrop : size.backNeckDrop));
+        let necklineStartRows = necklineStartRowsOverride !== null ? necklineStartRowsOverride : (rowsPerCm ? Math.round(necklineStartCm * rowsPerCm) : null);
+
+        const results = {
+            castOnStitches: Math.round(width * stitchesPerCm),
+            sleeveEndStitches,
+            totalLengthCm: garmentPiece === 'mangas' ? size.sleeveLength : size.totalLength,
+            totalLengthRows: rowsPerCm ? Math.round((garmentPiece === 'mangas' ? size.sleeveLength : size.totalLength) * rowsPerCm) : null,
+            armholeStartCm: size.armholeStartHeight,
+            armholeStartRows: rowsPerCm ? Math.round(size.armholeStartHeight * rowsPerCm) : null,
+            necklineStartCm: parseFloat(necklineStartCm.toFixed(1)),
+            necklineStartRows: necklineStartRows,
+            notes,
+            measurements,
+            garmentPiece,
+        };
+        renderBottomUpResults(results);
+    }
+
+    function calculateTopDown(size, stitchesPerCm, rowsPerCm) {
+        const totalStitches = Math.round(size.neckContour * stitchesPerCm);
+        const raglanStitches = 8;
+        const remainingStitches = totalStitches - raglanStitches;
+        const backStitches = Math.round(remainingStitches / 3);
+        const frontStitches = Math.round(remainingStitches / 3);
+        const sleevesStitches = remainingStitches - backStitches - frontStitches;
+        
+        let notes = ['Se sugiere tejer unas pasadas para el cuello (elástico o punto deseado) antes de empezar las vueltas de aumentos del ranglan.'];
+        const garmentType = garmentTypeSelect.value;
+        if (garmentType === 'chaqueta') {
+            notes.push('¡Atención! Has elegido chaqueta. Los puntos del delantero se dividen en dos (para delantero izquierdo y derecho). A cada lado, debes añadir los puntos que necesites para la tapeta.');
+        }
+
+        const sleeveStartStitches = Math.round(size.upperArmContour * stitchesPerCm);
+        const sleeveEndStitches = Math.round(size.cuffContour * stitchesPerCm);
+        const totalDecreaseStitches = sleeveStartStitches - sleeveEndStitches;
+        if (totalDecreaseStitches > 0) {
+            let decreaseNote = `FORMA DE LA MANGA: Una vez separadas las mangas, para darles forma, deberás disminuir un total de ${totalDecreaseStitches} puntos hasta el puño.`;
+            if (rowsPerCm) {
+                const totalRowsForSleeve = Math.round(size.sleeveLength * rowsPerCm);
+                const numberOfDecreaseEvents = totalDecreaseStitches / 2;
+                if (numberOfDecreaseEvents > 0) {
+                    const decreaseFrequencyInRows = Math.floor(totalRowsForSleeve / numberOfDecreaseEvents);
+                    decreaseNote += ` Esto se consigue haciendo 1 disminución a cada lado (${Math.ceil(numberOfDecreaseEvents)} veces) aproximadamente cada ${decreaseFrequencyInRows} pasadas, repartidas uniformemente.`;
+                }
+            } else {
+                decreaseNote += ` Estas disminuciones deben repartirse de manera uniforme a lo largo de los ${size.sleeveLength} cm de la manga.`;
+            }
+            notes.push(decreaseNote);
+        } else {
+             notes.push("FORMA DE LA MANGA: No se necesitan disminuciones. Tejer recto desde la sisa hasta el puño.");
+        }
+        
+        const results = {
+            castOnStitches: totalStitches,
+            distribution: { back: backStitches, front: frontStitches, sleeves: sleevesStitches, raglan: raglanStitches },
+            raglanLengthCm: size.raglanLength,
+            raglanLengthRows: rowsPerCm ? Math.round(size.raglanLength * rowsPerCm) : null,
+            sleeveLengthCm: size.sleeveLength,
+            sleeveLengthRows: rowsPerCm ? Math.round(size.sleeveLength * rowsPerCm) : null,
+            bodyLengthCm: size.armholeStartHeight,
+            bodyLengthRows: rowsPerCm ? Math.round(size.armholeStartHeight * rowsPerCm) : null,
+            notes,
+            garmentType
+        };
+        renderTopDownResults(results);
+    }
+    
+    // --- LÓGICA DE RENDERIZADO ---
+    function formatNote(note) {
+        // Usa una expresión más robusta para reemplazar **...** con <strong>...</strong>
+        return note.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+    
+    // Texto de la CTA personalizado con el nombre de tu tienda y la tipografía manuscrita que te gusta
+    const communityCTA_HTML = `
+        <div class="mt-6 bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4 rounded-md">
+            <h4 class="font-bold">¡Comparte tu creación!</h4>
+            <p style="font-family: 'Dancing Script', cursive;">Desde Rincón de labores nos encantaría ver tu proyecto terminado. Sube una foto a Instagram y etiquétanos <a href="https://www.instagram.com/rincondlabores/" target="_blank" rel="noopener noreferrer" class="font-bold underline">@rincondlabores</a>.</p>
+        </div>`;
+
+
+    function renderCustomResults(stitches, rows) {
+        resultsContainer.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-lg animate-fade-in">
+                <h3 class="text-xl font-bold text-pink-700 mb-4">Resultado para Medida Personalizada</h3>
+                <p class="text-lg">Puntos a montar: <span class="font-bold text-2xl text-purple-700">${stitches}</span></p>
+                ${rows ? `<p class="text-lg">Largo total: <span class="font-bold text-2xl text-purple-700">${rows} pasadas</span></p>` : ''}
+                ${communityCTA_HTML}
+            </div>`;
+    }
+
+    function renderBottomUpResults(results) {
+        const castOnLabel = results.garmentPiece === 'mangas' ? 'Puntos a montar (puño):' : 'Puntos a montar:';
+        const renderRows = (rows) => rows ? `(${rows} pasadas)` : '';
+        
+        resultsContainer.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-lg animate-fade-in">
+                <h3 class="text-xl font-bold text-pink-700 mb-4">Cálculo para Construcción desde Abajo</h3>
+                <div class="space-y-3 text-gray-700">
+                    <p class="text-lg"><strong>${castOnLabel}</strong> <span class="font-bold text-2xl text-purple-700">${results.castOnStitches}</span></p>
+                    ${results.garmentPiece === 'mangas' && results.sleeveEndStitches ? `<p class="text-lg"><strong>Puntos finales (sisa):</strong> <span class="font-bold text-2xl text-purple-700">${results.sleeveEndStitches}</span></p>` : ''}
+                    <p><strong>Largo total de la pieza:</strong> ${results.totalLengthCm} cm ${renderRows(results.totalLengthRows)}</p>
+                    ${results.garmentPiece !== 'mangas' ? `<p><strong>Empezar sisa a los:</strong> ${results.armholeStartCm} cm ${renderRows(results.armholeStartRows)} desde el inicio.</p>` : ''}
+                    ${(results.garmentPiece === 'delantero' || results.garmentPiece === 'espalda') ? `<p><strong>Empezar escote a los:</strong> ${results.necklineStartCm} cm ${renderRows(results.necklineStartRows)} desde el inicio.</p>` : ''}
+                </div>
+                ${results.measurements.length > 0 ? `
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-bold text-pink-600">Medidas de referencia usadas:</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600">
+                        ${results.measurements.map(m => `<li>${m.label}: <strong>${m.value}</strong></li>`).join('')}
+                    </ul>
+                </div>` : ''}
+                ${results.notes.length > 0 ? `
+                <div class="mt-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
+                    <h4 class="font-bold">Notas Importantes</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        ${results.notes.map(note => `<li>${formatNote(note)}</li>`).join('')}
+                    </ul>
+                </div>` : ''}
+                ${communityCTA_HTML}
+            </div>`;
+    }
+
+    function renderTopDownResults(results) {
+        const renderRows = (rows) => rows ? `(${rows} pasadas)` : '';
+
+        resultsContainer.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-lg animate-fade-in">
+                <h3 class="text-xl font-bold text-pink-700 mb-4">Cálculo para Construcción Top-Down (Ranglan)</h3>
+                <div class="space-y-3 text-gray-700">
+                    <p><strong>Puntos a montar para el cuello:</strong> <span class="font-bold text-2xl text-purple-700">${results.castOnStitches}</span></p>
+                    <div class="bg-purple-50 p-4 rounded-md">
+                        <h4 class="font-bold mb-2">Reparto de puntos:</h4>
+                        <p><strong>Espalda:</strong> ${results.distribution.back} puntos</p>
+                        <p><strong>Delantero:</strong> ${results.distribution.front} puntos ${results.garmentType === 'chaqueta' ? `(a dividir en ${Math.round(results.distribution.front/2)} por lado)` : ''}</p>
+                        <p><strong>Mangas:</strong> ${results.distribution.sleeves} puntos (a dividir en ${Math.round(results.distribution.sleeves/2)} por manga)</p>
+                        <p><strong>Puntos de Ranglan:</strong> ${results.distribution.raglan} puntos (normalmente 2 por cada una de las 4 líneas de ranglan)</p>
+                    </div>
+                    <p><strong>Largo del ranglan:</strong> ${results.raglanLengthCm} cm ${renderRows(results.raglanLengthRows)}</p>
+                    <p><strong>Largo de manga (desde sisa):</strong> ${results.sleeveLengthCm} cm ${renderRows(results.sleeveLengthRows)}</p>
+                    <p><strong>Largo del cuerpo (desde sisa):</strong> ${results.bodyLengthCm} cm ${renderRows(results.bodyLengthRows)}</p>
+                </div>
+                ${results.notes.length > 0 ? `
+                <div class="mt-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md">
+                    <h4 class="font-bold">Notas y Sugerencias</h4>
+                    <ul class="list-disc list-inside">
+                        ${results.notes.map(note => `<li>${note.replace('FORMA DE LA MANGA:', '<strong>FORMA DE LA MANGA:</strong>')}</li>`).join('')}
+                    </ul>
+                </div>` : ''}
+                ${communityCTA_HTML}
+            </div>`;
+    }
+
+    // --- INICIALIZACIÓN ---
+    populateSizes();
+    updateFormVisibility();
+    calculateBtn.addEventListener('click', handleCalculate);
+    resetBtn.addEventListener('click', resetForm);
 });
