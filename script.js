@@ -41,7 +41,7 @@ const ORDEN_TALLAS = {
 
 
 // ====================================================================
-// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ (Se mantienen sin cambios)
+// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ 
 // ====================================================================
 
 function poblarTallas() {
@@ -149,7 +149,7 @@ function calcularPatron() {
 
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
-    // --- LÓGICA DE HOLGURA (Holgura Modificada) ---
+    // --- LÓGICA DE HOLGURA ---
     let holguraCm = 8.0; // Default para Adultos (8cm)
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
         holguraCm = 4.0; // Holgura para Bebés (4cm)
@@ -178,7 +178,7 @@ function calcularPatron() {
     let tiraCuelloCm = (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) ? 1.5 : (tallaSeleccionada.includes('años') ? 2.0 : 2.5);
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
-    // Ajuste de CC para Top-Down (Raglán) para cuello más holgado (CORRECCIÓN: Bebé reducido a 1.0cm)
+    // Ajuste de CC para Top-Down (Raglán) para cuello más holgado 
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
@@ -347,6 +347,13 @@ function calcularPatron() {
         const totalAumentos = puntosSisaManga - puntosPuño;
         const aumentosPorLado = Math.floor(totalAumentos / 2);
         const frecuenciaAumentos = (aumentosPorLado > 0 && largoMangaH) ? Math.round(largoMangaH / aumentosPorLado) : 0;
+        
+        // **CÁLCULO DE CM HASTA EL ÚLTIMO AUMENTO**
+        let cmAumentoFinal = 0;
+        if (aumentosPorLado > 0 && frecuenciaAumentos > 0 && densidadH) {
+            const hilerasTotalesAumento = frecuenciaAumentos * aumentosPorLado;
+            cmAumentoFinal = (hilerasTotalesAumento / densidadH).toFixed(1);
+        }
 
         // NOTA IMPORTANTE SOBRE TALLAS DE NIÑO
         if (tallaSeleccionada.includes('años')) {
@@ -358,7 +365,15 @@ function calcularPatron() {
         
         if (aumentosPorLado > 0) {
             const frecuenciaCm = (frecuenciaAumentos / densidadH).toFixed(1);
-            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm} cm**) **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
+            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm} cm**) **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n`;
+            
+            // **FRASE SOLICITADA**
+            if (cmAumentoFinal > 0) {
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Medida Final:** Los **${puntosSisaManga} puntos** se alcanzarán a los **${cmAumentoFinal} cm** de largo de manga.</p>\n\n`;
+            } else {
+                 resultado += `\n`;
+            }
+            
         } else {
             resultado += `* **Aumentos:** No se requieren aumentos o el cálculo es inconsistente. Tejer recto.\n\n`;
         }
