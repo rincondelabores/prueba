@@ -1,15 +1,13 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (AJUSTADAS)
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (ACTUALIZADAS POR INFERENCIA)
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
-    // Tallas de Bebé (Según progresión interna)
+    // Tallas de Bebé (Según progresión interna y correcciones)
     '00 (Prematuro)': { CP: 37.0, CC: 20.0, CA: 12.0, 'C Puño': 10.0, LT: 18.0, LM: 10.0, PSisa: 8.0, AE: 14.0, CED: 3.0 },
     '0 meses': { CP: 39.0, CC: 21.0, CA: 13.0, 'C Puño': 10.0, LT: 20.0, LM: 12.0, PSisa: 8.0, AE: 16.0, CED: 3.5 },
     '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 15.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
     '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 12.0, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
-    
-    // Tallas Inferidas (Añadidas y Ajustadas)
     '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 13.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
     '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 15.0, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
     '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 23.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
@@ -17,29 +15,30 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 29.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
 
     // Tallas de Niños (Según progresión interna)
-    '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 21.5, LT: 35.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, // Inferido
+    '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 21.5, LT: 35.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
     '4 años': { CP: 64.0, CC: 27.0, CA: 24.0, 'C Puño': 22.0, LT: 36.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
-    '6 años': { CP: 68.0, CC: 28.0, CA: 26.0, 'C Puño': 23.0, LT: 38.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 }, // Inferido
-    '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 }, // Inferido
+    '6 años': { CP: 68.0, CC: 28.0, CA: 26.0, 'C Puño': 23.0, LT: 38.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 },
+    '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
     '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
     // Tallas de Mujer (Adulto) - Extrapoladas
     '36': { CP: 84.0, CC: 34.0, CA: 34.0, 'C Puño': 28.0, LT: 58.0, LM: 59.0, PSisa: 22.0, AE: 42.0, CED: 10.0 },
-    '38': { CP: 88.0, CC: 35.0, CA: 35.5, 'C Puño': 29.0, LT: 59.0, LM: 59.5, PSisa: 23.0, AE: 43.0, CED: 10.3 }, // Inferido
+    '38': { CP: 88.0, CC: 35.0, CA: 35.5, 'C Puño': 29.0, LT: 59.0, LM: 59.5, PSisa: 23.0, AE: 43.0, CED: 10.3 },
     '40': { CP: 92.0, CC: 36.0, CA: 37.0, 'C Puño': 30.0, LT: 60.0, LM: 60.0, PSisa: 24.0, AE: 44.0, CED: 10.5 },
-    '42': { CP: 98.0, CC: 37.5, CA: 39.0, 'C Puño': 31.0, LT: 61.0, LM: 60.5, PSisa: 25.5, AE: 45.5, CED: 10.8 }, // Inferido
+    '42': { CP: 98.0, CC: 37.5, CA: 39.0, 'C Puño': 31.0, LT: 61.0, LM: 60.5, PSisa: 25.5, AE: 45.5, CED: 10.8 },
     '44': { CP: 104.0, CC: 39.0, CA: 41.0, 'C Puño': 32.0, LT: 62.0, LM: 61.0, PSisa: 27.0, AE: 47.0, CED: 11.0 },
-    '46': { CP: 110.0, CC: 40.5, CA: 43.0, 'C Puño': 33.0, LT: 63.0, LM: 61.5, PSisa: 28.5, AE: 48.5, CED: 11.3 }, // Inferido
+    '46': { CP: 110.0, CC: 40.5, CA: 43.0, 'C Puño': 33.0, LT: 63.0, LM: 61.5, PSisa: 28.5, AE: 48.5, CED: 11.3 },
     '48': { CP: 116.0, CC: 42.0, CA: 45.0, 'C Puño': 34.0, LT: 64.0, LM: 62.0, PSisa: 30.0, AE: 50.0, CED: 11.5 },
     '50': { CP: 120.0, CC: 44.0, CA: 47.0, 'C Puño': 35.0, LT: 65.0, LM: 63.0, PSisa: 31.0, AE: 52.0, CED: 12.0 }
 };
 
 const ORDEN_TALLAS = {
-    // Es necesario ajustar el 'ORDEN_TALLAS' para incluir las nuevas tallas de meses
+    // Orden de tallas ajustado
     'Bebé (Prematuro a 24m)': ['00 (Prematuro)', '0 meses', '1-3 meses', '3-6 meses', '6-9 meses', '9-12 meses', '12-15 meses', '15-18 meses', '18-24 meses'],
     'Niños (3 a 10 años)': ['3 años', '4 años', '6 años', '8 años', '10 años'],
     'Adulto (36 a 50)': ['36', '38', '40', '42', '44', '46', '48', '50']
 };
+
 
 // ====================================================================
 // 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
@@ -96,7 +95,7 @@ function manejarVisibilidadCampos() {
     }
 }
 
-// Inicialización de funciones al cargar el DOM (Solución al error de carga)
+// Inicialización de funciones al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
     poblarTallas();
     const tipoPrendaSelect = document.getElementById('tipo_prenda');
@@ -198,7 +197,6 @@ function calcularPatron() {
         // --- CÁLCULO BOTTOM-UP (Bajo a Hombro) ---
         
         const largoCuerpoCm = medidas.LT - medidas.PSisa;
-        const largoMangaCm = medidas.LM;
         
         // Espalda
         const hilerasBajoSisa = Math.round(largoCuerpoCm * densidadH);
@@ -222,7 +220,7 @@ function calcularPatron() {
 
         resultado += `<h4>🧶 Resultados de Tejido (Bajo a Escote - Por Piezas) ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n\n`;
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
@@ -262,7 +260,7 @@ function calcularPatron() {
         resultado += `* **Tejer Bajo a Sisa:** **${hilerasBajoSisa} pasadas** (**${largoCuerpoCm.toFixed(1)} cm**).\n`;
         resultado += `* **Continuar Sisa a Hombro:** **${hilerasSisaHombro} pasadas** (**${medidas.PSisa.toFixed(1)} cm**).\n`;
         
-        // 💡 Instrucciones de Escote (Formato claro solicitado por Elena)
+        // 💡 Instrucciones de Escote (Formato claro)
         resultado += `<u>Instrucciones de Escote (Jersey)</u>\n`;
 
         if (tipoPrenda === "JERSEY") {
@@ -273,16 +271,17 @@ function calcularPatron() {
             resultado += `<u>Forma de Escote y Hombros</u>\n`;
             
             // Cierres de escote (ej. 3, 2, 1) - Estimación simple
-            const cierresEscoteTramos = Math.min(3, Math.floor(puntosACerrarBase / 6));
-            const baseCierreEscote = Math.floor(puntosACerrarBase / cierresEscoteTramos);
-            const restoCierreEscote = puntosACerrarBase % cierresEscoteTramos;
+            const puntosEscoteLado = puntosACerrarBase / 2;
+            const cierresEscoteTramos = Math.min(3, Math.floor(puntosEscoteLado / 3));
+            const baseCierreEscote = Math.floor(puntosEscoteLado / cierresEscoteTramos);
+            const restoCierreEscote = puntosEscoteLado % cierresEscoteTramos;
             
             let cierresLadoEscote = [];
             for (let i = 0; i < cierresEscoteTramos; i++) {
-                cierresLadoEscote.push(Math.floor(baseCierreEscote / 2) + (i < restoCierreEscote / 2 ? 1 : 0));
+                cierresLadoEscote.push(baseCierreEscote + (i < restoCierreEscote ? 1 : 0));
             }
             
-            resultado += `* **Escote (Por Separado):** Disminuir o cerrar puntos en el borde del escote para dar la curva. Por ejemplo, cerrando por lado: **${cierresLadoEscote.join(', ')} puntos**.\n`;
+            resultado += `* **Escote (Por Separado):** Disminuir o cerrar puntos en el borde del escote para dar la curva. Por ejemplo, cerrando por lado en varias pasadas: **${cierresLadoEscote.reverse().join(', ')} puntos**.\n`;
             
             
             if (hilerasTrabajarAntesHombro > 0) {
@@ -311,7 +310,7 @@ function calcularPatron() {
         const frecuenciaAumentos = (aumentosPorLado > 0) ? Math.round(largoMangaH / aumentosPorLado) : 0;
         
         resultado += `* **Montar:** **${puntosPuño} p.** (Puño de **${medidas['C Puño'].toFixed(1)} cm**).\n`;
-        resultado += `* **Tejer:** **${largoMangaH} pasadas** (**${largoMangaCm.toFixed(1)} cm**) hasta la sisa.\n`;
+        resultado += `* **Tejer:** **${largoMangaH} pasadas** (**${medidas.LM.toFixed(1)} cm**) hasta la sisa.\n`;
         
         if (frecuenciaAumentos > 0) {
             resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (**${aumentosPorLado} veces**) hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
@@ -327,13 +326,26 @@ function calcularPatron() {
 
     } else if (metodoTejido === "ESCOTE" && densidadH) {
         // --- CÁLCULO TOP-DOWN (Escote a Bajo - Raglán) ---
-        const profundidadSisaH = Math.round(medidas.PSisa * densidadH);
-        const largoTotalH = Math.round(medidas.LT * densidadH);
-        const largoMangaH = Math.round(medidas.LM * densidadH);
         
-        resultado += `<h4>🧶 Resultados de Tejido desde el Escote ${indicacionH}</h4>\n`;
+        // 🚨 CORRECCIÓN RAGLÁN: Tope máximo de 25 cm para adultos.
+        let raglanCmBase;
+        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+             // BEBÉ: Forzamos a 10 cm.
+             raglanCmBase = 10.0;
+        } else if (tallaSeleccionada.includes('años')) {
+             // NIÑO: Forzamos a 12 cm.
+             raglanCmBase = 12.0;
+        } else {
+            // ADULTO: Usamos PSisa, pero la limitamos al estándar de ~25 cm (basado en la web).
+            raglanCmBase = Math.min(medidas.PSisa, 25.0); 
+        }
+
+        const hilerasRaglan = Math.round(raglanCmBase * densidadH);
+        const aumentosPorLado = Math.floor(hilerasRaglan / 2);
+        
+        resultado += `<h4>🧶 Resultados de Tejido desde el Escote (Raglán) ${indicacionH}</h4>\n`;
         // Referencia de Talla
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n\n`;
 
         // 1. REPARTO INICIAL
         const puntosMontaje = ccPts; 
@@ -365,21 +377,7 @@ function calcularPatron() {
         resultado += `* **Instrucción de Cuello:** Tejer **${tiraCuelloPts} pasadas** (**${tiraCuelloCm.toFixed(1)} cm**) con los puntos de montaje para formar la tira del cuello.\n`;
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
-        // 2. AUMENTOS RAGLÁN - Lógica de Forzado y Puntos Sisa
-        
-        let raglanCmBase;
-        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
-             // Bebé (0m-18m): 10 cm.
-             raglanCmBase = 10.0;
-        } else if (tallaSeleccionada.includes('años')) {
-             raglanCmBase = 12.0;
-        } else {
-            // ADULTO: Usar el largo de sisa ajustado
-            raglanCmBase = medidas.PSisa * 1.1; 
-        }
-
-        const hilerasRaglan = Math.round(raglanCmBase * densidadH);
-        const aumentosPorLado = Math.floor(hilerasRaglan / 2);
+        // 2. AUMENTOS RAGLÁN
         
         // Puntos totales que tendrá la manga al separar
         const puntosMangaFinal = pManga + aumentosPorLado; 
@@ -401,8 +399,8 @@ function calcularPatron() {
         const largoMangaCm = medidas.LM - raglanCmBase; 
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
-        const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : 0;
-        const finalLargoMangaCm = largoMangaCm > 0 ? largoMangaCm.toFixed(1) : 0;
+        const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : (0.0).toFixed(1);
+        const finalLargoMangaCm = largoMangaCm > 0 ? largoMangaCm.toFixed(1) : (0.0).toFixed(1);
         
         resultado += `<u>3. Largos Finales</u>\n`;
         resultado += `* **Largo del Cuerpo (desde Sisa a Bajo):** **${finalLargoCuerpoCm} cm** (**${largoCuerpoRestanteH} pasadas**).\n`;
