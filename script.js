@@ -10,27 +10,27 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 14.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
     '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 12.0, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
     '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 13.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
-    '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 13.4, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
-    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 13.6, LT: 30.0, LM: 22.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
-    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 13.8, LT: 32.0, LM: 25.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
-    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 14, LT: 34.0, LM: 27.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
+    '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 15.0, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
+    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 22.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
+    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 19.0, LT: 32.0, LM: 25.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
+    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 27.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
 
     // Tallas de Niños (Se mantienen los datos anteriores)
-    '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 14, LT: 38.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
-    '4 años': { CP: 64.0, CC: 27.0, CA: 24.0, 'C Puño': 14.3, LT: 42.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
-    '6 años': { CP: 68.0, CC: 28.0, CA: 26.0, 'C Puño': 14.5, LT: 34.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 },
-    '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 14.8, LT: 46.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
-    '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 15, LT: 48.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
+    '3 años': { CP: 63.0, CC: 26.5, CA: 23.0, 'C Puño': 21.5, LT: 38.0, LM: 30.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
+    '4 años': { CP: 64.0, CC: 27.0, CA: 24.0, 'C Puño': 22.0, LT: 42.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
+    '6 años': { CP: 68.0, CC: 28.0, CA: 26.0, 'C Puño': 23.0, LT: 44.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 },
+    '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 46.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
+    '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 48.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
     // Tallas de Mujer (Adulto) - CP MODIFICADO.
     '36': { CP: 82.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
     '38': { CP: 86.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
     '40': { CP: 92.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
     '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 }, 
-    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.5, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
-    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 17, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
-    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 17.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
-    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 18.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
+    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
+    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
+    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
+    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
 };
 
 const ORDEN_TALLAS = {
@@ -41,7 +41,7 @@ const ORDEN_TALLAS = {
 
 
 // ====================================================================
-// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ 
+// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ (Se mantienen sin cambios)
 // ====================================================================
 
 function poblarTallas() {
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Lógica de Escote por Tercios Aplicada)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Lógica de Escote por 60/20/20 y Secuencia 3,2,2..1)
 // ====================================================================
 
 /**
@@ -209,88 +209,115 @@ function calcularPatron() {
         const hilerasSisaHombro = Math.round(medidas.PSisa * densidadH);
         const hilerasTotalEspalda = hilerasBajoSisa + hilerasSisaHombro;
         
-        const puntosMedioPecho = Math.round(cpPts / 2);
-        const puntosEspalda = puntosMedioPecho;
+        let puntosMedioPecho = Math.round(cpPts / 2);
+        let puntosEspalda = puntosMedioPecho;
         
         const escoteCmDesdeSisa = medidas.PSisa - medidas.CED;
         const hilerasInicioEscote = Math.round(escoteCmDesdeSisa * densidadH);
         
         
-        // --- CÁLCULO DE PUNTOS DE ESCOTE Y HOMBRO (LÓGICA CORREGIDA BASADA EN TERCIOS) ---
+        // --- LÓGICA DE ESCOTE Y HOMBRO (LÓGICA REFINADA CON 1/3 Y 33% CENTRAL) ---
         
-        // 1. Base: Cálculo de 1/3 de los puntos de la Espalda (Medio Pecho)
+        // 1. Cálculo base de 1/3 (Tercio de los puntos del Medio Pecho / Espalda)
         const puntosTercio = Math.round(puntosMedioPecho / 3);
         
-        // 2. Puntos Finales de Hombro: Un hombro es 1/3 de la espalda.
-        const puntosHombro = puntosTercio; // Puntos fijos para el hombro
+        // 2. Puntos Finales de Hombro: Se asignan 1/3 a cada hombro.
+        const puntosHombro = puntosTercio; 
         
-        let puntosTotalDelantero; 
-        let puntosEscoteTotal; // Puntos totales a cerrar (centro + curva)
+        // Puntos totales restantes para el Escote (Central + Curvas)
+        let puntosEscoteTotal = puntosMedioPecho - (puntosHombro * 2);
+        
+        // Ajuste por si el redondeo dejó puntos sueltos
+        if ((puntosHombro * 2) + puntosEscoteTotal !== puntosMedioPecho) {
+            puntosEscoteTotal = puntosMedioPecho - (puntosHombro * 2);
+        }
+        
+        // Lógica de Escote específica para Jersey/Chaqueta
         let puntosEscoteCentral = 0;
-        let puntosAFormarEscotePts; // Puntos a menguar en la curva (por un lado)
+        let puntosAFormarEscotePts = 0; // Puntos a menguar en la curva (por un lado)
+        let puntosTotalDelantero;
 
         if (tipoPrenda === "JERSEY") {
             puntosTotalDelantero = puntosMedioPecho;
-            // Escote Total = Puntos Totales Delantero - (2 * puntosHombro)
-            puntosEscoteTotal = puntosMedioPecho - (puntosHombro * 2);
-
-            // 1. Cierre Central (Asumimos 40-50% del escote total, ajustado a impar para dividir bien)
-            puntosEscoteCentral = Math.ceil(puntosEscoteTotal * 0.45); 
-            if (puntosEscoteCentral % 2 === 0) {
-                 puntosEscoteCentral = Math.max(1, puntosEscoteCentral - 1); 
-            }
-            // 2. Puntos para la Curva (resto dividido por 2)
-            puntosAFormarEscotePts = Math.floor(Math.max(0, puntosEscoteTotal - puntosEscoteCentral) / 2); 
             
+            // --- NUEVA LÓGICA DE DISTRIBUCIÓN (60% CENTRO, 20% CADA CURVA) ---
+            
+            // 1. Puntos totales a trabajar en el Escote (Central + Curvas)
+            let puntosEscoteTotal = puntosMedioPecho - (puntosHombro * 2);
+            
+            // 2. Cierre Central (60% del total de Escote)
+            puntosEscoteCentral = Math.round(puntosEscoteTotal * 0.60);
+            if (puntosEscoteCentral % 2 === 0) {
+                 // Asegurar que el cierre central sea impar para una división más limpia
+                 puntosEscoteCentral = Math.max(1, puntosEscoteCentral + 1); 
+            }
+            
+            // 3. Puntos para la Curva (40% restante dividido por 2, 20% por lado)
+            const puntosCurvaTotal = Math.max(0, puntosEscoteTotal - puntosEscoteCentral);
+            puntosAFormarEscotePts = Math.floor(puntosCurvaTotal / 2);
+            
+            // Ajustar el centro si el redondeo dejó un punto sobrante.
+            if (puntosCurvaTotal % 2 !== 0) {
+                puntosEscoteCentral += 1;
+            }
+
         } else { // Chaqueta (Delantero es la mitad)
             puntosTotalDelantero = Math.round(puntosMedioPecho / 2); 
             
+            // En Chaqueta: No hay cierre central, solo curva. 
             // Puntos a menguar en el borde central = Puntos Delantero - Puntos Hombro
-            puntosEscoteTotal = puntosTotalDelantero - puntosHombro; 
-            puntosEscoteCentral = 0; // No hay cierre central en la chaqueta
-            puntosAFormarEscotePts = Math.max(0, puntosEscoteTotal); // Los puntos de la curva son el total del escote
+            puntosEscoteCentral = 0;
+            puntosAFormarEscotePts = Math.max(0, puntosTotalDelantero - puntosHombro); 
         }
-
-        // --- LÓGICA DE ESCOTE SIMPLIFICADA Y DISTRIBUCIÓN DE MENGUADOS (4, 3, 2, 1...) ---
-        // Simulación de cierres: (Asegurando que todos los puntos de la curva se cierren)
-        const cierresEscote = [];
+        
+        // --- IMPLEMENTAR SECUENCIA DE CIERRE (3p, 2p, 2p... 1p...) ---
+        const cierresEscoteFinal = [];
         let puntosRestantesCurva = puntosAFormarEscotePts;
-        
-        // Distribución: Priorizar cierres grandes (4, 3, 2, 1...)
-        
-        // Cierre 1: Cierres de 4 (Máximo 1 vez)
-        if (puntosRestantesCurva >= 4) {
-            cierresEscote.push('4p, 1 vez');
-            puntosRestantesCurva -= 4;
-        }
-        
-        // Cierre 2: Cierres de 3 (Máximo 1 vez)
+
+        // 1. Cierre de 3 puntos (MÁXIMO 1 VEZ)
         if (puntosRestantesCurva >= 3) {
-            cierresEscote.push('3p, 1 vez');
+            cierresEscoteFinal.push('3p, 1 vez');
             puntosRestantesCurva -= 3;
         }
 
-        // Cierre 3: Cierres de 2
-        let c2_veces = Math.floor(puntosRestantesCurva / 2);
-        if (c2_veces > 0) {
-            cierresEscote.push(`2p, ${c2_veces} veces`);
-            puntosRestantesCurva -= (c2_veces * 2);
+        // 2. Cierre de 2 puntos (MÁXIMO 1 VEZ, para asegurar la secuencia 3, 2)
+        if (puntosRestantesCurva >= 2) {
+            cierresEscoteFinal.push('2p, 1 vez');
+            puntosRestantesCurva -= 2;
         }
         
-        // Cierre 4: Cierres de 1 punto (si queda alguno)
-        if (puntosRestantesCurva === 1) {
-             cierresEscote.push('1p, 1 vez');
-             puntosRestantesCurva -= 1;
+        // 3. Cierre de 2 puntos (RESTO REPETIDO)
+        let c2_veces_resto = Math.floor(puntosRestantesCurva / 2);
+        if (c2_veces_resto > 0) {
+            // Si el paso 2 se ejecutó, combinamos los cierres de 2p.
+            if (cierresEscoteFinal.length > 0 && cierresEscoteFinal[cierresEscoteFinal.length - 1].startsWith('2p')) {
+                // El paso anterior fue '2p, 1 vez'. Combinamos:
+                const total_c2 = 1 + c2_veces_resto;
+                cierresEscoteFinal[cierresEscoteFinal.length - 1] = `2p, ${total_c2} veces`;
+            } else {
+                // El paso anterior fue 3p (o nada). No hay 2p fijos, así que listamos los cierres restantes de 2p.
+                cierresEscoteFinal.push(`2p, ${c2_veces_resto} veces`);
+            }
+            puntosRestantesCurva -= (c2_veces_resto * 2);
+        }
+
+        // 4. Cierre de 1 punto (FINAL, si queda algo)
+        let c1_veces_final = puntosRestantesCurva;
+        if (c1_veces_final > 0) {
+            cierresEscoteFinal.push(`1p, ${c1_veces_final} veces`);
         }
         
-        // Cierre 5: Seguridad (si aún quedan puntos, aunque no debería)
-        if (puntosRestantesCurva > 0) {
-            cierresEscote.push(`${puntosRestantesCurva}p, 1 vez (Ajuste Final)`); 
+        // --- CÁLCULO DE PASADAS DE CURVA (CORREGIDO) ---
+        let num_veces_curva = 0;
+        for (const cierre of cierresEscoteFinal) {
+            const vecesStr = cierre.split(',')[1].trim();
+            const veces = parseInt(vecesStr.replace('vez', '1').replace('veces', ''));
+            num_veces_curva += veces;
         }
         
+        const pasadasCurvaCorrected = num_veces_curva * 2; // Cada disminución es una pasada (2 filas totales)
         
-        const pasadasCurva = cierresEscote.length * 2; 
-        const hilerasTrabajarRecto = hilerasSisaHombro - hilerasInicioEscote - pasadasCurva;
+        const hilerasTrabajarRecto = hilerasSisaHombro - hilerasInicioEscote - pasadasCurvaCorrected;
         const cmRecto = hilerasTrabajarRecto > 0 ? (hilerasTrabajarRecto / densidadH).toFixed(1) : (0).toFixed(1); 
         
         // =================================== INICIO OUTPUT ===================================
@@ -326,13 +353,13 @@ function calcularPatron() {
         
         if (tipoPrenda === "JERSEY") {
              resultado += `* **2. Cierre Central:** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
-             resultado += `* **3. Curva de Escote:** Continuar tejiendo y disminuir en el borde del escote de la siguiente manera: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** por lado).\n`;
+             resultado += `* **3. Curva de Escote:** Continuar tejiendo y disminuir en el borde del escote de la siguiente manera: **${cierresEscoteFinal.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** por lado).\n`;
              resultado += `* **4.  Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
         } else { // CHAQUETA
-             const cierreInicial = cierresEscote[0].split(',')[0].trim();
-             const restoCierres = cierresEscote.length > 1 ? ` y luego disminuir con la siguiente secuencia: **${cierresEscote.slice(1).join(', ')}**` : '';
+            const cierreInicial = cierresEscoteFinal[0].split(',')[0].trim();
+            const restoCierres = cierresEscoteFinal.length > 1 ? ` y luego disminuir con la siguiente secuencia: **${cierresEscoteFinal.slice(1).join(', ')}**` : '';
             
-            resultado += `* **2. Curva de Escote (Borde Central):** Cerrar **${cierreInicial}** puntos de golpe en el inicio del escote y continuar las disminuciones por el mismo borde: **${restoCierres.replace(' y luego disminuir con la siguiente secuencia: ', '')}** (un total de **${puntosAFormarEscotePts} puntos**).\n`;
+            resultado += `* **2. Curva de Escote (Borde Central):** Cerrar **${cierreInicial} puntos** y luego disminuir con la siguiente secuencia: **${restoCierres.replace(' y luego disminuir con la siguiente secuencia: ', '')}** (un total de **${puntosAFormarEscotePts} puntos**).\n`;
             resultado += `* **3. Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
@@ -347,17 +374,16 @@ function calcularPatron() {
         const totalAumentos = puntosSisaManga - puntosPuño;
         const aumentosPorLado = Math.floor(totalAumentos / 2);
         const frecuenciaAumentos = (aumentosPorLado > 0 && largoMangaH) ? Math.round(largoMangaH / aumentosPorLado) : 0;
-        
-        // **CÁLCULO DE CM HASTA EL ÚLTIMO AUMENTO**
-        let cmAumentoFinal = 0;
-        if (aumentosPorLado > 0 && frecuenciaAumentos > 0 && densidadH) {
-            const hilerasTotalesAumento = frecuenciaAumentos * aumentosPorLado;
-            cmAumentoFinal = (hilerasTotalesAumento / densidadH).toFixed(1);
-        }
 
-        // NOTA IMPORTANTE SOBRE TALLAS DE NIÑO
+        // CÁLCULO DEL ANCHO FINAL EN SISA (CORRECCIÓN SOLICITADA)
+        let cmAnchoFinalSisa = 0;
+        if (puntosSisaManga > 0 && densidadP > 0) {
+            cmAnchoFinalSisa = (puntosSisaManga / densidadP).toFixed(1);
+        }
+        
+        // NOTA IMPORTANTE SOBRE TALLAS DE NIÑO (SOLO SE MUESTRA EN TALLAS DE NIÑO)
         if (tallaSeleccionada.includes('años')) {
-            resultado += `<p style="font-size:0.9em; padding-left: 20px; color: #cc0000;">* **NOTA IMPORTANTE:** Los **${medidas['C Puño'].toFixed(1)} cm** de Contorno de Puño para las tallas de niño son grandes. Esto resulta en **${aumentosPorLado > 0 ? aumentosPorLado : 0} aumentos por lado**. Por favor, verifique el contorno deseado de puño (**'C Puño'**) en la tabla de tallas si el resultado no parece correcto.</p>\n`;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px; color: #cc0000;">* **NOTA IMPORTANTE:** El Contorno de Puño (**${medidas['C Puño'].toFixed(1)} cm**) para tallas de niño es una medida estándar. Verifique el contorno deseado si el resultado de aumentos (**${aumentosPorLado > 0 ? aumentosPorLado : 0} aumentos por lado**) le parece excesivo.</p>\n`;
         }
         
         resultado += `* **Montar:** **${puntosPuño} p.** (Puño de **${medidas['C Puño'].toFixed(1)} cm**).\n`;
@@ -367,9 +393,9 @@ function calcularPatron() {
             const frecuenciaCm = (frecuenciaAumentos / densidadH).toFixed(1);
             resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm} cm**) **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n`;
             
-            // **FRASE SOLICITADA**
-            if (cmAumentoFinal > 0) {
-                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Medida Final:** Los **${puntosSisaManga} puntos** se alcanzarán a los **${cmAumentoFinal} cm** de largo de manga.</p>\n\n`;
+            // FRASE SOLICITADA (Ancho en CM)
+            if (cmAnchoFinalSisa > 0) {
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Ancho Final:** El ancho de la manga en la sisa será de **${cmAnchoFinalSisa} cm** (**${puntosSisaManga} puntos**).</p>\n\n`;
             } else {
                  resultado += `\n`;
             }
