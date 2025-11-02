@@ -59,7 +59,6 @@ function poblarTallas() {
         optgroup.label = label;
         
         tallas.forEach(tallaKey => {
-            // Verifica la existencia de la clave en el objeto de medidas
             if (tallaKey in MEDIDAS_ANTROPOMETRICAS) { 
                 const option = document.createElement('option');
                 option.value = tallaKey;
@@ -156,6 +155,31 @@ function calcularPatron() {
 
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
+    // --- LÓGICA DE HOLGURA (Holgura Normal/Estándar) ---
+    // Holgura base de 10 cm para adulto y 6 cm para niño para un ajuste cómodo
+    let holguraCm = 10.0; 
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
+        holguraCm = 6.0; 
+    }
+    
+    // --- LÓGICA DE RAGLÁN BASE (Para ambas direcciones) ---
+    // Se calcula aquí para ser usada en ambos métodos (BAJO y ESCOTE)
+    let raglanCmBase;
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
+         raglanCmBase = 10.0;
+    } else if (tallaSeleccionada.includes('años')) {
+         raglanCmBase = 12.0;
+    } else {
+        // CORRECCIÓN RAGLÁN: Tope máximo de 25 cm para adultos.
+        raglanCmBase = Math.min(medidas.PSisa, 25.0); 
+    }
+
+    // Puntos y Hileras Base (USANDO HOLGURA)
+    const anchoPrendaCm = medidas.CP + holguraCm; // APLICA HOLGURA
+    const cpPts = Math.round(anchoPrendaCm * densidadP); // Puntos totales del contorno final (Prenda)
+    
+    const caPts = Math.round(medidas.CA * densidadP);
+    
     // TIRA CUELLO (Referencia para tapeta)
     let tiraCuelloCm;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
@@ -166,18 +190,12 @@ function calcularPatron() {
         tiraCuelloCm = 2.5;
     }
 
-    // Puntos y Hileras Base
-    const cpPts = Math.round(medidas.CP * densidadP);
-    const caPts = Math.round(medidas.CA * densidadP);
-    
     // Ajuste de CC para Top-Down (Raglán) para cuello más holgado
     let ccAjustadoCm = medidas.CC;
     if (metodoTejido === "ESCOTE") {
         if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('años')) {
-             // Bebé/Niño: Margen ajustado para cabeza
              ccAjustadoCm = medidas.CC + 3; 
         } else {
-             // Adulto: Margen más grande para pasar la cabeza
              ccAjustadoCm = medidas.CC + 10; 
         }
     }
@@ -188,7 +206,7 @@ function calcularPatron() {
     // Tapeta Suggestion (Calculada y redondeada al siguiente impar)
     let puntosTapeta = Math.round(tiraCuelloCm * densidadP);
     if (puntosTapeta % 2 === 0) {
-        puntosTapeta += 1; // Asegura que los puntos de la tapeta sean impares
+        puntosTapeta += 1;
     }
     
     let resultado = '';
@@ -205,9 +223,9 @@ function calcularPatron() {
         
         let puntosMedioPecho = Math.round(cpPts / 2);
         let puntosEspalda = puntosMedioPecho;
-        let puntosTotalDelantero; // Puntos *sin* la tapeta
+        let puntosTotalDelantero; 
         
-        let puntosACerrarBase = Math.round(medidas.CC * 0.75 * densidadP); // Usar CC original para el cierre de cuello
+        let puntosACerrarBase = Math.round(medidas.CC * 0.75 * densidadP);
         const escoteCmDesdeSisa = medidas.PSisa - medidas.CED;
         const hilerasInicioEscote = Math.round(escoteCmDesdeSisa * densidadH);
         
@@ -219,8 +237,8 @@ function calcularPatron() {
         }
 
         resultado += `<h4>🧶 Resultados de Tejido (Bajo a Escote - Por Piezas) ${indicacionH}</h4>\n`;
-        // Referencia de Talla
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho del cuerpo):** **${medidas.CP.toFixed(1)} cm**.\n`;
+        resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
@@ -303,14 +321,17 @@ function calcularPatron() {
         resultado += `<u>3. Mangas</u>\n`;
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         const puntosSisaManga = caPts; 
-        const largoMangaH = Math.round(medidas.LM * densidadH);
+        
+        // CORRECCIÓN LARGO MANGA: Largo de Puño a Sisa (LM Total - Altura Raglán)
+        const largoMangaSisaPuñoCm = medidas.LM - raglanCmBase; 
+        const largoMangaH = Math.round(largoMangaSisaPuñoCm * densidadH);
         
         const totalAumentos = puntosSisaManga - puntosPuño;
         const aumentosPorLado = Math.floor(totalAumentos / 2);
         const frecuenciaAumentos = (aumentosPorLado > 0) ? Math.round(largoMangaH / aumentosPorLado) : 0;
         
         resultado += `* **Montar:** **${puntosPuño} p.** (Puño de **${medidas['C Puño'].toFixed(1)} cm**).\n`;
-        resultado += `* **Tejer:** **${largoMangaH} pasadas** (**${medidas.LM.toFixed(1)} cm**) hasta la sisa.\n`;
+        resultado += `* **Tejer:** **${largoMangaH} pasadas** (**${largoMangaSisaPuñoCm.toFixed(1)} cm**) hasta la sisa.\n`;
         
         if (frecuenciaAumentos > 0) {
             resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** cada **${frecuenciaAumentos} pasadas** (**${aumentosPorLado} veces**) hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
@@ -327,25 +348,12 @@ function calcularPatron() {
     } else if (metodoTejido === "ESCOTE" && densidadH) {
         // --- CÁLCULO TOP-DOWN (Escote a Bajo - Raglán) ---
         
-        // 🚨 CORRECCIÓN RAGLÁN: Tope máximo de 25 cm para adultos.
-        let raglanCmBase;
-        if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
-             // BEBÉ: Forzamos a 10 cm.
-             raglanCmBase = 10.0;
-        } else if (tallaSeleccionada.includes('años')) {
-             // NIÑO: Forzamos a 12 cm.
-             raglanCmBase = 12.0;
-        } else {
-            // ADULTO: Usamos PSisa, pero la limitamos al estándar de ~25 cm (basado en la web).
-            raglanCmBase = Math.min(medidas.PSisa, 25.0); 
-        }
-
         const hilerasRaglan = Math.round(raglanCmBase * densidadH);
         const aumentosPorLado = Math.floor(hilerasRaglan / 2);
         
         resultado += `<h4>🧶 Resultados de Tejido desde el Escote (Raglán) ${indicacionH}</h4>\n`;
-        // Referencia de Talla
-        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** **${medidas.CP.toFixed(1)} cm**.\n\n`;
+        resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho del cuerpo):** **${medidas.CP.toFixed(1)} cm**.\n`;
+        resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** **${anchoPrendaCm.toFixed(1)} cm** (**${cpPts} puntos**).\n\n`;
 
         // 1. REPARTO INICIAL
         const puntosMontaje = ccPts; 
@@ -379,11 +387,8 @@ function calcularPatron() {
 
         // 2. AUMENTOS RAGLÁN
         
-        // Puntos totales que tendrá la manga al separar
         const puntosMangaFinal = pManga + aumentosPorLado; 
-        
-        // Puntos Añadidos en la sisa (Aproximadamente 10-20% de los puntos de la manga)
-        const puntosAnadirSisaPts = Math.max(4, Math.round(puntosMangaFinal * 0.1)); // Aseguramos un mínimo de 4 puntos
+        const puntosAnadirSisaPts = Math.max(4, Math.round(puntosMangaFinal * 0.1)); 
 
         resultado += `<u>2. Aumentos y Separación (Raglán)</u>\n`;
         resultado += `* **Largo de Línea Raglán Deseado:** Aprox. **${raglanCmBase.toFixed(1)} cm** (**${hilerasRaglan} pasadas**).\n`;
@@ -392,10 +397,10 @@ function calcularPatron() {
         
         
         // 3. LARGOS FINALES
-        // Las pasadas restantes para cuerpo y mangas se ajustarán automáticamente
         const largoCuerpoCm = medidas.LT - raglanCmBase;
         const largoCuerpoRestanteH = Math.round(largoCuerpoCm * densidadH);
         
+        // CORRECCIÓN LARGO MANGA: Largo de Sisa a Puño (LM Total - Altura Raglán)
         const largoMangaCm = medidas.LM - raglanCmBase; 
         const largoMangaRestanteH = Math.round(largoMangaCm * densidadH);
 
