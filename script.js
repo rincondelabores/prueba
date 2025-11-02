@@ -292,24 +292,24 @@ function calcularPatron() {
         if (tipoPrenda === "JERSEY") {
             resultado += `* **Montar:** **${puntosTotalDelantero} puntos**.\n`;
         } else { // CHAQUETA
-            resultado += `* **Montar (Base):** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
+            resultado += `* **Montar:** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tapeta Opcional:** Sugerimos añadir **${puntosTapeta} puntos** extra para la tapeta, que serán **${tiraCuelloCm.toFixed(1)} cm** de ancho.</p>\n`;
         }
         
         resultado += `* **Tejer hasta la Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${densidadH ? `(**${hilerasBajoSisa} pasadas**)` : ''} (igual que la espalda).\n`; 
-        resultado += `* **Largo Total de Sisa a Hombro:** **${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
+      
         
         // INSTRUCCIONES DE ESCOTE SIMPLIFICADAS
-        resultado += `<u>Instrucciones de Escote (Delantero) - Simplificado</u>\n`;
+        resultado += `<u>Instrucciones de Escote (Delantero)</u>\n`;
         resultado += `* **1. Inicio de Escote:** A los **${escoteCmDesdeSisa.toFixed(1)} cm** desde el inicio de la sisa. ${densidadH ? `(En la pasada **${hilerasInicioEscote}**).` : ''}\n`;
         
         if (tipoPrenda === "JERSEY") {
              resultado += `* **2. Cierre Central:** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
-             resultado += `* **3. Curva de Escote (Por Separado):** Continuar tejiendo cada hombro por separado y cerrar/disminuir en el borde del escote de la siguiente manera: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** por lado).\n`;
-             resultado += `* **4. Trabajo Plano y Hombro:** Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
+             resultado += `* **3. Curva de Escote:** Continuar tejiendo y disminuir en el borde del escote de la siguiente manera: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** por lado).\n`;
+             resultado += `* **4.  Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
         } else { // CHAQUETA
             resultado += `* **2. Curva de Escote (Borde Central):** Cerrar **${cierreInicial} puntos** y luego disminuir con la siguiente secuencia: **${cierresEscote.slice(1).join(', ')}** (un total de **${puntosAFormarEscotePts} puntos**).\n`;
-            resultado += `* **3. Trabajo Plano y Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
+            resultado += `* **3. Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
         // 3. MANGAS
