@@ -1,5 +1,6 @@
 // ====================================================================
-// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO con la última tabla)
+// 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
+//    ERROR CORREGIDO: Se eliminan los asteriscos dobles (**) en los valores LM.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
@@ -21,15 +22,16 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '8 años': { CP: 72.0, CC: 29.0, CA: 28.0, 'C Puño': 24.0, LT: 40.0, LM: 38.5, PSisa: 18.0, AE: 36.0, CED: 8.5 },
     '10 años': { CP: 76.0, CC: 30.0, CA: 30.0, 'C Puño': 25.0, LT: 42.0, LM: 41.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
-    // Tallas de Mujer (Adulto) - TODOS los valores son de la última tabla. LM es Sisa a Puño.
-    '36': { CP: 88.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: **47.0**, PSisa: 22.0, AE: 35.0, CED: 7.3 },
-    '38': { CP: 92.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: **48.0**, PSisa: 22.0, AE: 36.0, CED: 7.5 },
-    '40': { CP: 96.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: **48.5**, PSisa: 22.5, AE: 36.8, CED: 7.7 },
-    '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: **49.0**, PSisa: 23.0, AE: 37.6, CED: 7.9 },
-    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: **50.0**, PSisa: 23.3, AE: 38.6, CED: 8.1 },
-    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: **51.0**, PSisa: 23.5, AE: 39.6, CED: 8.3 },
-    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: **52.0**, PSisa: 24.0, AE: 40.6, CED: 8.5 },
-    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: **54.0**, PSisa: 24.3, AE: 41.6, CED: 8.7 }
+    // Tallas de Mujer (Adulto) - LM es Sisa a Puño.
+    // **AQUÍ ESTABA EL ERROR DE SINTAXIS:**
+    '36': { CP: 88.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 },
+    '38': { CP: 92.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 },
+    '40': { CP: 96.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 },
+    '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 },
+    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 },
+    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 },
+    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 },
+    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 }
 };
 
 const ORDEN_TALLAS = {
@@ -40,7 +42,7 @@ const ORDEN_TALLAS = {
 
 
 // ====================================================================
-// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ (Se mantienen sin cambios)
+// 2. FUNCIONES DE UTILIDAD Y LÓGICA DE INTERFAZ
 // ====================================================================
 
 function poblarTallas() {
@@ -87,17 +89,17 @@ function manejarVisibilidadCampos() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    poblarTallas();
+    // Tras la corrección de sintaxis, esta función ya se puede ejecutar:
+    poblarTallas(); 
+    
     const tipoPrendaSelect = document.getElementById('tipo_prenda');
     if (tipoPrendaSelect) {
         tipoPrendaSelect.addEventListener('change', manejarVisibilidadCampos);
     }
     manejarVisibilidadCampos();
     
-    const botonCalcular = document.getElementById('calcular_patron');
-    if (botonCalcular) {
-        botonCalcular.addEventListener('click', calcularPatron);
-    }
+    // Se elimina el bloque de código que intentaba adjuntar el evento
+    // de click a un ID que no existe, ya que el HTML usa 'onclick="calcularPatron()"'.
 });
 
 // ====================================================================
@@ -106,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /**
  * Función principal para calcular el patrón de tejido.
+ * (Esta función se llama directamente desde el botón en index.html)
  */
 function calcularPatron() {
     const puntosMuestra = parseFloat(document.getElementById('puntos_muestra').value);
@@ -309,8 +312,7 @@ function calcularPatron() {
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         const puntosSisaManga = caPts; 
         
-        // CORRECCIÓN: Usar medidas.LM directamente, ya que el usuario ha confirmado que
-        // LM en su tabla representa el largo de Sisa a Puño.
+        // CORRECTO: Usar medidas.LM directamente (Largo de Sisa a Puño).
         const largoMangaSisaPuñoCm = medidas.LM; 
         const largoMangaH = densidadH ? Math.round(largoMangaSisaPuñoCm * densidadH) : null;
         
