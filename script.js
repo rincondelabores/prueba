@@ -220,13 +220,11 @@ function calcularPatron() {
     let raglanCmBase;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
          raglanCmBase = 10.0;
-    } 
-    // raglanCmBase para 'años' usa PSisa
-    else if (tallaSeleccionada.includes('años')) {
-         raglanCmBase = medidas.PSisa; 
-    } 
-    else {
-        raglanCmBase = Math.min(medidas.PSisa, 25.0); 
+    } else if (tallaSeleccionada.includes('años')) {
+         raglanCmBase = 12.0;
+    } else {
+        // MODIFICACIÓN SOLICITADA: Se elimina el límite máximo de 25.0 cm para adultos.
+        raglanCmBase = medidas.PSisa; 
     }
 
     // Puntos y Hileras Base
@@ -471,11 +469,13 @@ function calcularPatron() {
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
         // 2. AUMENTOS RAGLÁN
-        const puntosAumentadosR_Total = raglanCmBase * densidadP * 2;
+        const numAumentosRondas = densidadH ? Math.floor(hilerasRaglan / 2) : 0; // El número de rondas/hileras con aumentos
+        const puntosAumentadosPorPieza = numAumentosRondas * 2; // Total de puntos añadidos a cada pieza (2 lados * num rondas)
         
-        const puntosMangaFinal_PreSisa = Math.round(pManga + puntosAumentadosR_Total); 
-        const puntosEspaldaFinal_PreSisa = Math.round(pEspalda + puntosAumentadosR_Total);
-        const puntosDelanteroFinal_PreSisa = Math.round(pDelanteroBase + puntosAumentadosR_Total);
+        // Puntos finales de las piezas antes de añadir los puntos de la sisa.
+        const puntosMangaFinal_PreSisa = Math.round(pManga + puntosAumentadosPorPieza); 
+        const puntosEspaldaFinal_PreSisa = Math.round(pEspalda + puntosAumentadosPorPieza);
+        const puntosDelanteroFinal_PreSisa = Math.round(pDelanteroBase + puntosAumentadosPorPieza);
 
         const puntosAnadirSisaPtsBase = Math.max(4, Math.round(puntosSisaManga * 0.2)); 
         const puntosAnadirSisaPts = puntosAnadirSisaPtsBase % 2 === 0 ? puntosAnadirSisaPtsBase : puntosAnadirSisaPtsBase + 1; 
@@ -485,23 +485,16 @@ function calcularPatron() {
         
         let instruccionRaglanStr = "Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) a lo largo de los **" + raglanCmBase.toFixed(1) + " cm**.";
         if (densidadH) {
-             instruccionRaglanStr = `Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.`;
+             instruccionRaglanStr = `Aumentar 1 punto a cada lado de los 4 marcadores (8 aumentos total) cada **2 pasadas** hasta completar **${hilerasRaglan} pasadas**.\n`;
+             instruccionRaglanStr += `<p style="font-size:0.9em; padding-left: 20px;">- Esto añade **${puntosAumentadosPorPieza} puntos** a cada una de las 4 piezas (Manga/Delantero/Espalda).</p>`;
         }
         resultado += `* **Instrucción de Aumentos:** ${instruccionRaglanStr}\n`;
-        
-        // CLARIFICACIÓN DE PUNTOS AL FINALIZAR EL RAGLÁN
-        resultado += `* **Puntos Finales por Pieza (Antes de la Sisa):**\n`;
-        resultado += `<p style="font-size:0.9em; padding-left: 20px;">- Espalda: **${puntosEspaldaFinal_PreSisa} puntos**.\n`;
-        resultado += `- Delantero/s: **${puntosDelanteroFinal_PreSisa} puntos**.\n`;
-        resultado += `- Cada Manga: **${puntosMangaFinal_PreSisa} puntos**.</p>\n`;
         resultado += `* **Puntos a Añadir en la Sisa:** Al separar las mangas, añadir **${puntosAnadirSisaPts} puntos** (montados o recogidos) bajo cada sisa. \n\n`;
         
         
-        // 3. INSTRUCCIONES DE MANGA Y CUERPO (ORDENADAS POR PRIORIDAD)
+        // 3. INSTRUCCIONES DE MANGA Y CUERPO (MODIFICADO Y DETALLADO)
         
         // CÁLCULOS PARA EL CUERPO Y LA MANGA
-        const puntosMangaConSisa = puntosMangaFinal_PreSisa + puntosAnadirSisaPts;
-        const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         const largoMangaCm = medidas.LM; 
         const largoMangaRestanteH = densidadH ? Math.round(largoMangaCm * densidadH) : null;
         const finalLargoMangaCm = largoMangaCm > 0 ? largoMangaCm.toFixed(1) : (0.0).toFixed(1);
@@ -510,17 +503,28 @@ function calcularPatron() {
         const largoCuerpoRestanteH = densidadH ? Math.round(largoCuerpoCm * densidadH) : null;
         const finalLargoCuerpoCm = largoCuerpoCm > 0 ? largoCuerpoCm.toFixed(1) : (0.0).toFixed(1);
         
-        // CÁLCULO FINAL DE PUNTOS DEL CUERPO
-        const puntosTotalCuerpoFinal = puntosEspaldaFinal_PreSisa + puntosDelanteroFinal_PreSisa + (puntosAnadirSisaPts * 2);
+        const puntosMangaConSisa = puntosMangaFinal_PreSisa + puntosAnadirSisaPts;
+        const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
 
+        // Puntos finales que quedan en la aguja después de unir.
+        const puntosCuerpoEspaldaFinal = puntosEspaldaFinal_PreSisa;
+        const puntosCuerpoDelanteroFinal = puntosDelanteroFinal_PreSisa;
+        const puntosTotalCuerpoFinal = puntosCuerpoEspaldaFinal + puntosCuerpoDelanteroFinal + (puntosAnadirSisaPts * 2);
         
         resultado += `<u>3. Instrucciones post-Raglán (Separación y Tejido)</u>\n`;
-        resultado += `* **Separación de Piezas:** El Raglán divide el tejido en 4 piezas. Dejar los puntos de la **Espalda** y **Delantero/s** en espera (en un cable o lana auxiliar) y comenzar a tejer la **Manga 1**.\n`;
         
-        // --- 3a. MANGAS (Prioridad 1) ---
+        // --- 3.1. MANGAS (Instrucción revisada) ---
         resultado += `\n<u>3.1. Mangas (Tejer dos iguales)</u>\n`;
-        resultado += `* **Manga Inicial:** Transferir los **${puntosMangaFinal_PreSisa} puntos** de una manga a una aguja para tejer y recoger/montar los **${puntosAnadirSisaPts} puntos** bajo la sisa, para un total de **${puntosMangaConSisa} puntos**.\n`;
+        resultado += `* **Manga Inicial:** Dejar el Cuerpo en espera. Transferir los **${puntosMangaFinal_PreSisa} puntos** de la manga a una aguja de trabajo.\n`;
         
+        // Clarificación para añadir puntos bajo manga
+        resultado += `* **Puntos Bajo Manga:** Recoger o montar los **${puntosAnadirSisaPts} puntos** bajo la sisa (que corresponden a la separación del Raglán). Esto resulta en un total de **${puntosMangaConSisa} puntos**.\n`;
+
+        if (puntosAnadirSisaPts % 2 === 0 && puntosAnadirSisaPts > 0) {
+            const mitadPuntosSisa = puntosAnadirSisaPts / 2;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Nota (Tejido Plano):** Si teje la manga en plano (con costura), puede repartir los **${puntosAnadirSisaPts} puntos** de la sisa en dos partes: **${mitadPuntosSisa} puntos** al inicio y **${mitadPuntosSisa} puntos** al final de la hilera.</p>\n`;
+        }
+
         resultado += `* **Disminuciones de Manga:**\n`;
         
         const disminucionesTotales = puntosMangaConSisa - puntosPuño;
@@ -544,33 +548,46 @@ function calcularPatron() {
         resultado += `* **Largo Total de Manga (desde Sisa a Puño):** **${finalLargoMangaCm} cm** ${largoMangaRestanteH !== null ? `(**${largoMangaRestanteH} pasadas**)` : ''}.\n`;
 
 
-        // --- 3b. CUERPO (Prioridad 2) ---
-        resultado += `\n<u>3.2. Cuerpo</u>\n`;
+        // --- 3.2. CUERPO (Instrucción revisada) ---
+        resultado += `\n<u>3.2. Cuerpo (Espalda y Delantero)</u>\n`;
         
-        let pDelanteroFinalStr;
+        // LÓGICA JERSEY (Tejer en circular)
         if (tipoPrenda === "JERSEY") {
-            pDelanteroFinalStr = `**${puntosDelanteroFinal_PreSisa} puntos**`;
-            resultado += `* **Unión de Puntos:** Juntar los puntos de las piezas restantes para el Cuerpo en la siguiente secuencia para tejer en circular: **Delantero** $\rightarrow$ Recoger/montar **${puntosAnadirSisaPts} puntos** bajo la manga 1 $\rightarrow$ **Espalda** $\rightarrow$ Recoger/montar **${puntosAnadirSisaPts} puntos** bajo la manga 2.\n`;
-        } else {
-            pDelanteroFinalStr = `**${Math.ceil(puntosDelanteroFinal_PreSisa/2)} puntos** (Del. 1) y **${Math.floor(puntosDelanteroFinal_PreSisa/2)} puntos** (Del. 2)`;
-            resultado += `* **Unión de Puntos:** Juntar los puntos de las piezas restantes para el Cuerpo en la siguiente secuencia para tejer en plano (chaqueta): **Delantero 1** $\rightarrow$ Recoger/montar **${puntosAnadirSisaPts} puntos** bajo la manga 1 $\rightarrow$ **Espalda** $\rightarrow$ Recoger/montar **${puntosAnadirSisaPts} puntos** bajo la manga 2 $\rightarrow$ **Delantero 2**.\n`;
-        }
-        
-        resultado += `* **Puntos Totales:** Continuar tejiendo con un total de **${puntosTotalCuerpoFinal} puntos**.\n`;
-        resultado += `<p style="font-size:0.9em; padding-left: 20px;">- La Espalda tendrá **${puntosEspaldaFinal_PreSisa} p** y el Delantero/s, ${pDelanteroFinalStr}, además de los **${puntosAnadirSisaPts * 2}** puntos añadidos bajo sisa.</p>\n`;
-        
-        resultado += `* **Largo del Cuerpo (desde Sisa a Bajo):** Continuar recto **${finalLargoCuerpoCm} cm** ${largoCuerpoRestanteH !== null ? `(**${largoCuerpoRestanteH} pasadas**)` : ''}.\n`;
+            const puntosPiezaDelantera = puntosCuerpoDelanteroFinal;
+            const puntosPiezaEspalda = puntosCuerpoEspaldaFinal;
 
+            resultado += `* **Tejido en Redondo (Jersey):** Para tejer el Cuerpo en circular y evitar costuras laterales, junte las piezas restantes en la aguja en el siguiente orden:\n`;
+            resultado += `<p style="padding-left: 20px;">- **Secuencia:** **Delantero** (**${puntosPiezaDelantera} puntos**), **${puntosAnadirSisaPts} puntos** (bajo manga 1), **Espalda** (**${puntosPiezaEspalda} puntos**), **${puntosAnadirSisaPts} puntos** (bajo manga 2).\n`;
+            resultado += `- **Puntos Totales:** Continúe tejiendo con un total de **${puntosTotalCuerpoFinal} puntos**.\n`;
+            
+            if (puntosAnadirSisaPts % 2 === 0 && puntosAnadirSisaPts > 0) {
+                 const mitadPuntosSisa = puntosAnadirSisaPts / 2;
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga divididos en dos: **${mitadPuntosSisa} puntos** al final de la Espalda y **${mitadPuntosSisa} puntos** al inicio del Delantero (si teje por el derecho).</p>\n`;
+            } else {
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga como puntos de montaje/aumento al final de la Espalda y al inicio del Delantero.</p>\n`;
+            }
+        
+        // LÓGICA CHAQUETA (Tejer en plano)
+        } else { // CHAQUETA
+            const pDelantero1 = Math.ceil(puntosCuerpoDelanteroFinal/2);
+            const pDelantero2 = Math.floor(puntosCuerpoDelanteroFinal/2);
+            const puntosPiezaEspalda = puntosCuerpoEspaldaFinal;
+            
+            resultado += `* **Tejido en Plano (Chaqueta):** Para tejer el Cuerpo en una sola pieza (evitando costuras laterales), junte las piezas restantes en la aguja en el siguiente orden:\n`;
+            resultado += `<p style="padding-left: 20px;">- **Secuencia:** **Delantero 1** (**${pDelantero1} puntos**), **${puntosAnadirSisaPts} puntos** (bajo manga 1), **Espalda** (**${puntosPiezaEspalda} puntos**), **${puntosAnadirSisaPts} puntos** (bajo manga 2), **Delantero 2** (**${pDelantero2} puntos**).\n`;
+            resultado += `- **Puntos Totales:** Continúe tejiendo con un total de **${puntosTotalCuerpoFinal} puntos**.\n`;
+        }
+
+        resultado += `* **Largo del Cuerpo (desde Sisa a Bajo):** Continuar recto **${finalLargoCuerpoCm} cm** ${largoCuerpoRestanteH !== null ? `(**${largoCuerpoRestanteH} pasadas**)` : ''}.\n`;
 
     } else {
         resultadoDiv.innerHTML = '<p class="error">Error: Por favor, complete todos los campos obligatorios: **Puntos de Muestra** y selección de **Talla** y **Tipo de Prenda** y **Método de Tejido**.</p>';
         return;
     }
-
+    
     // AÑADIR NOTA DE CROCHET/GANCHILLO (MODIFICACIÓN FINAL)
     resultado += `<hr style="margin-top: 25px; border-color: #d6a4a4;">`;
     resultado += `<p style="font-size:0.9em; text-align: center;">💡 **Nota:** Esta calculadora es válida para **Punto de Aguja** (donde 'puntos' = puntos y 'pasadas' = hileras) y para **Ganchillo/Crochet** (donde 'puntos' = cadenetas/puntos bajos y 'pasadas' = vueltas). Solo tiene que sustituir la terminología.</p>`;
-
 
     resultadoDiv.innerHTML = resultado.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 }
