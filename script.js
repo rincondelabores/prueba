@@ -220,9 +220,13 @@ function calcularPatron() {
     let raglanCmBase;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
          raglanCmBase = 10.0;
-    } else if (tallaSeleccionada.includes('años')) {
-         raglanCmBase = 12.0;
-    } else {
+    } 
+    // INICIO DE LA CORRECCIÓN: raglanCmBase para 'años' usa PSisa
+    else if (tallaSeleccionada.includes('años')) {
+         raglanCmBase = medidas.PSisa; // CORRECCIÓN 1: Usar PSisa para Raglán de Niños
+    } 
+    // FIN DE LA CORRECCIÓN
+    else {
         raglanCmBase = Math.min(medidas.PSisa, 25.0); 
     }
 
@@ -488,7 +492,9 @@ function calcularPatron() {
         
         // CÁLCULOS PARA EL CUERPO Y LA MANGA
         const puntosCuerpoEspaldaFinal = pEspalda + puntosAumentadosR + puntosAnadirSisaPts;
-        const puntosCuerpoDelanteroFinal = pDelanteroBase + (puntosAumentadosR * 2) + puntosAnadirSisaPts; // Aumentos Raglan de dos lados + puntos de sisa
+        // INICIO DE LA CORRECCIÓN: Se elimina el duplicado de aumentos
+        const puntosCuerpoDelanteroFinal = pDelanteroBase + puntosAumentadosR + puntosAnadirSisaPts; // CORRECCIÓN 2: Se eliminó el * 2 incorrecto
+        // FIN DE LA CORRECCIÓN
         const puntosTotalCuerpoFinal = puntosCuerpoEspaldaFinal + puntosCuerpoDelanteroFinal;
 
         const largoCuerpoCm = medidas.LT - medidas.PSisa; 
