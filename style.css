@@ -160,3 +160,26 @@ footer {
     color: #666;
     border-top: 1px solid var(--color-borde);
 }
+
+/* ======================================================= */
+/* === AJUSTES DE RESPONSIVIDAD PARA DISPOSITIVOS MÓVILES === */
+/* ======================================================= */
+@media screen and (max-width: 768px) {
+    .container {
+        /* Fuerza a que los bloques (formulario y resultados) se apilen verticalmente */
+        flex-direction: column; 
+        margin: 10px auto; /* Menos margen vertical */
+        padding: 0 10px; /* Menos padding lateral */
+        gap: 15px; /* Menos espacio entre bloques */
+    }
+
+    /* Reducir el tamaño de la cabecera en móviles */
+    header h1 {
+        font-size: 1.8em;
+    }
+
+    /* Reducir padding de las secciones en móviles */
+    .calculator-form, .results {
+        padding: 20px;
+    }
+}
