@@ -523,7 +523,7 @@ function calcularPatron() {
 
         if (puntosAnadirSisaPts % 2 === 0 && puntosAnadirSisaPts > 0) {
             const mitadPuntosSisa = puntosAnadirSisaPts / 2;
-            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Nota (Agujas rectas):** Si teje la manga en plano (con costura), debe dividir los **${puntosAnadirSisaPts} puntos** de la sisa en dos: **${mitadPuntosSisa} puntos** al antes de la manga y **${mitadPuntosSisa} puntos** al final.</p>\n`;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Nota (Agujas rectas):** Si teje la manga en plano (con costura), debe dividir los **${puntosAnadirSisaPts} puntos** de la sisa en dos: **${mitadPuntosSisa} puntos** antes de la manga y **${mitadPuntosSisa} puntos** después de la manga.</p>\n`;
         }
 
         resultado += `* **Disminuciones de Manga:**\n`;
@@ -563,9 +563,9 @@ function calcularPatron() {
             
             if (puntosAnadirSisaPts % 2 === 0 && puntosAnadirSisaPts > 0) {
                  const mitadPuntosSisa = puntosAnadirSisaPts / 2;
-                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga divididos en dos: **${mitadPuntosSisa} puntos** al final de la Espalda y **${mitadPuntosSisa} puntos** al inicio del Delantero (si teje por el derecho).</p>\n`;
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga divididos en dos: **${mitadPuntosSisa} puntos** al inicio y final de la Espalda y **${mitadPuntosSisa} puntos** al inicio y final del Delantero.</p>\n`;
             } else {
-                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga como puntos de montaje/aumento al final de la Espalda y al inicio del Delantero.</p>\n`;
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tejido Separado (Plano):** Si prefiere tejer el Delantero y la Espalda por separado, recuerde añadir los **${puntosAnadirSisaPts} puntos** bajo manga como puntos de montaje/aumento al inicio y final de la Espalda y al inicio y final del Delantero.</p>\n`;
             }
         
         // LÓGICA CHAQUETA (Tejer en plano)
