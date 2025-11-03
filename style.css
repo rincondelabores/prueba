@@ -53,7 +53,9 @@ header h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--color-sombra);
-    flex: 0 0 250px; /* Ancho fijo para la tarjeta */
+    /* REMOVIDA la propiedad flex: 0 0 250px; para que ocupe el ancho completo de su nuevo contenedor */
+    width: 100%; 
+    margin-top: 25px; /* Separación añadida para despegarló del botón de calcular */
     height: fit-content;
     text-align: center;
     border-top: 5px solid var(--color-secundario);
