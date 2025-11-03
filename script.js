@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Ajuste para Pasadas Opcionales y Chaqueta Bottom-Up)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Actualización de tiraCuelloCm)
 // ====================================================================
 
 /**
@@ -222,7 +222,19 @@ function calcularPatron() {
     const cpPts = Math.round(anchoPrendaCm * densidadP); 
     const caPts = Math.round(medidas.CA * densidadP);
     
-    let tiraCuelloCm = (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) ? 1.5 : (tallaSeleccionada.includes('años') ? 2.0 : 2.5);
+    // =================================================
+    // CÓDIGO CORREGIDO PARA LA TIRA DEL CUELLO/TAPETA
+    // =================================================
+    let tiraCuelloCm;
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
+        tiraCuelloCm = 1.5; // Bebé
+    } else if (tallaSeleccionada.includes('años')) {
+        tiraCuelloCm = 2.0; // Niños
+    } else {
+        tiraCuelloCm = 3.0; // Adultos
+    }
+    // =================================================
+    
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
     let ccAjustadoCm = medidas.CC;
