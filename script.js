@@ -360,14 +360,14 @@ function calcularPatron() {
         if (caidaEscoteDeseadaCm) {
              resultado += `* **Profundidad de Escote Final Deseada (Tira Incluida):** **${cedFinalCm.toFixed(1)} cm** (El patrón se calcula con una caída de **${cedRealCm.toFixed(1)} cm** para el cuerpo).\n\n`;
         } else {
-             resultado += `* **Caída de Escote (Estándar de Patrón):** **${medidas.CED.toFixed(1)} cm**.\n\n`;
+             resultado += `* **Caída de Escote:** **${medidas.CED.toFixed(1)} cm**.\n\n`;
         }
         
         // 1. ESPALDA
         resultado += `<u>1. Espalda</u>\n`;
         resultado += `* **Montar:** **${puntosEspalda} puntos**.\n`;
         resultado += `* **Tejer hasta la Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${hilerasBajoSisa !== null ? `(**${hilerasBajoSisa} pasadas**)` : ''}.\n`; 
-        resultado += `* **Continuar Sisa a Hombro (Recto):** **${medidas.PSisa.toFixed(1)} cm** ${hilerasSisaHombro !== null ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n`; 
+        resultado += `* **Continuar tejiendo de Sisa a Hombro (Recto):** **${medidas.PSisa.toFixed(1)} cm** ${hilerasSisaHombro !== null ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n`; 
         resultado += `* **Total Tejido (De bajo a Hombro):** **${medidas.LT.toFixed(1)} cm** ${hilerasTotalEspalda !== null ? `(**${hilerasTotalEspalda} pasadas**)` : ''}. Cerrar todos los puntos al finalizar.\n\n`;
 
         // 2. DELANTERO(S)
@@ -381,8 +381,8 @@ function calcularPatron() {
         resultado += `* **Tejer hasta la Sisa:** **${largoCuerpoCm.toFixed(1)} cm** ${hilerasBajoSisa !== null ? `(**${hilerasBajoSisa} pasadas**)` : ''} (igual que la espalda).\n`; 
       
         // INSTRUCCIONES DE ESCOTE
-        resultado += `<u>Instrucciones de Escote (Delantero)</u>\n`;
-        resultado += `* **1. Inicio de Escote:** A los **${escoteCmDesdeSisa.toFixed(1)} cm** desde el inicio de la sisa. ${hilerasInicioEscote !== null ? `(En la pasada **${hilerasInicioEscote}**).` : ''}\n`;
+        resultado += `<u>Indicacciones para el Escote (Delantero)</u>\n`;
+        resultado += `* **1. Tejer el Escote ** a los **${escoteCmDesdeSisa.toFixed(1)} cm** desde el inicio de la sisa. ${hilerasInicioEscote !== null ? `(En la pasada **${hilerasInicioEscote}**).` : ''}\n`;
         
         if (tipoPrenda === "JERSEY") {
              resultado += `* **2. Cierre Central (Recto):** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados.\n`;
@@ -398,7 +398,7 @@ function calcularPatron() {
             const avisoTapetaEnCierre = ` (Tenga en cuenta que si añadió la tapeta sugerida de **${puntosTapeta} puntos**, el cierre inicial será de **${puntosCierreInicialConTapeta} puntos** en total).`;
             
             // Instrucción modificada con la advertencia
-            resultado += `* **2. Borde Central (Escote):** Cerrar **${puntosCierreInicial} puntos**${avisoTapetaEnCierre} y luego continuar disminuyendo de la siguiente manera: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
+            resultado += `* **2. Cierre Central (Escote):** Cerrar **${puntosCierreInicial} puntos**${avisoTapetaEnCierre} y luego continuar disminuyendo de la siguiente manera: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
             resultado += `* **3. Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${hilerasSisaHombro !== null ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
@@ -588,7 +588,7 @@ function calcularPatron() {
     
     // AÑADIR NOTA DE CROCHET/GANCHILLO (MODIFICACIÓN FINAL)
     resultado += `<hr style="margin-top: 25px; border-color: #d6a4a4;">`;
-    resultado += `<p style="font-size:0.9em; text-align: center;">💡 **Nota:** Esta calculadora es válida para **Punto de Aguja** (donde 'puntos' = puntos y 'pasadas' = hileras) y para **Ganchillo/Crochet** (donde 'puntos' = cadenetas/puntos bajos y 'pasadas' = vueltas). Solo tiene que sustituir la terminología.</p>`;
+    resultado += `<p style="font-size:0.9em; text-align: center;">💡 **Nota:** Esta calculadora es válida tanto para **tejido en dos agujas** (donde 'puntos' = puntos y 'pasadas' = hileras) como para **Ganchillo/Crochet** (donde 'puntos' = cadenetas y 'pasadas' = vueltas). Solo tiene que sustituir la terminología.</p>`;
 
     resultadoDiv.innerHTML = resultado.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 }
