@@ -142,15 +142,16 @@ function generarCierresProgresivosNuevo(puntosAFormar) {
             if (cierres[i] === actual) {
                 contador++;
             } else {
-                // CORRECCIÓN ORTOGRÁFICA: 'vezes' por 'veces'
-                cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'ces' : ''}`);
+              // CORRECCIÓN ORTOGRÁFICA: Se usa 'veces' o 'vez' según el contador.
+                cierresAgrupados.push(`${actual}p, ${contador} ${contador > 1 ? 'veces' : 'vez'}`); 
                 actual = cierres[i];
                 contador = 1;
             }
         }
-        // CORRECCIÓN ORTOGRÁFICA: 'vezes' por 'veces'
-        cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'ces' : ''}`);
+        // CORRECCIÓN ORTOGRÁFICA: Se usa 'veces' o 'vez' según el contador.
+        cierresAgrupados.push(`${actual}p, ${contador} ${contador > 1 ? 'veces' : 'vez'}`);
     }
+       
 
     return { 
         secuencia: cierresAgrupados, 
@@ -394,7 +395,7 @@ function calcularPatron() {
             const puntosCierreInicial = puntosEscoteCentral;
             const puntosCierreInicialConTapeta = puntosEscoteCentral + puntosTapeta;
             
-            const avisoTapetaEnCierre = ` (Tenga en cuenta que si usó la tapeta sugerida de **${puntosTapeta} puntos**, el cierre inicial será de **${puntosCierreInicialConTapeta} puntos** en total).`;
+            const avisoTapetaEnCierre = ` (Tenga en cuenta que si añadió la tapeta sugerida de **${puntosTapeta} puntos**, el cierre inicial será de **${puntosCierreInicialConTapeta} puntos** en total).`;
             
             // Instrucción modificada con la advertencia
             resultado += `* **2. Borde Central (Escote):** Cerrar **${puntosCierreInicial} puntos**${avisoTapetaEnCierre} y luego continuar disminuyendo de la siguiente manera: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
