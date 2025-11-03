@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Nueva lógica de Sisa Caída Integrada)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Nueva lógica de Sisa Caída Integrada - CORREGIDA)
 // ====================================================================
 
 /**
@@ -182,9 +182,9 @@ function calcularPatron() {
     const anchoMangaCm = medidas.CA + holguraMangaCm; 
     const caPts = Math.round(anchoMangaCm * densidadP); 
     
-    // **NUEVO CÁLCULO CRÍTICO: LARGO DE LA ABERTURA DE LA SISA (PARA MANGA CAÍDA)**
-    // PSisa (largo) = (Contorno Axila + Holgura) / 2
-    const sisaLargoCm = anchoMangaCm / 2;
+    // **CÁLCULO CRÍTICO CORREGIDO: LARGO DE LA ABERTURA DE LA SISA (PARA MANGA CAÍDA)**
+    // Fórmula solicitada por Elena: Sisa (largo) = (Contorno Axila / 2) + Holgura
+    const sisaLargoCm = (medidas.CA / 2) + holguraMangaCm;
 
     // TIRA CUELLO (Referencia para tapeta)
     let tiraCuelloCm = (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) ? 1.5 : (tallaSeleccionada.includes('años') ? 2.0 : 2.5);
@@ -291,7 +291,7 @@ function calcularPatron() {
         
         // =================================== INICIO OUTPUT ===================================
         resultado += `<h4>🧶 Resultados de Tejido (Del Bajo al Hombro - Por Piezas)</h4>\n`;
-        resultado += `<p style="color: #cc0000;">* **NOTA IMPORTANTE:** Este cálculo es para **Manga Caída (Recta sin Copa)**. La sisa del cuerpo se ha ajustado al ancho de la manga.</p>\n`;
+        resultado += `<p style="color: #cc0000;">* **NOTA IMPORTANTE:** Este cálculo es para **Manga Caída (Recta sin Copa)**. La sisa del cuerpo se ha ajustado a tu fórmula: (CA/2) + Holgura.</p>\n`;
         resultado += `* **Talla Seleccionada (${tallaSeleccionada}) (Contorno de pecho):** <b>${medidas.CP.toFixed(1)} cm</b>.\n`; 
         resultado += `* **Holgura Aplicada (Ajuste Normal):** <b>${holguraCm.toFixed(1)} cm</b>.\n`; 
         resultado += `* **Ancho Total de la Prenda (Contorno de pecho + Holgura):** <b>${anchoPrendaCm.toFixed(1)} cm</b> (<b>${cpPts} puntos</b>).\n\n`;
@@ -300,7 +300,7 @@ function calcularPatron() {
         resultado += `<u>1. Espalda</u>\n`;
         resultado += `* **Montar:** <b>${puntosEspalda} puntos</b>.\n`;
         resultado += `* **Tejer hasta la Sisa:** <b>${largoCuerpoCm.toFixed(1)} cm</b> ${densidadH ? `(<b>${hilerasBajoSisa} pasadas</b>)` : ''}. Este es el punto de inicio de la sisa de manga caída.\n`; 
-        resultado += `* **Continuar Sisa a Hombro (Recto):** <b>${sisaLargoCm.toFixed(1)} cm</b> ${densidadH ? `(<b>${hilerasSisaHombro} pasadas</b>)` : ''}. Este es el **largo de la abertura de la sisa**.\n`; 
+        resultado += `* **Continuar Sisa a Hombro (Recto):** <b>${sisaLargoCm.toFixed(1)} cm</b> ${densidadH ? `(<b>${hilerasSisaHombro} pasadas</b>)` : ''}. Este es el **largo de la abertura de la sisa (caída)**.\n`; 
         resultado += `* **Total Tejido (De bajo a Hombro):** <b>${medidas.LT.toFixed(1)} cm</b> ${densidadH ? `(<b>${hilerasTotalEspalda} pasadas</b>)` : ''}. Cerrar todos los puntos al finalizar.\n\n`;
 
         // 2. DELANTERO(S)
@@ -333,7 +333,7 @@ function calcularPatron() {
         resultado += `<u>3. Mangas</u>\n`;
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
         
-        // PUNTOS SISA MANGA USA ANCHO PLANO
+        // PUNTOS SISA MANGA USA ANCHO PLANO (Contorno Axila + Holgura TOTAL)
         const puntosSisaManga = caPts; 
         
         const largoMangaSisaPuñoCm = medidas.LM; 
@@ -364,7 +364,7 @@ function calcularPatron() {
             
             // FRASE SOLICITADA (Ancho en CM)
             if (cmAnchoFinalSisa > 0) {
-                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Ancho Final (Sisa):** El ancho de la manga en la sisa será de <b>${cmAnchoFinalSisa} cm</b> (<b>${puntosSisaManga} puntos</b>). Este es el largo que debe coincidir con la sisa de manga caída del cuerpo.</p>\n\n`; 
+                 resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Ancho Final (Sisa):** El ancho de la manga en la sisa será de <b>${cmAnchoFinalSisa} cm</b> (<b>${puntosSisaManga} puntos</b>). Este ancho debe coincidir con el **doble** del largo de la sisa de caída del cuerpo (2 x ${sisaLargoCm.toFixed(1)} cm = ${(sisaLargoCm * 2).toFixed(1)} cm), por lo que el cuerpo tendrá hombro caído.</p>\n\n`; 
             } else {
                  resultado += `\n`;
             }
