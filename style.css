@@ -53,9 +53,8 @@ header h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--color-sombra);
-    /* REMOVIDA la propiedad flex: 0 0 250px; para que ocupe el ancho completo de su nuevo contenedor */
     width: 100%; 
-    margin-top: 25px; /* Separación añadida para despegarló del botón de calcular */
+    margin-top: 25px; 
     height: fit-content;
     text-align: center;
     border-top: 5px solid var(--color-secundario);
@@ -96,7 +95,7 @@ header h1 {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--color-sombra);
-    flex: 1; /* Ocupan el espacio restante */
+    flex: 1; /* Ocupan el espacio restante en escritorio */
 }
 
 .calculator-form h2, .results h2 {
@@ -144,7 +143,7 @@ button:hover {
     min-height: 150px;
     background-color: #eef5f8;
     border-radius: 4px;
-    white-space: pre-wrap; /* Respeta saltos de línea del script.js */
+    white-space: pre-wrap; 
 }
 
 .output-box h3, .output-box h4 {
@@ -168,18 +167,20 @@ footer {
     .container {
         /* Fuerza a que los bloques (formulario y resultados) se apilen verticalmente */
         flex-direction: column; 
-        margin: 10px auto; /* Menos margen vertical */
-        padding: 0 10px; /* Menos padding lateral */
-        gap: 15px; /* Menos espacio entre bloques */
+        margin: 10px auto; 
+        padding: 0 10px; 
+        gap: 15px; 
+    }
+
+    /* CORRECCIÓN: Forzamos el ancho al 100% y eliminamos las propiedades flex para que se expandan completamente al apilarse */
+    .calculator-form, .results {
+        width: 100%; 
+        flex: none; 
+        padding: 20px;
     }
 
     /* Reducir el tamaño de la cabecera en móviles */
     header h1 {
         font-size: 1.8em;
-    }
-
-    /* Reducir padding de las secciones en móviles */
-    .calculator-form, .results {
-        padding: 20px;
     }
 }
