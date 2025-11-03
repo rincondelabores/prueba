@@ -106,6 +106,56 @@ document.addEventListener('DOMContentLoaded', () => {
 // ====================================================================
 
 /**
+ * Genera una secuencia de cierres progresivos (3p x 1, luego 2p, luego 1p)
+ * para lograr el borde curvo del escote.
+ */
+function generarCierresProgresivosNuevo(puntosAFormar) {
+    let puntosRestantes = puntosAFormar;
+    const cierres = [];
+
+    // 1. Cierre de 3 puntos, 1 vez (si es posible)
+    if (puntosRestantes >= 3) {
+        cierres.push(3);
+        puntosRestantes -= 3;
+    }
+
+    // 2. Cierres de 2 puntos (prioridad: cierres mayores primero)
+    while (puntosRestantes >= 2) {
+        cierres.push(2);
+        puntosRestantes -= 2;
+    }
+
+    // 3. Cierres de 1 punto (el resto)
+    while (puntosRestantes > 0) {
+        cierres.push(1);
+        puntosRestantes -= 1;
+    }
+
+    // Agrupar cierres idénticos consecutivos y formatear para la salida
+    const cierresAgrupados = [];
+    if (cierres.length > 0) {
+        let actual = cierres[0];
+        let contador = 1;
+        for (let i = 1; i < cierres.length; i++) {
+            if (cierres[i] === actual) {
+                contador++;
+            } else {
+                cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'es' : ''}`);
+                actual = cierres[i];
+                contador = 1;
+            }
+        }
+        cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'es' : ''}`);
+    }
+
+    return { 
+        secuencia: cierresAgrupados, 
+        totalDisminuciones: cierres.length 
+    };
+}
+
+
+/**
  * Función principal para calcular el patrón de tejido.
  */
 function calcularPatron() {
@@ -213,107 +263,64 @@ function calcularPatron() {
         let puntosEspalda = puntosMedioPecho;
         let puntosTotalDelantero; 
         
-        // Puntos base para el hueco del escote (aprox 75% del CC)
-        let puntosACerrarBase = Math.round(medidas.CC * 0.75 * densidadP); 
-        
         const escoteCmDesdeSisa = medidas.PSisa - medidas.CED;
         const hilerasInicioEscote = Math.round(escoteCmDesdeSisa * densidadH);
         
         if (tipoPrenda === "CHAQUETA") {
             puntosTotalDelantero = Math.round(puntosMedioPecho / 2);
-            puntosACerrarBase = Math.round(puntosACerrarBase / 2);
         } else { // JERSEY
             puntosTotalDelantero = puntosMedioPecho;
         }
 
-        // --- LÓGICA DE ESCOTE REFINADA (Según la petición del usuario) ---
+        // ===============================================
+        // *** LÓGICA DE ESCOTE: 33% Hombro / 33% Escote / 33% Hombro ***
+        // *** Escote: 30% Curva / 40% Recto / 30% Curva ***
+        // ===============================================
 
-        /**
-         * Genera una secuencia de cierres progresivos (por ejemplo: 4p, 1 vez; 3p, 1 vez; 2p, 3 veces; 1p, 4 veces...) 
-         * para lograr un borde más redondeado.
-         */
-        function generarCierresProgresivos(puntosAFormar) {
-            let puntosRestantes = puntosAFormar;
-            const cierres = [];
-            
-            // 1. Cierres grandes (4, 3) - Max 4. Priorizar los cierres más grandes al inicio.
-            // Distribuir el 50% de los puntos en cierres de 4 y 3, hasta un máximo de 10 puntos en esta fase.
-            let puntosParaCierresGrandes = Math.min(Math.round(puntosAFormar * 0.5), 10); 
-            
-            while (puntosParaCierresGrandes > 0 && puntosRestantes > 0) {
-                let cierre = 0;
-                if (puntosParaCierresGrandes >= 4) {
-                    cierre = 4;
-                } else if (puntosParaCierresGrandes >= 3) {
-                    cierre = 3;
-                } else if (puntosParaCierresGrandes >= 2) {
-                    cierre = 2; // Si solo quedan 2 en esta fase, usarlos.
-                } else {
-                    cierre = 1; // Si solo queda 1 en esta fase, usarlo.
-                }
-                
-                cierres.push(cierre);
-                puntosParaCierresGrandes -= cierre;
-                puntosRestantes -= cierre;
-            }
-
-            // 2. Cierres medianos y pequeños (2, 1) - El resto se cierra progresivamente.
-            while (puntosRestantes > 0) {
-                 if (puntosRestantes >= 2) {
-                     cierres.push(2);
-                     puntosRestantes -= 2;
-                 } else {
-                     cierres.push(1);
-                     puntosRestantes -= 1;
-                 }
-            }
-            
-            // Agrupar cierres idénticos consecutivos y formatear para la salida
-            const cierresAgrupados = [];
-            if (cierres.length > 0) {
-                let actual = cierres[0];
-                let contador = 1;
-                for (let i = 1; i < cierres.length; i++) {
-                    if (cierres[i] === actual) {
-                        contador++;
-                    } else {
-                        cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'es' : ''}`);
-                        actual = cierres[i];
-                        contador = 1;
-                    }
-                }
-                cierresAgrupados.push(`${actual}p, ${contador} vez${contador > 1 ? 'es' : ''}`);
-            }
-
-            return { 
-                secuencia: cierresAgrupados, 
-                totalDisminuciones: cierres.length 
-            };
+        // 1. Puntos de Hombro (Aprox. 33% del delantero)
+        const puntosHombroBase = Math.round(puntosTotalDelantero * 0.33); 
+        
+        // 2. Puntos Totales a Cerrar en el Escote (Aprox. 33% restante)
+        let puntosEscoteTotal = puntosTotalDelantero - (puntosHombroBase * 2);
+        
+        // Ajuste por redondeo: si el EscoteTotal es muy bajo, se ajusta al Hombro.
+        if (puntosEscoteTotal < 3) {
+            puntosEscoteTotal = 3; 
+            puntosHombroBase = Math.floor((puntosTotalDelantero - puntosEscoteTotal) / 2);
         }
+
+        // 3. Desglose del Escote Total (40% Central, 30% Curva 1, 30% Curva 2)
         
-        
-        const puntosEscoteCentral = puntosACerrarBase;
-        // Puntos restantes para el hombro
-        const puntosHombro = puntosTotalDelantero - Math.ceil(puntosEscoteCentral / 2); 
-        
-        let puntosAFormarEscotePts;
+        // 40% Cierre Recto Central (Debe ser impar para Jersey)
+        let puntosEscoteCentral = Math.round(puntosEscoteTotal * 0.40);
         if (tipoPrenda === "JERSEY") {
-            // Puntos de la curva = Puntos totales del delantero - Puntos del hombro (incluye la mitad del cierre central)
-            puntosAFormarEscotePts = puntosTotalDelantero - puntosHombro; 
-        } else { // Chaqueta
-            // Puntos de la curva = Puntos centrales del escote
-            puntosAFormarEscotePts = puntosACerrarBase; 
+             if (puntosEscoteCentral % 2 === 0) {
+                 puntosEscoteCentral = Math.max(1, puntosEscoteCentral + 1);
+             }
         }
         
+        // Puntos restantes para las dos curvas
+        const puntosRestantesCurvas = puntosEscoteTotal - puntosEscoteCentral;
         
+        // 30% Curva por lado (Ajustado por el resto disponible)
+        let puntosAFormarEscotePts = Math.floor(puntosRestantesCurvas / 2);
+        
+        // Aseguramos que el hombro no sea cero y que la curva sea al menos 1
+        const puntosHombro = puntosHombroBase + (puntosRestantesCurvas - (puntosAFormarEscotePts * 2));
+        if (puntosHombro < 1) {
+            puntosHombro = 1;
+        }
+
         // Aplicar la nueva lógica de cierre progresivo
-        const escoteCalculado = generarCierresProgresivos(puntosAFormarEscotePts);
+        const escoteCalculado = generarCierresProgresivosNuevo(puntosAFormarEscotePts);
         
         const cierresEscote = escoteCalculado.secuencia; 
         const pasadasCurva = escoteCalculado.totalDisminuciones * 2; 
         
+        // Pasadas Rectas: Restar el inicio de escote y las pasadas que se usan para la curva.
         const hilerasTrabajarRecto = hilerasSisaHombro - hilerasInicioEscote - pasadasCurva;
         const cmRecto = hilerasTrabajarRecto > 0 ? (hilerasTrabajarRecto / densidadH).toFixed(1) : (0).toFixed(1); 
+        // =================================== FIN CORRECCIÓN ===================================
         
         // =================================== INICIO OUTPUT ===================================
         resultado += `<h4>🧶 Resultados de Tejido (Del Bajo al Hombro - Por Piezas)</h4>\n`;
@@ -334,6 +341,7 @@ function calcularPatron() {
         if (tipoPrenda === "JERSEY") {
             resultado += `* **Montar:** **${puntosTotalDelantero} puntos**.\n`;
         } else { // CHAQUETA
+            puntosEscoteCentral = Math.round(puntosEscoteCentral / 2); // Dividir el cierre central de la chaqueta
             resultado += `* **Montar:** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tapeta Opcional:** Sugerimos añadir **${puntosTapeta} puntos** extra para la tapeta, que serán **${tiraCuelloCm.toFixed(1)} cm** de ancho.</p>\n`;
         }
@@ -346,13 +354,16 @@ function calcularPatron() {
         resultado += `* **1. Inicio de Escote:** A los **${escoteCmDesdeSisa.toFixed(1)} cm** desde el inicio de la sisa. ${densidadH ? `(En la pasada **${hilerasInicioEscote}**).` : ''}\n`;
         
         if (tipoPrenda === "JERSEY") {
-             resultado += `* **2. Cierre Central:** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
-             resultado += `* **3. Curva de Escote:** Continuar tejiendo y cerrar progresivamente en el borde del escote con la siguiente secuencia: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** a cerrar por lado).\n`;
-             resultado += `* **4.  Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
+             resultado += `* **2. Cierre Central (Recto):** Cerrar los **${puntosEscoteCentral} puntos** centrales. Esto divide el tejido en dos lados independientes.\n`;
+             resultado += `* **3. Curva de Escote (Ambos lados):** Continuar tejiendo y cerrar progresivamente en el borde del escote con la siguiente secuencia: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** a cerrar por lado).\n`;
+             resultado += `* **4.  Hombro:** Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes por hombro al llegar a la altura total de sisa (**${medidas.PSisa.toFixed(1)} cm** ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}).\n\n`; 
         } else { // CHAQUETA
-            // Usamos el total de cierres progresivos, ya que en la chaqueta no hay cierre central
-            resultado += `* **2. Curva de Escote (Borde Central):** Cerrar progresivamente con la siguiente secuencia: **${cierresEscote.join(', ')}** (un total de **${puntosAFormarEscotePts} puntos** a disminuir).\n`;
-            resultado += `* **3. Continuar recto los **${cmRecto} cm** ${densidadH ? `(**${hilerasTrabajarRecto} pasadas**)` : ''} restantes. Cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
+            // La chaqueta cierra puntos del escote central más la curva en un solo lado
+            const totalCierreLateral = puntosEscoteCentral + puntosAFormarEscotePts;
+            const secuenciaTotal = generarCierresProgresivosNuevo(totalCierreLateral).secuencia;
+            
+            resultado += `* **2. Borde Central (Escote):** Cerrar **${puntosEscoteCentral} puntos** y luego continuar disminuyendo progresivamente con la siguiente secuencia: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
+            resultado += `* **3. Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${densidadH ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
         // 3. MANGAS
