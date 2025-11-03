@@ -1,5 +1,6 @@
 // ====================================================================
 // 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
+//    CP DE TALLAS 36, 38, 40 MODIFICADOS.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Actualización de tiraCuelloCm)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Corrección de Holgura de Manga)
 // ====================================================================
 
 /**
@@ -199,7 +200,7 @@ function calcularPatron() {
 
     const medidas = MEDIDAS_ANTROPOMETRICAS[tallaSeleccionada];
     
-    // --- LÓGICA DE HOLGURA Y RAGLÁN (Se mantiene) ---
+    // --- LÓGICA DE HOLGURA DE CUERPO Y RAGLÁN (Se mantiene) ---
     let holguraCm = 8.0; 
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00')) {
         holguraCm = 4.0; 
@@ -219,11 +220,25 @@ function calcularPatron() {
     // Puntos y Hileras Base
     const anchoPrendaCm = medidas.CP + holguraCm; 
     const cpPts = Math.round(anchoPrendaCm * densidadP); 
-    const caPts = Math.round(medidas.CA * densidadP);
     
-    // =================================================
+    // --- LÓGICA DE HOLGURA DE MANGA (AÑADIDA) ---
+    let holguraMangaCm;
+    if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
+        holguraMangaCm = 2.0; // Bebé
+    } else if (tallaSeleccionada.includes('años')) {
+        holguraMangaCm = 4.0; // Niños
+    } else {
+        holguraMangaCm = 6.0; // Adultos
+    }
+    
+    // Cálculo de ancho final de la sisa de la manga (Contorno de Axila + Holgura de Manga)
+    const anchoSisaMangaCm = medidas.CA + holguraMangaCm;
+    const puntosSisaManga = Math.round(anchoSisaMangaCm * densidadP); 
+    // Nota: caPts ya no es el ancho de la sisa de la manga, se usa solo para el Contorno de Axila antropométrico.
+    const caPts = Math.round(medidas.CA * densidadP); 
+
+
     // CÓDIGO CORREGIDO PARA LA TIRA DEL CUELLO/TAPETA
-    // =================================================
     let tiraCuelloCm;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
         tiraCuelloCm = 1.5; // Bebé
@@ -232,7 +247,6 @@ function calcularPatron() {
     } else {
         tiraCuelloCm = 3.0; // Adultos
     }
-    // =================================================
     
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
@@ -361,7 +375,7 @@ function calcularPatron() {
         // 3. MANGAS
         resultado += `<u>3. Mangas</u>\n`;
         const puntosPuño = Math.round(medidas['C Puño'] * densidadP);
-        const puntosSisaManga = caPts; 
+        // const puntosSisaManga está calculado arriba con holgura
         const largoMangaSisaPuñoCm = medidas.LM; 
         const largoMangaH = densidadH ? Math.round(largoMangaSisaPuñoCm * densidadH) : null;
         
@@ -374,13 +388,17 @@ function calcularPatron() {
         if (aumentosPorLado > 0) {
             const frecuenciaCm = largoMangaSisaPuñoCm / aumentosPorLado;
             
+            // CÁLCULO DE CM AÑADIDO PARA LA SISA
+            const cmSisaFinal = anchoSisaMangaCm.toFixed(1);
+
             let frecuenciaStr = `cada **${frecuenciaCm.toFixed(1)} cm**`;
             if (densidadH) {
                 const frecuenciaAumentos = Math.round(largoMangaH / aumentosPorLado);
                 frecuenciaStr = `cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm.toFixed(1)} cm**)`
             }
             
-            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** ${frecuenciaStr} **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
+            // LÍNEA DE OUTPUT MODIFICADA para aclarar la frecuencia y confirmar la holgura
+            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** (2 puntos por repetición) **${aumentosPorLado} veces** con una frecuencia de **${frecuenciaStr}**. Esto lleva la manga a **${puntosSisaManga} puntos** (**${cmSisaFinal} cm** de contorno en la sisa, incluyendo **${holguraMangaCm.toFixed(1)} cm** de holgura).\n\n`;
         } else {
             resultado += `* **Aumentos:** No se requieren aumentos o el cálculo es inconsistente. Tejer recto.\n\n`;
         }
