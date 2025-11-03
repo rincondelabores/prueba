@@ -23,14 +23,14 @@ const MEDIDAS_ANTROPOMETRICAS = {
     '10 años': { CP: 72.0, CC: 33.0, CA: 26.5, 'C Puño':18.0, LT: 50.0, LM: 43.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
     // Tallas de Mujer (Adulto) - CP MODIFICADO.
-    '36': { CP: 81.0, CC: 35.0, CA: 30.0, 'C Puño':19, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
-    '38': { CP: 86.0, CC: 36.0, CA: 32.0, 'C Puño': 19.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
-    '40': { CP: 92.0, CC: 37.0, CA: 33.0, 'C Puño': 19.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
-    '42': { CP: 100.0, CC: 38.0, CA: 35.0, 'C Puño': 19.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 }, 
-    '44': { CP: 104.0, CC: 40.0, CA: 37.0, 'C Puño': 20.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
-    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 20.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
-    '48': { CP: 112.0, CC: 40.0, CA: 39.0, 'C Puño': 20.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
-    '50': { CP: 116.0, CC: 41.0, CA: 40.0, 'C Puño': 20.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
+    '36': { CP: 81.0, CC: 35.0, CA: 30.0, 'C Puño':19, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 11.0 }, 
+    '38': { CP: 86.0, CC: 36.0, CA: 32.0, 'C Puño': 19.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 11.5 }, 
+    '40': { CP: 92.0, CC: 37.0, CA: 33.0, 'C Puño': 19.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 12.0 }, 
+    '42': { CP: 100.0, CC: 38.0, CA: 35.0, 'C Puño': 19.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 12.5 }, 
+    '44': { CP: 104.0, CC: 40.0, CA: 37.0, 'C Puño': 20.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 13.0 }, 
+    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 20.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 13.5 }, 
+    '48': { CP: 112.0, CC: 40.0, CA: 39.0, 'C Puño': 20.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 14.0 }, 
+    '50': { CP: 116.0, CC: 41.0, CA: 40.0, 'C Puño': 20.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 14.5 } 
 };
 
 const ORDEN_TALLAS = {
