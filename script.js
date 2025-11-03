@@ -511,18 +511,18 @@ function calcularPatron() {
         const puntosCuerpoDelanteroFinal = puntosDelanteroFinal_PreSisa;
         const puntosTotalCuerpoFinal = puntosCuerpoEspaldaFinal + puntosCuerpoDelanteroFinal + (puntosAnadirSisaPts * 2);
         
-        resultado += `<u>3. Instrucciones post-Raglán (Separación y Tejido)</u>\n`;
+        resultado += `<u>3. Acabado el raglán, separamos las piezas asi:</u>\n`;
         
         // --- 3.1. MANGAS (Instrucción revisada) ---
         resultado += `\n<u>3.1. Mangas (Tejer dos iguales)</u>\n`;
-        resultado += `* **Manga Inicial:** Dejar el Cuerpo en espera. Poner los **${puntosMangaFinal_PreSisa} puntos** de la manga a una aguja de trabajo.\n`;
+        resultado += `* ** Dejar el Cuerpo en espera. Poner los **${puntosMangaFinal_PreSisa} puntos** de la manga a una aguja de trabajo.\n`;
         
         // Clarificación para añadir puntos bajo manga
-        resultado += `* **Puntos Bajo Manga:** Recoger o montar los **${puntosAnadirSisaPts} puntos** bajo la sisa (Esto hace  mas comoda la prenda en la zona de la sisa). Esto resulta en un total de **${puntosMangaConSisa} puntos**.\n`;
+        resultado += `* **Puntos Bajo Manga:** Recoger o montar los **${puntosAnadirSisaPts} puntos** bajo la sisa (Esto hace  mas comoda la prenda en la zona de la sisa). Tendrá un total de **${puntosMangaConSisa} puntos**.\n`;
 
         if (puntosAnadirSisaPts % 2 === 0 && puntosAnadirSisaPts > 0) {
             const mitadPuntosSisa = puntosAnadirSisaPts / 2;
-            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Nota (Agujas rectas):** Si teje la manga en plano (con costura), debe repartir los **${puntosAnadirSisaPts} puntos** de la sisa en dos partes: **${mitadPuntosSisa} puntos** al inicio y **${mitadPuntosSisa} puntos** al final de la hilera.</p>\n`;
+            resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Nota (Agujas rectas):** Si teje la manga en plano (con costura), debe dividir los **${puntosAnadirSisaPts} puntos** de la sisa en dos: **${mitadPuntosSisa} puntos** al antes de la manga y **${mitadPuntosSisa} puntos** al final.</p>\n`;
         }
 
         resultado += `* **Disminuciones de Manga:**\n`;
@@ -539,7 +539,7 @@ function calcularPatron() {
                 frecuenciaStr = `cada **${frecuenciaPasadas} pasadas** (aprox. **${frecuenciaCm.toFixed(1)} cm**)`
             }
             
-            resultado += `<p style="padding-left: 20px;">- Disminuir **1 punto a cada lado**  **${vecesDisminuir} veces** con una frecuencia de **${frecuenciaStr}**.\n`;
+            resultado += `<p style="padding-left: 20px;">- Disminuir **1 punto a cada lado**  **${vecesDisminuir} veces**  **${frecuenciaStr}**.\n`;
             resultado += `- Esto dejará **${puntosPuño} puntos** en el puño (**${medidas['C Puño'].toFixed(1)} cm**).</p>\n`;
         } else {
             resultado += `<p style="padding-left: 20px;">- No se requieren disminuciones. Tejer recto hasta el puño.</p>\n`;
