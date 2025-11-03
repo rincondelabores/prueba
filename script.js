@@ -7,30 +7,30 @@ const MEDIDAS_ANTROPOMETRICAS = {
     // Tallas de Bebé (Se mantienen los datos anteriores)
     '00 (Prematuro)': { CP: 37.0, CC: 20.0, CA: 12.0, 'C Puño': 10.0, LT: 18.0, LM: 10.0, PSisa: 8.0, AE: 14.0, CED: 3.0 },
     '0 meses': { CP: 39.0, CC: 21.0, CA: 13.0, 'C Puño': 10.0, LT: 20.0, LM: 12.0, PSisa: 8.0, AE: 16.0, CED: 3.5 },
-    '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 11.0, LT: 22.0, LM: 14.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
-    '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 12.0, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
-    '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 13.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
-    '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 15.0, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
-    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 17.0, LT: 30.0, LM: 22.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
-    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 19.0, LT: 32.0, LM: 25.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
-    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 21.0, LT: 34.0, LM: 27.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
+    '1-3 meses': { CP: 40.0, CC: 22.0, CA: 14.0, 'C Puño': 10.2, LT: 22.0, LM: 14.0, PSisa: 9.0, AE: 18.0, CED: 4.0 },
+    '3-6 meses': { CP: 44.0, CC: 23.0, CA: 16.0, 'C Puño': 10.4, LT: 24.0, LM: 16.0, PSisa: 10.0, AE: 20.0, CED: 4.5 },
+    '6-9 meses': { CP: 48.0, CC: 27.0, CA: 17.0, 'C Puño': 11.0, LT: 26.0, LM: 18.0, PSisa: 11.0, AE: 22.0, CED: 5.0 },
+    '9-12 meses': { CP: 52.0, CC: 25.0, CA: 18.0, 'C Puño': 11.5, LT: 28.0, LM: 20.0, PSisa: 12.0, AE: 24.0, CED: 5.5 },
+    '12-15 meses': { CP: 56.0, CC: 25.0, CA: 19.0, 'C Puño': 12.0, LT: 30.0, LM: 22.0, PSisa: 13.0, AE: 26.0, CED: 6.0 },
+    '15-18 meses': { CP: 60.0, CC: 26.0, CA: 20.0, 'C Puño': 12.5, LT: 32.0, LM: 25.0, PSisa: 14.0, AE: 28.0, CED: 6.5 },
+    '18-24 meses': { CP: 62.0, CC: 26.0, CA: 22.0, 'C Puño': 13.0, LT: 34.0, LM: 27.0, PSisa: 15.0, AE: 30.0, CED: 7.0 },
 
     // Tallas de Niños (Se mantienen los datos anteriores)
-    '3 años': { CP: 63.0, CC: 26.5, CA: 25, 'C Puño': 21.5, LT: 36.0, LM: 28.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
-    '4 años': { CP: 64.0, CC: 27.0, CA: 27.0, 'C Puño': 22.0, LT: 38.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
-    '6 años': { CP: 68.0, CC: 28.0, CA: 29.0, 'C Puño': 23.0, LT: 46.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 },
-    '8 años': { CP: 72.0, CC: 29.0, CA: 31.0, 'C Puño': 24.0, LT: 50.0, LM: 39.0, PSisa: 18.0, AE: 36.0, CED: 8.5 },
-    '10 años': { CP: 76.0, CC: 30.0, CA: 34.0, 'C Puño': 25.0, LT: 54.0, LM: 43.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
+    '3 años': { CP: 63.0, CC: 26.5, CA: 23, 'C Puño': 13.5, LT: 36.0, LM: 28.5, PSisa: 15.5, AE: 31.0, CED: 7.3 }, 
+    '4 años': { CP: 64.0, CC: 27.0, CA: 24.0, 'C Puño': 14.0, LT: 38.0, LM: 32.0, PSisa: 16.0, AE: 32.0, CED: 7.5 },
+    '6 años': { CP: 68.0, CC: 28.0, CA: 25.0, 'C Puño': 14.5, LT: 46.0, LM: 35.5, PSisa: 17.0, AE: 34.0, CED: 8.0 },
+    '8 años': { CP: 72.0, CC: 29.0, CA: 26.0, 'C Puño': 15.0, LT: 50.0, LM: 39.0, PSisa: 18.0, AE: 36.0, CED: 8.5 },
+    '10 años': { CP: 76.0, CC: 30.0, CA: 26.5, 'C Puño':15.5, LT: 54.0, LM: 43.0, PSisa: 19.0, AE: 38.0, CED: 9.0 },
     
     // Tallas de Mujer (Adulto) - CP MODIFICADO.
-    '36': { CP: 82.0, CC: 35.0, CA: 25.0, 'C Puño': 15.2, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
-    '38': { CP: 86.0, CC: 36.0, CA: 28.0, 'C Puño': 15.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
-    '40': { CP: 92.0, CC: 37.0, CA: 30.0, 'C Puño': 15.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
-    '42': { CP: 100.0, CC: 38.0, CA: 33.0, 'C Puño': 15.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 }, 
-    '44': { CP: 104.0, CC: 40.0, CA: 36.0, 'C Puño': 16.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
-    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 16.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
-    '48': { CP: 112.0, CC: 40.0, CA: 40.0, 'C Puño': 16.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
-    '50': { CP: 116.0, CC: 41.0, CA: 43.0, 'C Puño': 16.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
+    '36': { CP: 82.0, CC: 35.0, CA: 30.0, 'C Puño':19, LT: 58.0, LM: 47.0, PSisa: 22.0, AE: 35.0, CED: 7.3 }, 
+    '38': { CP: 86.0, CC: 36.0, CA: 32.0, 'C Puño': 19.4, LT: 60.0, LM: 48.0, PSisa: 22.0, AE: 36.0, CED: 7.5 }, 
+    '40': { CP: 92.0, CC: 37.0, CA: 33.0, 'C Puño': 19.6, LT: 61.0, LM: 48.5, PSisa: 22.5, AE: 36.8, CED: 7.7 }, 
+    '42': { CP: 100.0, CC: 38.0, CA: 35.0, 'C Puño': 19.8, LT: 62.0, LM: 49.0, PSisa: 23.0, AE: 37.6, CED: 7.9 }, 
+    '44': { CP: 104.0, CC: 40.0, CA: 37.0, 'C Puño': 20.0, LT: 63.0, LM: 50.0, PSisa: 23.3, AE: 38.6, CED: 8.1 }, 
+    '46': { CP: 108.0, CC: 39.0, CA: 38.0, 'C Puño': 20.2, LT: 64.0, LM: 51.0, PSisa: 23.5, AE: 39.6, CED: 8.3 }, 
+    '48': { CP: 112.0, CC: 40.0, CA: 39.0, 'C Puño': 20.4, LT: 66.0, LM: 52.0, PSisa: 24.0, AE: 40.6, CED: 8.5 }, 
+    '50': { CP: 116.0, CC: 41.0, CA: 40.0, 'C Puño': 20.6, LT: 68.0, LM: 54.0, PSisa: 24.3, AE: 41.6, CED: 8.7 } 
 };
 
 const ORDEN_TALLAS = {
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Corrección de Holgura de Manga)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Corrección de Holgura de Manga y Reparto de Escote)
 // ====================================================================
 
 /**
@@ -290,14 +290,18 @@ function calcularPatron() {
             puntosTotalDelantero = puntosMedioPecho;
         }
 
-        // --- LÓGICA DE ESCOTE (33/33/33 y 30/40/30) ---
-        const puntosHombroBase = Math.round(puntosTotalDelantero * 0.33); 
+        // --- LÓGICA DE ESCOTE (30.56% Hombro, 38.88% Escote Central, 30.56% Hombro) ---
+        // MODIFICACIÓN DEL 28% AL 30.56% SEGÚN EL REPARTO SOLICITADO
+        const puntosHombroBase = Math.round(puntosTotalDelantero * 0.3056); 
         let puntosEscoteTotal = puntosTotalDelantero - (puntosHombroBase * 2);
         if (puntosEscoteTotal < 3) {
             puntosEscoteTotal = 3; 
             puntosHombroBase = Math.floor((puntosTotalDelantero - puntosEscoteTotal) / 2);
         }
-        let puntosEscoteCentral = Math.round(puntosEscoteTotal * 0.40);
+        
+        // Ajuste: El 38.88% se distribuye entre el cierre central (40%) y la curva restante (60%).
+        // Se mantiene la proporción 40/60 para central/curva dentro del total del escote.
+        let puntosEscoteCentral = Math.round(puntosEscoteTotal * 0.40); 
         if (tipoPrenda === "JERSEY" && puntosEscoteCentral % 2 === 0) {
              puntosEscoteCentral = Math.max(1, puntosEscoteCentral + 1);
         }
