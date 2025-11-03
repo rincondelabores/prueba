@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Ajuste para Pasadas Opcionales)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Ajuste para Pasadas Opcionales y Chaqueta Bottom-Up)
 // ====================================================================
 
 /**
@@ -286,9 +286,6 @@ function calcularPatron() {
         
         // CÁLCULO DE CM RECTOS (Siempre en CM)
         let cmCurva = 0;
-        // La estimación de la curva en CM se hace asumiendo que las disminuciones se dan en el número de pasadas
-        // y que cada disminución toma 2 pasadas (una de cierre, una de vuelta).
-        // Si no hay densidadH, no podemos calcular los cm exactos de la curva, por lo que asumimos 0 y restamos el total de PSisa - CED.
         if (densidadH) {
              cmCurva = pasadasCurva / densidadH;
         }
@@ -322,7 +319,7 @@ function calcularPatron() {
         if (tipoPrenda === "JERSEY") {
             resultado += `* **Montar:** **${puntosTotalDelantero} puntos**.\n`;
         } else { // CHAQUETA
-            puntosEscoteCentral = Math.round(puntosEscoteCentral / 2); 
+            // Ya se ha calculado puntosEscoteCentral para un solo delantero (40% de 33% del total)
             resultado += `* **Montar:** **${puntosTotalDelantero} puntos** (por cada Delantero).\n`;
             resultado += `<p style="font-size:0.9em; padding-left: 20px;">* **Tapeta Opcional:** Sugerimos añadir **${puntosTapeta} puntos** extra para la tapeta, que serán **${tiraCuelloCm.toFixed(1)} cm** de ancho.</p>\n`;
         }
@@ -340,7 +337,13 @@ function calcularPatron() {
             const totalCierreLateral = puntosEscoteCentral + puntosAFormarEscotePts;
             const secuenciaTotal = generarCierresProgresivosNuevo(totalCierreLateral).secuencia;
             
-            resultado += `* **2. Borde Central (Escote):** Cerrar **${puntosEscoteCentral} puntos** y luego continuar disminuyendo progresivamente con la siguiente secuencia: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
+            const puntosCierreInicial = puntosEscoteCentral;
+            const puntosCierreInicialConTapeta = puntosEscoteCentral + puntosTapeta;
+            
+            const avisoTapetaEnCierre = ` (Tenga en cuenta que si usó la tapeta sugerida de **${puntosTapeta} puntos**, el cierre inicial será de **${puntosCierreInicialConTapeta} puntos** en total).`;
+            
+            // Instrucción modificada con la advertencia
+            resultado += `* **2. Borde Central (Escote):** Cerrar **${puntosCierreInicial} puntos**${avisoTapetaEnCierre} y luego continuar disminuyendo progresivamente con la siguiente secuencia: **${secuenciaTotal.join(', ')}** (un total de **${totalCierreLateral} puntos** a disminuir).\n`;
             resultado += `* **3. Hombro:** Continuar recto y cerrar los **${puntosHombro} puntos** restantes en el hombro al llegar a los **${medidas.PSisa.toFixed(1)} cm** de altura total de sisa ${hilerasSisaHombro !== null ? `(**${hilerasSisaHombro} pasadas**)` : ''}.\n\n`; 
         }
 
@@ -408,7 +411,7 @@ function calcularPatron() {
         resultado += `* **Reparto (4 puntos marcados para el Raglán):** ${repartoStr}\n\n`;
 
         // 2. AUMENTOS RAGLÁN
-        const puntosMangaFinal = pManga + (raglanCmBase * densidadP); 
+        const puntosMangaFinal = pManga + (raglanCmBase * densidadP * 2); 
         const puntosAnadirSisaPtsBase = Math.max(4, Math.round(puntosMangaFinal * 0.1)); 
         const puntosAnadirSisaPts = puntosAnadirSisaPtsBase % 2 === 0 ? puntosAnadirSisaPtsBase : puntosAnadirSisaPtsBase + 1; 
 
