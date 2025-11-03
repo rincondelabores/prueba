@@ -1,6 +1,5 @@
 // ====================================================================
 // 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
-//    CP DE TALLAS 36, 38, 40 MODIFICADOS.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
