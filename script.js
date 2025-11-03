@@ -1,5 +1,6 @@
 // ====================================================================
 // 1. DATOS Y MEDIDAS ANTROPOMÉTRICAS (Adulto CORREGIDO y CONSOLIDADO)
+//    CP DE TALLAS 36, 38, 40 MODIFICADOS.
 // ====================================================================
 
 const MEDIDAS_ANTROPOMETRICAS = {
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ====================================================================
-// 3. LÓGICA CENTRAL DE CÁLCULO (Actualización de tiraCuelloCm)
+// 3. LÓGICA CENTRAL DE CÁLCULO (Actualización en la sección de Mangas)
 // ====================================================================
 
 /**
@@ -221,9 +222,7 @@ function calcularPatron() {
     const cpPts = Math.round(anchoPrendaCm * densidadP); 
     const caPts = Math.round(medidas.CA * densidadP);
     
-    // =================================================
     // CÓDIGO CORREGIDO PARA LA TIRA DEL CUELLO/TAPETA
-    // =================================================
     let tiraCuelloCm;
     if (tallaSeleccionada.includes('meses') || tallaSeleccionada.includes('00') || tallaSeleccionada.includes('0')) {
         tiraCuelloCm = 1.5; // Bebé
@@ -232,7 +231,6 @@ function calcularPatron() {
     } else {
         tiraCuelloCm = 3.0; // Adultos
     }
-    // =================================================
     
     const tiraCuelloPts = Math.round(tiraCuelloCm * densidadP);
     
@@ -374,13 +372,17 @@ function calcularPatron() {
         if (aumentosPorLado > 0) {
             const frecuenciaCm = largoMangaSisaPuñoCm / aumentosPorLado;
             
+            // CÁLCULO DE CM AÑADIDO PARA LA SISA
+            const cmSisaFinal = (puntosSisaManga / densidadP).toFixed(1);
+
             let frecuenciaStr = `cada **${frecuenciaCm.toFixed(1)} cm**`;
             if (densidadH) {
                 const frecuenciaAumentos = Math.round(largoMangaH / aumentosPorLado);
                 frecuenciaStr = `cada **${frecuenciaAumentos} pasadas** (aprox. **${frecuenciaCm.toFixed(1)} cm**)`
             }
             
-            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** ${frecuenciaStr} **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** en la sisa.\n\n`;
+            // LÍNEA DE OUTPUT MODIFICADA
+            resultado += `* **Aumentos:** Aumentar **1 punto a cada lado** ${frecuenciaStr} **${aumentosPorLado} veces** hasta alcanzar los **${puntosSisaManga} puntos** (**${cmSisaFinal} cm**) en la sisa.\n\n`;
         } else {
             resultado += `* **Aumentos:** No se requieren aumentos o el cálculo es inconsistente. Tejer recto.\n\n`;
         }
